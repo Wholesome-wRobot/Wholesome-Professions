@@ -1,0 +1,6 @@
+C:\Users\Nico\Desktop\WRobot\WRobot\Plugins\Z.E.Radar.dll
+C:\Users\Nico\Desktop\WRobot\WRobot\Plugins\Z.E.Radar.pdb
+C:\Users\Nico\Desktop\WRobot\Z.E.Radar\WhatsGoingOn\obj\Release\WhatsGoingOn.csproj.CoreCompileInputs.cache
+C:\Users\Nico\Desktop\WRobot\Z.E.Radar\WhatsGoingOn\obj\Release\Z.E.Radar.dll
+C:\Users\Nico\Desktop\WRobot\Z.E.Radar\WhatsGoingOn\obj\Release\Z.E.Radar.pdb
+C:\Users\Nico\Desktop\WRobot\Z.E.Radar\WhatsGoingOn\obj\Release\WhatsGoingOn.csprojResolveAssemblyReference.cache

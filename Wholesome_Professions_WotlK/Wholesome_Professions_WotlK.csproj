@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1CAC3B4B-6684-47A4-82B8-D051B838A4CA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wholesome_Professions_WotlK</RootNamespace>
+    <AssemblyName>Wholesome Professions WotlK</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Products\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="robotManager">
+      <HintPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Bin\robotManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="wManager">
+      <HintPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Bin\wManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bot\Bot.cs" />
+    <Compile Include="GUI\ProductSettingsControl.xaml.cs">
+      <DependentUpon>ProductSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\Broadcaster.cs" />
+    <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Items\ItemHelper.cs" />
+    <Compile Include="Professions\IProfession.cs" />
+    <Compile Include="Items\ItemDB.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Professions\Step.cs" />
+    <Compile Include="Professions\Tailoring.cs" />
+    <Compile Include="Helpers\VendorDB.cs" />
+    <Compile Include="States\CraftState.cs" />
+    <Compile Include="Helpers\ToolBox.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Bot\WholesomeProfessionsSave.cs" />
+    <Compile Include="Bot\WholesomeProfessionsSettings.cs" />
+    <Compile Include="States\TravelState.cs" />
+    <Compile Include="States\VendorState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="GUI\ProductSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
