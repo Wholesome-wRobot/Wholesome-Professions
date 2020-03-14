@@ -65,14 +65,19 @@
     <Compile Include="Professions\Step.cs" />
     <Compile Include="Professions\Tailoring.cs" />
     <Compile Include="Helpers\VendorDB.cs" />
+    <Compile Include="States\LearnRecipeFromTrainerState.cs" />
     <Compile Include="States\CraftState.cs" />
     <Compile Include="Helpers\ToolBox.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bot\WholesomeProfessionsSave.cs" />
     <Compile Include="Bot\WholesomeProfessionsSettings.cs" />
+    <Compile Include="States\LearnProfessionState.cs" />
+    <Compile Include="States\BuyAndLearnRecipeState.cs" />
+    <Compile Include="States\BuyMaterialsState.cs" />
+    <Compile Include="States\SetCurrentStepState.cs" />
     <Compile Include="States\TravelState.cs" />
-    <Compile Include="States\VendorState.cs" />
+    <Compile Include="States\SellItemsState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GUI\ProductSettingsControl.xaml">

@@ -28,9 +28,15 @@ namespace Wholesome_Professions_WotlK.Bot
                 Fsm.AddState(new Farming { Priority = 18 });
                 Fsm.AddState(new ToTown { Priority = 17 });
 
-                Fsm.AddState(new VendorState { Priority = 7 });
-                Fsm.AddState(new TravelState { Priority = 6 });
-                Fsm.AddState(new CraftState { Priority = 5 });
+                Fsm.AddState(new SellItemsState { Priority = 11 });
+
+                Fsm.AddState(new SetCurrentStepState { Priority = 10 });
+                Fsm.AddState(new TravelState { Priority = 9 });
+                Fsm.AddState(new LearnProfessionState { Priority = 8 });
+                Fsm.AddState(new BuyAndLearnRecipeState { Priority = 7 });
+                Fsm.AddState(new LearnRecipeFromTrainerState { Priority = 6 });
+                Fsm.AddState(new BuyMaterialsState { Priority = 5 });
+                Fsm.AddState(new CraftState { Priority = 4 });
 
                 Fsm.AddState(new Grinding { Priority = 2 });
                 Fsm.AddState(new MovementLoop { Priority = 1 });

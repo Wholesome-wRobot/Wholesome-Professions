@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Bot.Tasks;
+using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
 namespace Wholesome_Professions_WotlK.States
 {
-    class TravelState : State
+    class LearnProfessionState : State
     {
         public override string DisplayName
         {
-            get { return "Traveling"; }
+            get { return "Learning profession"; }
         }
 
         public override int Priority
@@ -32,7 +33,7 @@ namespace Wholesome_Professions_WotlK.States
                     || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || Main.currentProfession.CurrentStep == null)
                     return false;
 
-                if (Main.currentProfession.ShouldTravel())
+                if (Main.currentProfession.ShouldLearnProfession())
                     return true;
 
                 return false;
@@ -51,42 +52,20 @@ namespace Wholesome_Professions_WotlK.States
 
         public override void Run()
         {
-            // ek = 0, kalimdor = 1, Outlands = 530, Northrend 571
-            Logger.LogDebug("************ RUNNING TRAVEL STATE ************");
+            Logger.LogDebug("************ RUNNING LEARN PROFESSION STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            int destinationContinent = Main.currentProfession.Continent;
+            Npc trainer = Main.currentProfession.ProfessionTrainer;
 
-            // To Outlands
-            if (destinationContinent == 530)
+            // Learn Profession
+            Logger.Log($"Learning {Main.currentProfession.ProfessionSpell} at NPC {trainer.Entry}");
+            if (GoToTask.ToPositionAndIntecractWithNpc(trainer.Position, trainer.Entry, trainer.GossipOption))
             {
-                Logger.Log("Traveling to Outland");
-                KalimdorToEK();
-                EKToOutland();
+                ToolBox.LearnthisSpell(Main.currentProfession.ProfessionSpell);
+                Thread.Sleep(1000);
             }
-            
+
             Broadcaster.autoBroadcast = true;
-        }
-
-        private void KalimdorToEK()
-        {
-            if (Usefuls.ContinentId == 1)
-            {
-                Vector3 position = new Vector3(1472.55f, -4215.7f, 59.221f);
-                if (GoToTask.ToPositionAndIntecractWithGameObject(position, 195142))
-                    Thread.Sleep(1500);
-            }
-        }
-
-        private void EKToOutland()
-        {
-            if (Usefuls.ContinentId == 0)
-            {
-                if (GoToTask.ToPosition(new Vector3(-11920.39, -3206.81, -15.35475f)))
-                    Thread.Sleep(5000);
-                if (GoToTask.ToPosition(new Vector3(-182.5485, 1023.459, 54.23014)))
-                    Thread.Sleep(1500);
-            }
         }
     }
 }

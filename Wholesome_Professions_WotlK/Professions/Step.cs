@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Helpers;
 
@@ -9,6 +8,7 @@ public class Step
     public int levelToReach;
     public Item itemoCraft;
     public int estimatedAmountOfCrafts;
+    public bool knownRecipe;
     public enum StepType
     {
         CraftToLevel,
@@ -89,7 +89,8 @@ public class Step
         // If craft all items
         if (stepType == StepType.CraftAll)
         {
-            return Math.Max(0, (estimatedAmountOfCrafts * mat.amount) - ToolBox.GetAlreadyCrafted(Main.currentProfession.ProfessionName.ToString(), mat.item.name));
+            return (estimatedAmountOfCrafts * mat.amount) - ItemsManager.GetItemCountById(mat.item.itemId);
+            //return Math.Max(0, (estimatedAmountOfCrafts * mat.amount) - ToolBox.GetAlreadyCrafted(Main.currentProfession.ProfessionName.ToString(), mat.item.name));
         }
         // or if we only need to craft until we level up
         else

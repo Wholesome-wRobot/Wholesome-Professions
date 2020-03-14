@@ -19,6 +19,10 @@ public class Tailoring : IProfession
     public int MinimumCharLevel { get; set; }
     public string ProfessionSpell { get; set; }
 
+    // Flags
+    public bool ShouldCraftFlag { get; set; }
+    public bool HasSetCurrentStep { get; set; }
+
     public Item ItemToFarm { get; set; }
     public int AmountOfItemToFarm { get; set; }
 
@@ -27,6 +31,7 @@ public class Tailoring : IProfession
         CurrentStep = null;
         ProfessionName = SkillLine.Tailoring;
         RegenerateSteps();
+        SetTrainer();
 
         // Reset save if prof level is 0
         if (ToolBox.GetProfessionLevel(ProfessionName) == 0)
@@ -35,6 +40,7 @@ public class Tailoring : IProfession
 
     public void RegenerateSteps()
     {
+        Logger.LogDebug("REGENERATING STEPS");
         SetTrainer();
 
         AllSteps.Clear();
@@ -58,147 +64,99 @@ public class Tailoring : IProfession
         AllSteps.Add(new Step(225, 230, ItemDB.BlackMageweaveGloves, 5));
         AllSteps.Add(new Step(230, 250, ItemDB.BlackMageweaveHeadband, 23));
         AllSteps.Add(new Step(250, 260, ItemDB.BoltofRunecloth)); // Force precraft
-        AllSteps.Add(new Step(260, 280, ItemDB.RuneclothBelt, 25));
-        AllSteps.Add(new Step(280, 295, ItemDB.RuneclothGloves, 18));
+        AllSteps.Add(new Step(260, 280, ItemDB.RuneclothBelt, 30));
+        AllSteps.Add(new Step(280, 295, ItemDB.RuneclothGloves, 20));
         AllSteps.Add(new Step(295, 300, ItemDB.RuneclothHeadband, 5));
         AllSteps.Add(new Step(300, 325, ItemDB.BoltofNetherweave)); // Force precraft
         AllSteps.Add(new Step(325, 335, ItemDB.BoltofImbuedNetherweave, 15));
         AllSteps.Add(new Step(335, 345, ItemDB.NetherweaveBoots, 10));
         AllSteps.Add(new Step(345, 350, ItemDB.NetherweaveTunic, 5));
+
+        HasSetCurrentStep = false;
     }
 
+    // Should set current step
+    public bool ShouldSetCurrentStep()
+    {
+        return !HasSetCurrentStep;
+    }
+
+    // Should buy Materials
+    public bool ShouldBuyMaterials()
+    {
+        return CurrentStep.CanBuyRemainingMats() && !CurrentStep.HasMatsToCraftOne() && MyLevelIsHighEnough();
+    }
+
+    // Should travel
+    public bool ShouldTravel()
+    {
+        return Continent != Usefuls.ContinentId && MyLevelIsHighEnough();
+    }
+
+    // Should learn recipe from trainer
+    public bool ShouldLearnRecipeFromTrainer()
+    {
+        var RecipeVendor = CurrentStep.itemoCraft.RecipeVendor;
+        return !CurrentStep.knownRecipe && RecipeVendor == null && MyLevelIsHighEnough();
+    }
+
+    // Should buy and learn recipe
+    public bool ShouldBuyAndLearnRecipe()
+    {
+        var RecipeVendor = CurrentStep.itemoCraft.RecipeVendor;
+        return !CurrentStep.knownRecipe && RecipeVendor != null && MyLevelIsHighEnough();
+    }
+
+    // Should learn profession
+    public bool ShouldLearnProfession()
+    {
+        return ToolBox.GetProfessionLevel(ProfessionName) == ToolBox.GetProfessionMaxLevel(ProfessionName) && MyLevelIsHighEnough();
+    }
+
+    // Should sell items
+    public bool ShouldSellItems()
+    {
+        return Bag.GetContainerNumFreeSlots <= 1;
+    }
+
+    // Should craft
     public bool ShouldCraft()
     {
-        Logger.LogDebug("************* Checking if should craft");
+        bool shouldCraft = CheckIfShouldCraft();
+        ShouldCraftFlag = shouldCraft;
+        return ShouldCraftFlag;
+    }
 
-        SetCurrentStep();
-
-        // If no step has been selected
-        if (CurrentStep == null)
-        {
-            Broadcaster.ClearAndAddBroadCastMessage("No progression is currently possible");
-            return false;
-        }
-
-        // If we don't have the minimum level
-        if (ObjectManager.Me.Level < MinimumCharLevel)
-        {
-            Broadcaster.AddBroadCastMessage($"You must be at least level {MinimumCharLevel} to progress");
-            return false;
-        }
-
-        // If current step is a forced pre craft from the list, we generate a craft all
-        if (CurrentStep.stepType == Step.StepType.ListPreCraft)
-        {
-            Logger.LogDebug("ADDING FORCED CRAFT");
-            AllSteps.Add(new Step(CurrentStep.itemoCraft, ItemHelper.GetTotalNeededMat(CurrentStep.itemoCraft, this)));
-            return false;
-        }
-
-        if (ItemToFarm != null)
+    private bool CheckIfShouldCraft()
+    {
+        // If basic conditions are not met
+        if (CurrentStep == null || CurrentStep.stepType == Step.StepType.ListPreCraft || !MyLevelIsHighEnough())
             return false;
 
-        // If current step requires a precraft
-        foreach (Item.Mat materialToPreCraft in CurrentStep.itemoCraft.Materials)
-        {
-            if (!materialToPreCraft.item.canBeBought && !materialToPreCraft.item.canBeFarmed)
-            {
-                int amountMatNeeded = ItemHelper.GetTotalNeededMat(materialToPreCraft.item, this);
-                Logger.LogDebug($"We need to PRECRAFT {amountMatNeeded} {materialToPreCraft.item.name}");
-                if (amountMatNeeded > 0)
-                {
-                    AllSteps.Add(new Step(materialToPreCraft.item, amountMatNeeded));
-                    return false;
-                }
-            }
-        }
+        // If items needed to farm
+        if (ItemHelper.NeedToFarmItemFor(CurrentStep.itemoCraft, this))
+            return false;
 
-        // Craft all
-        if (CurrentStep.stepType == Step.StepType.CraftAll)
+        // Craft 
+        if (CurrentStep.stepType == Step.StepType.CraftAll || CurrentStep.stepType == Step.StepType.CraftToLevel)
         {
             Logger.LogDebug($"Should run {CurrentStep.stepType.ToString()} {CurrentStep.itemoCraft.name}");
             return true;
         }
 
-        // Craft to level
-        if (CurrentStep.stepType == Step.StepType.CraftToLevel)
-        {
-            Logger.LogDebug($"Should run {CurrentStep.stepType.ToString()} {CurrentStep.itemoCraft.name}");
-            return true;
-        }
-
-        Logger.LogDebug("No step to run after check");
+        Logger.Log("WARNING: No step to run after check");
         return false;
     }
 
-    public void SetCurrentStep()
+    public bool MyLevelIsHighEnough()
     {
-        Logger.LogDebug("************* Setting current Step");
-        int currentLevel = ToolBox.GetProfessionLevel(ProfessionName);
-
-        // Manage sell list
-        ManageSellList();
-
-        // Search for Priority Steps
-        Logger.LogDebug($"*** Checking for priority steps");
-        foreach (Step step in AllSteps)
-        {
-            Logger.LogDebug($"Checking {step.itemoCraft.name}");
-
-            // Search for priority step
-            if (step.stepType == Step.StepType.CraftAll)
-            {
-                List<string> groupedMessages = new List<string>();
-                groupedMessages.Add($"STEP : Craft all {step.itemoCraft.name} x {step.estimatedAmountOfCrafts}");
-                Logger.LogDebug($"STEP : Craft all {step.itemoCraft.name} x {step.estimatedAmountOfCrafts}");
-
-                CurrentStep = step;
-
-                if (ItemHelper.NeedToFarmItemFor(CurrentStep.itemoCraft, this))
-                    groupedMessages.Add($"You need {AmountOfItemToFarm} more {ItemToFarm.name} in your bags to proceed");
-
-                Broadcaster.ClearAndAddBroadCastMessagesList(groupedMessages);
-                return;
-            }
-        }
-
-        // Search for Normal Steps
-        Logger.LogDebug($"*** Checking for normal steps");
-        foreach (Step step in AllSteps)
-        {
-            Logger.LogDebug($"Checking {step.itemoCraft.name}");
-
-            // Search for craft to level step
-            if (step.stepType != Step.StepType.CraftAll && currentLevel >= step.minlevel && currentLevel < step.levelToReach)
-            {
-                List<string> groupedMessages = new List<string>();
-                groupedMessages.Add($"STEP : Craft {step.itemoCraft.name} to reach level {step.levelToReach}");
-                Logger.LogDebug($"STEP : Craft to level {step.itemoCraft.name} x {step.GetRemainingProfessionLevels()}");
-
-                CurrentStep = step;
-
-                if (ItemHelper.NeedToFarmItemFor(CurrentStep.itemoCraft, this))
-                    groupedMessages.Add($"You need {AmountOfItemToFarm} more {ItemToFarm.name} in your bags to proceed");
-
-                Broadcaster.ClearAndAddBroadCastMessagesList(groupedMessages);
-                return;
-            }
-        }
-
-        Logger.LogDebug("No step selected");
-        CurrentStep = null;
+        return ObjectManager.Me.Level >= MinimumCharLevel;
     }
 
-    private void ManageSellList()
+    public void AddGeneratedStep(Step step)
     {
-        foreach (Step step in AllSteps)
-        {
-            wManager.wManagerSetting.CurrentSetting.Selling = false;
-            wManager.Wow.Bot.States.ToTown.ForceToTown = false;
-            ToolBox.RemoveFromSellAndNotSellList(step.itemoCraft);
-            if (step.itemoCraft.forceSell)
-                ToolBox.AddItemToSellList(step.itemoCraft);
-        }
+        AllSteps.Add(step);
+        HasSetCurrentStep = false;
     }
 
     public void SetTrainer()
@@ -210,32 +168,36 @@ public class Tailoring : IProfession
         {
             if (profLevel < 75)
             {
+                Continent = 1;
                 ProfessionSpell = "Apprentice Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
             }
             else if (profLevel >= 75 && profLevel < 150)
             {
+                Continent = 1;
                 ProfessionSpell = "Journeyman Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
             }
             else if (profLevel >= 150 && profLevel < 225)
             {
+                Continent = 1;
                 ProfessionSpell = "Expert Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
             }
-            else if (profLevel >= 225 && profLevel < 300) // requires lvl 35
+            else if (profLevel >= 225 && profLevel < 300)
             {
+                Continent = 1;
                 MinimumCharLevel = 35;
                 ProfessionSpell = "Artisan Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
             }
-            else if (profLevel >= 300 && profLevel < 350) // requires lvl 58 min
+            else if (profLevel >= 300 && profLevel < 350)
             {
+                Continent = 530;
                 MinimumCharLevel = 58;
                 ProfessionSpell = "Master Tailor";
                 ProfessionTrainer = VendorDB.ThrallmarTailoringTrainer;
                 SuppliesVendor = VendorDB.ShattrathTailoringSupplies;
-                Continent = 530;
             }
         }
     }

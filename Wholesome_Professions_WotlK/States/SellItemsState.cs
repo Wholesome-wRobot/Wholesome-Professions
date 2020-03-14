@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using robotManager.FiniteStateMachine;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Helpers;
@@ -10,11 +6,11 @@ using wManager.Wow.ObjectManager;
 
 namespace Wholesome_Professions_WotlK.States
 {
-    class VendorState : State
+    class SellItemsState : State
     {
         public override string DisplayName
         {
-            get { return "Vendor"; }
+            get { return "Selling Items"; }
         }
 
         public override int Priority
@@ -29,10 +25,11 @@ namespace Wholesome_Professions_WotlK.States
         {
             get
             {
-                if (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause && ObjectManager.Me.IsValid
-                    && !Conditions.IsAttackedAndCannotIgnore && Main.currentProfession != null
-                    && Main.currentProfession.Continent != Usefuls.ContinentId
-                    && Main.currentProfession.CurrentStep != null)
+                if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
+                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null)
+                    return false;
+
+                if (Main.currentProfession.ShouldSellItems())
                     return true;
 
                 return false;
@@ -51,15 +48,13 @@ namespace Wholesome_Professions_WotlK.States
 
         public override void Run()
         {
-            // ek = 0, kalimdor = 1, Outlands = 530, Northrend 571
-            Logger.LogDebug("************ RUNNING TRAVEL STATE ************");
+            Logger.LogDebug("************ RUNNING SELL ITEMS STATE ************");
             Broadcaster.autoBroadcast = false;
-            Step currentStep = Main.currentProfession.CurrentStep;
 
-
-
-            MovementManager.StopMoveNewThread();
-            Main.currentProfession.RegenerateSteps();
+            // Sell items if we need bag space
+            wManager.wManagerSetting.CurrentSetting.Selling = true;
+            wManager.Wow.Bot.States.ToTown.ForceToTown = true;
+            
             Broadcaster.autoBroadcast = true;
         }
     }

@@ -4,15 +4,15 @@
 library
 C#
 .cs
-C:\Users\Nico\Dropbox\Programmation\wRobot\Wholesome_Professions_WotlK_product\Wholesome_Professions_WotlK\obj\Release\
+C:\Users\Nico\Dropbox\Programmation\wRobot\Wholesome_Professions_WotlK_product\Wholesome_Professions_WotlK\obj\Debug\
 Wholesome_Professions_WotlK
 none
 false
-TRACE
+DEBUG;TRACE
 
 11450044096
 
-28-1244268917
+24460730772
 11-866088382
 GUI\ProductSettingsControl.xaml;
 

@@ -1,12 +1,14 @@
 ﻿using robotManager.Helpful;
 using robotManager.Products;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using Wholesome_Professions_WotlK.Bot;
 using Wholesome_Professions_WotlK.GUI;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Plugin;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 
 public class Main : IProduct

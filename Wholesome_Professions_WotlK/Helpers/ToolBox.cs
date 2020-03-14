@@ -1,12 +1,26 @@
 ﻿using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 
 public class ToolBox
 {
+    // Manage WRobot sell/not sell lists
+    public static void ManageSellList(List<Step> allSteps)
+    {
+        foreach (Step step in allSteps)
+        {
+            wManager.wManagerSetting.CurrentSetting.Selling = false;
+            wManager.Wow.Bot.States.ToTown.ForceToTown = false;
+            ToolBox.RemoveFromSellAndNotSellList(step.itemoCraft);
+            if (step.itemoCraft.forceSell)
+                ToolBox.AddItemToSellList(step.itemoCraft);
+        }
+    }
+
     // Add +x to crafted item to settings
     public static void AddCraftedItemToSettings(string profession, Item itemToAdd, int amountToAdd = 1)
     {
@@ -155,7 +169,7 @@ public class ToolBox
     public static bool RecipeIsKnown(string recipeName, string profession)
     {
         SpellManager.CastSpellByNameLUA(profession);
-        return Lua.LuaDoString <bool> (@"
+        bool recipeIsKnown =  Lua.LuaDoString <bool> (@"
                                     tradeskillName, currentLevel, maxLevel, skillLineModifier = GetTradeSkillLine();
                                     tradeItemCount = GetNumTradeSkills()
                                     for i = 1, tradeItemCount do
@@ -164,6 +178,9 @@ public class ToolBox
                                                 return true;
                                             end
                                     end");
+        Thread.Sleep(500);
+        SpellManager.CastSpellByNameLUA(profession);
+        return recipeIsKnown;
     }
 }
 

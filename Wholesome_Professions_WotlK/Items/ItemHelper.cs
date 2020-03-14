@@ -41,7 +41,6 @@ namespace Wholesome_Professions_WotlK.Items
             foreach (Step s in profession.AllSteps)
             {
                 int pickFromVirtualBag = 0;
-                //int itemsAlreadyCrafted = ToolBox.GetAlreadyCrafted(profession.ProfessionName.ToString(), s.itemoCraft.name);
 
                 // If it's current step and it's a level step, make sure we mitigate to match amount goal
                 if (s == Main.currentProfession.CurrentStep && s.stepType == Step.StepType.CraftToLevel && s.estimatedAmountOfCrafts != 0)
@@ -50,7 +49,7 @@ namespace Wholesome_Professions_WotlK.Items
                     pickFromVirtualBag = PickFromVirtualBag(s.itemoCraft, s.estimatedAmountOfCrafts);
 
                 if (ToolBox.GetProfessionLevel(profession.ProfessionName) < s.levelToReach)
-                    amount += GetMaterialAmountInItem(s.itemoCraft, itemToSearch, s.estimatedAmountOfCrafts - pickFromVirtualBag /*- itemsAlreadyCrafted*/);
+                    amount += GetMaterialAmountInItem(s.itemoCraft, itemToSearch, s.estimatedAmountOfCrafts - pickFromVirtualBag);
             }
             virtualBag.Clear();
             return amount;

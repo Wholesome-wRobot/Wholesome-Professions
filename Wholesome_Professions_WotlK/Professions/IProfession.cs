@@ -7,7 +7,7 @@ public interface IProfession
 {
     SkillLine ProfessionName { get; }
 
-    Step CurrentStep { get; }
+    Step CurrentStep { get; set; }
     List<Step> AllSteps { get; }
     
     Npc ProfessionTrainer { get; }
@@ -18,8 +18,21 @@ public interface IProfession
     int Continent { get; set; }
     int MinimumCharLevel { get; set; }
 
-    void SetCurrentStep();
-    void SetTrainer();
-    bool ShouldCraft();
+    bool ShouldCraftFlag { get; set; }
+    bool HasSetCurrentStep { get; set; }
+
     void RegenerateSteps();
+    
+    void SetTrainer();
+
+    bool ShouldCraft();
+    bool ShouldSellItems();
+    bool ShouldLearnProfession();
+    bool ShouldBuyAndLearnRecipe();
+    bool ShouldLearnRecipeFromTrainer();
+    bool ShouldBuyMaterials();
+    bool ShouldTravel();
+    bool ShouldSetCurrentStep();
+    void AddGeneratedStep(Step step);
+    bool MyLevelIsHighEnough();
 }
