@@ -5,26 +5,29 @@ using wManager.Wow.ObjectManager;
 using System.ComponentModel;
 using System.IO;
 using robotManager;
+using Wholesome_Professions_WotlK.Helpers;
 
 [Serializable]
 public class WholesomeProfessionsSettings : Settings
 {
     public static WholesomeProfessionsSettings CurrentSetting { get; set; }
+    
+    public bool LogDebug { get; set; }
+    public int ServerRate { get; set; }
+    public int BroadcasterInterval { get; set; }
 
     public WholesomeProfessionsSettings()
     {
         LogDebug = false;
-
-        ConfigWinForm(
-            new System.Drawing.Point(400, 400), "Wholesome Professions "
-            + Translate.Get("Settings")
-        );
+        ServerRate = 1;
+        BroadcasterInterval = 5;
     }
 
     public bool Save()
     {
         try
         {
+            Logger.LogDebug("Saving settings");
             return Save(AdviserFilePathAndName("WholesomeProfessionsSettings",
                 ObjectManager.Me.Name + "." + Usefuls.RealmName));
         }
@@ -39,6 +42,7 @@ public class WholesomeProfessionsSettings : Settings
     {
         try
         {
+            Logger.Log("Loading settings");
             if (File.Exists(AdviserFilePathAndName("WholesomeProfessionsSettings",
                 ObjectManager.Me.Name + "." + Usefuls.RealmName)))
             {
@@ -55,10 +59,4 @@ public class WholesomeProfessionsSettings : Settings
         }
         return false;
     }
-
-    [Category("Misc")]
-    [DefaultValue(false)]
-    [DisplayName("Log Debug")]
-    [Description("For Development purpose")]
-    public bool LogDebug { get; set; }
 }

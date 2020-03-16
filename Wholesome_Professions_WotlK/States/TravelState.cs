@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Bot.Tasks;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -58,7 +59,7 @@ namespace Wholesome_Professions_WotlK.States
             int destinationContinent = Main.currentProfession.Continent;
 
             // To Outlands
-            if (destinationContinent == 530)
+            if (destinationContinent == (int)ContinentId.Expansion01)
             {
                 Logger.Log("Traveling to Outland");
                 KalimdorToEK();
@@ -70,7 +71,7 @@ namespace Wholesome_Professions_WotlK.States
 
         private void KalimdorToEK()
         {
-            if (Usefuls.ContinentId == 1)
+            if (Usefuls.ContinentId == (int)ContinentId.Kalimdor)
             {
                 Vector3 position = new Vector3(1472.55f, -4215.7f, 59.221f);
                 if (GoToTask.ToPositionAndIntecractWithGameObject(position, 195142))
@@ -80,7 +81,7 @@ namespace Wholesome_Professions_WotlK.States
 
         private void EKToOutland()
         {
-            if (Usefuls.ContinentId == 0)
+            if (Usefuls.ContinentId == (int)ContinentId.Azeroth)
             {
                 if (GoToTask.ToPosition(new Vector3(-11920.39, -3206.81, -15.35475f)))
                     Thread.Sleep(5000);

@@ -18,7 +18,7 @@ public class Item
     public bool canBeBought;
     public int amountToCraft;
     public List<Mat> Materials;
-    public bool forceSell;
+    public bool forceSell; 
     public Npc RecipeVendor;
     public int RecipeItemId;
     public struct Mat
@@ -30,7 +30,7 @@ public class Item
     public Item()
     {
         Materials = new List<Mat>();
-        vendor = new Npc();
+        vendor = null;
         RecipeVendor = null;
     }
 
@@ -42,6 +42,6 @@ public class Item
             amount = amountToCraft
         };
         Materials.Add(matToAdd);
-        Logger.LogDebug($"ItemDB : Material {matToAdd.item.name} x {matToAdd.amount} added to item {name}");
+        Logger.LogDebug($"ItemDB : Material {matToAdd.item.name} x {matToAdd.amount} added to item {name} in DB");
     }
 }

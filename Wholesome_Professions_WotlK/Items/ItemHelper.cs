@@ -16,6 +16,7 @@ namespace Wholesome_Professions_WotlK.Items
         // Search if a base item should be farmed (ex : Linen Cloth)
         public static bool NeedToFarmItemFor(Item itemToCraft, IProfession profession)
         {
+
             foreach (Item.Mat mat in itemToCraft.Materials)
             {
                 int amountOfItemsToFarm = GetTotalNeededMat(mat.item, profession);

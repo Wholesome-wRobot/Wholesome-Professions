@@ -55,7 +55,6 @@ namespace Wholesome_Professions_WotlK.States
             MovementManager.StopMoveNewThread();
 
             // Deactivate broadcast
-            Broadcaster.BroadCastSituation();
             Broadcaster.autoBroadcast = false;
 
             //Debugger.Launch();
@@ -72,12 +71,13 @@ namespace Wholesome_Professions_WotlK.States
             if (currentStep.stepType == Step.StepType.CraftAll)
                 amountToCraft = currentStep.estimatedAmountOfCrafts;
             else if (currentStep.stepType == Step.StepType.CraftToLevel)
-                amountToCraft = currentStep.levelToReach - ToolBox.GetProfessionLevel(Main.currentProfession.ProfessionName);
+                amountToCraft = currentStep.GetRemainingProfessionLevels();
 
             int goalAmount = amountToCraft + itemInBagsBeforeCraft;
 
             Logger.Log($"Crafting {amountToCraft} x {currentStep.itemoCraft.name}");
             ToolBox.Craft(Main.currentProfession.ProfessionName.ToString(), currentStep.itemoCraft, amountToCraft);
+            Thread.Sleep(100);
             while (ItemsManager.GetItemCountById(currentStep.itemoCraft.itemId) < goalAmount && currentStep.HasMatsToCraftOne()
                 && Bag.GetContainerNumFreeSlots > 1)
             {
@@ -96,6 +96,14 @@ namespace Wholesome_Professions_WotlK.States
                     }
                 }
                 Thread.Sleep(200);
+
+                // Failsafe if craft is interrupted
+                if (!ObjectManager.Me.IsCast)
+                {
+                    Thread.Sleep(200);
+                    if (!ObjectManager.Me.IsCast)
+                        break;
+                }
             }
 
             Logger.Log("Craft complete");
@@ -103,7 +111,6 @@ namespace Wholesome_Professions_WotlK.States
             Main.currentProfession.RegenerateSteps();
 
             Broadcaster.autoBroadcast = true;
-            //Broadcaster.BroadCastSituation();
         }
     }
 }

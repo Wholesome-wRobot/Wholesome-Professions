@@ -40,9 +40,25 @@
     public static Item NetherweaveBoots = new Item();
     public static Item KnothideLeather = new Item();
     public static Item NetherweaveTunic = new Item();
+    public static Item NetherweavePants = new Item();
+    public static Item NetherweaveRobe = new Item();
 
     static ItemDB()
     {
+
+        NetherweaveRobe.name = "Netherweave Robe";
+        NetherweaveRobe.itemId = 21854;
+        NetherweaveRobe.AddMaterial(BoltofNetherweave, 8);
+        NetherweaveRobe.AddMaterial(RuneThread, 2);
+        NetherweaveRobe.RecipeVendor = VendorDB.ShattrathTailoringSupplies;
+        NetherweaveRobe.RecipeItemId = 21896;
+        NetherweaveRobe.forceSell = true;
+
+        NetherweavePants.name = "Netherweave Pants";
+        NetherweavePants.itemId = 21852;
+        NetherweavePants.AddMaterial(BoltofNetherweave, 6);
+        NetherweavePants.AddMaterial(RuneThread, 1);
+        NetherweavePants.forceSell = true;
 
         NetherweaveTunic.name = "Netherweave Tunic";
         NetherweaveTunic.itemId = 21855;
@@ -95,7 +111,6 @@
         RuneThread.name = "Rune Thread";
         RuneThread.itemId = 14341;
         RuneThread.canBeBought = true;
-        RuneThread.vendor = VendorDB.OGTailoringSupplies;
         RuneThread.estimatedPrice = 4750;
 
         RuneclothBelt.name = "Runecloth Belt";
@@ -121,7 +136,6 @@
         HeavySilkenThread.name = "Heavy Silken Thread";
         HeavySilkenThread.itemId = 8343;
         HeavySilkenThread.canBeBought = true;
-        HeavySilkenThread.vendor = VendorDB.OGTailoringSupplies;
         HeavySilkenThread.estimatedPrice = 1900;
 
         BlackMageweaveGloves.name = "Black Mageweave Gloves";
@@ -139,7 +153,6 @@
         SilkenThread.name = "Silken Thread";
         SilkenThread.itemId = 4291;
         SilkenThread.canBeBought = true;
-        SilkenThread.vendor = VendorDB.OGTailoringSupplies;
         SilkenThread.estimatedPrice = 500;
 
         CrimsonSilkPantaloons.name = "Crimson Silk Pantaloons";
@@ -152,7 +165,6 @@
         RedDye.name = "Red Dye";
         RedDye.itemId = 2604;
         RedDye.canBeBought = true;
-        RedDye.vendor = VendorDB.OGTailoringSupplies;
         RedDye.estimatedPrice = 47;
 
         CrimsonSilkVest.name = "Crimson Silk Vest";
@@ -173,7 +185,6 @@
         Bleach.name = "Bleach";
         Bleach.itemId = 2324;
         Bleach.canBeBought = true;
-        Bleach.vendor = VendorDB.OGTailoringSupplies;
         Bleach.estimatedPrice = 23;
 
         FormalWhiteShirt.name = "Formal White Shirt";
@@ -192,7 +203,6 @@
         BlueDye.name = "Blue Dye";
         BlueDye.itemId = 6260;
         BlueDye.canBeBought = true;
-        BlueDye.vendor = VendorDB.OGTailoringSupplies;
         BlueDye.estimatedPrice = 47;
 
         AzureSilkHood.name = "Azure Silk Hood";
@@ -215,7 +225,6 @@
         FineThread.name = "Fine Thread";
         FineThread.itemId = 2321;
         FineThread.canBeBought = true;
-        FineThread.vendor = VendorDB.OGTailoringSupplies;
         FineThread.estimatedPrice = 95;
 
         SimpleKilt.name = "Simple Kilt";
@@ -247,7 +256,6 @@
         CoarseThread.name = "Coarse Thread";
         CoarseThread.itemId = 2320;
         CoarseThread.canBeBought = true;
-        CoarseThread.vendor = VendorDB.OGTailoringSupplies;
         CoarseThread.estimatedPrice = 9;
 
         HeavyLinenGloves.name = "Heavy Linen Gloves";

@@ -5,20 +5,16 @@ using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
+using wManager.Wow.ObjectManager;
 
 public class ToolBox
 {
-    // Manage WRobot sell/not sell lists
-    public static void ManageSellList(List<Step> allSteps)
+    // Check if Horde
+    public static bool IsHorde()
     {
-        foreach (Step step in allSteps)
-        {
-            wManager.wManagerSetting.CurrentSetting.Selling = false;
-            wManager.Wow.Bot.States.ToTown.ForceToTown = false;
-            ToolBox.RemoveFromSellAndNotSellList(step.itemoCraft);
-            if (step.itemoCraft.forceSell)
-                ToolBox.AddItemToSellList(step.itemoCraft);
-        }
+        return ObjectManager.Me.Faction == (uint)PlayerFactions.Orc || ObjectManager.Me.Faction == (uint)PlayerFactions.Tauren
+            || ObjectManager.Me.Faction == (uint)PlayerFactions.Undead || ObjectManager.Me.Faction == (uint)PlayerFactions.BloodElf
+            || ObjectManager.Me.Faction == (uint)PlayerFactions.Troll;
     }
 
     // Add +x to crafted item to settings
@@ -114,24 +110,54 @@ public class ToolBox
         ", skillname.Replace("'", "\'")));
     }
 
-    public static void AddItemToDoNotSellList(Item item)
+    // Manage WRobot sell/not sell lists
+    public static void ManageSellList(List<Step> allSteps)
+    {
+        wManager.wManagerSetting.CurrentSetting.Selling = false;
+        wManager.Wow.Bot.States.ToTown.ForceToTown = false;
+        foreach (Step step in allSteps)
+        {
+            SetSellListForOneItem(step.itemoCraft);
+            foreach (Item.Mat mat in step.itemoCraft.Materials)
+            {
+                SetSellListForOneItem(mat.item);
+            }
+        }
+    }
+
+    private static void SetSellListForOneItem(Item item)
+    {
+        RemoveFromSellAndNotSellList(item);
+        if (item.forceSell)
+            AddItemToSellList(item);
+        else
+            AddItemToDoNotSellList(item);
+    }
+
+    private static void AddItemToDoNotSellList(Item item)
     {
         if (!wManager.wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
+        {
+            Logger.Log($"Add items {item.name} to Do not Sell List");
             wManager.wManagerSetting.CurrentSetting.DoNotSellList.Add(item.name);
+        }
     }
 
-    public static void AddItemToSellList(Item item)
+    private static void AddItemToSellList(Item item)
     {
         if (!wManager.wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
+        {
+            Logger.Log($"Add items {item.name} to Force Sell List");
             wManager.wManagerSetting.CurrentSetting.ForceSellList.Add(item.name);
+        }
     }
 
-    public static void RemoveFromSellAndNotSellList(Item item)
+    private static void RemoveFromSellAndNotSellList(Item item)
     {
-        if (!wManager.wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
+        if (wManager.wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
             wManager.wManagerSetting.CurrentSetting.ForceSellList.Remove(item.name);
 
-        if (!wManager.wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
+        if (wManager.wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
             wManager.wManagerSetting.CurrentSetting.DoNotSellList.Remove(item.name);
     }
 
@@ -178,9 +204,31 @@ public class ToolBox
                                                 return true;
                                             end
                                     end");
-        Thread.Sleep(500);
+        Thread.Sleep(300);
         SpellManager.CastSpellByNameLUA(profession);
         return recipeIsKnown;
+    }
+
+    public static bool IsProfessionFrameOpen()
+    {
+        return Lua.LuaDoString<bool>($"return TradeSkillFrame:IsVisible()");
+    }
+
+    public static void OpenProfessionFrame(string skillName)
+    {
+        if (!IsProfessionFrameOpen())
+        {
+            CloseProfessionFrame();
+            Lua.LuaDoString($"CastSpellByName('{skillName}')");
+        }
+        else
+            Lua.LuaDoString($"CastSpellByName('{skillName}')");
+    }
+
+    public static void CloseProfessionFrame()
+    {
+        if (!IsProfessionFrameOpen())
+            Lua.LuaDoString("TradeSkillFrame:Hide()");
     }
 }
 

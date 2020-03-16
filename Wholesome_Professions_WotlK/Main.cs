@@ -1,14 +1,13 @@
 ﻿using robotManager.Helpful;
 using robotManager.Products;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using System.Timers;
 using Wholesome_Professions_WotlK.Bot;
 using Wholesome_Professions_WotlK.GUI;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Plugin;
-using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 
 public class Main : IProduct
@@ -48,6 +47,8 @@ public class Main : IProduct
             _pulseThread.DoWork += DoBackgroundPulse;
             _pulseThread.RunWorkerAsync();
 
+            Broadcaster.InitializeTimer();
+
             if (Bot.Pulse())
             {
                 PluginsManager.LoadAllPlugins();
@@ -79,6 +80,8 @@ public class Main : IProduct
             _pulseThread.DoWork -= DoBackgroundPulse;
             _pulseThread.Dispose();
 
+            Broadcaster.broadcastTimer.Elapsed -= Broadcaster.SetTimerReady;
+
             Bot.Dispose();
             IsStarted = false;
             PluginsManager.DisposeAllPlugins();
@@ -107,10 +110,11 @@ public class Main : IProduct
             {
                 Logging.WriteError(string.Concat(arg), true);
             }
-            Thread.Sleep(5000);
+            Thread.Sleep(100);
         }
     }
 
+    // GUI
     public System.Windows.Controls.UserControl Settings
     {
         get

@@ -23,7 +23,7 @@ public class Step
         this.minlevel = minlevel;
         this.levelToReach = levelToReach;
         this.itemoCraft = itemoCraft;
-        this.estimatedAmountOfCrafts = estimatedAmountOfCrafts;
+        this.estimatedAmountOfCrafts = (estimatedAmountOfCrafts + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
 
         if (estimatedAmountOfCrafts == 0)
             stepType = StepType.ListPreCraft;
@@ -50,7 +50,8 @@ public class Step
 
     public int GetRemainingProfessionLevels()
     {
-        return levelToReach - ToolBox.GetProfessionLevel(Main.currentProfession.ProfessionName);
+        int remainingLevels =  levelToReach - ToolBox.GetProfessionLevel(Main.currentProfession.ProfessionName);
+        return (remainingLevels + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
     }
 
     public bool HasAllMats()

@@ -50,15 +50,12 @@ namespace Wholesome_Professions_WotlK.States
         public override void Run()
         {
             Logger.LogDebug("************ RUNNING SET CURRENT STEP STATE ************");
-            Logger.Log("Setting step. Please wait...");
+            Logger.Log("Calculating next step. Please wait...");
             Broadcaster.autoBroadcast = false;
 
             Step selectedStep = null;
             IProfession profession = Main.currentProfession;
             int currentLevel = ToolBox.GetProfessionLevel(profession.ProfessionName);
-
-            // Manage sell list
-            ToolBox.ManageSellList(profession.AllSteps);
 
             // Search for Priority Steps
             Logger.LogDebug($"*** Checking for priority steps");
@@ -138,6 +135,7 @@ namespace Wholesome_Professions_WotlK.States
 
             Main.currentProfession.HasSetCurrentStep = true;
             Broadcaster.autoBroadcast = true;
+            Broadcaster.BroadCastSituation(true);
         }
     }
 }

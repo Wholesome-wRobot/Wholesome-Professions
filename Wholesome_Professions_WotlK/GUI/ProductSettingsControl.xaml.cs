@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace Wholesome_Professions_WotlK.GUI
 {
@@ -23,6 +24,27 @@ namespace Wholesome_Professions_WotlK.GUI
         public ProductSettingsControl()
         {
             InitializeComponent();
+            ServerRate.Value = WholesomeProfessionsSettings.CurrentSetting.ServerRate;
+            BroadcasterInterval.Value = WholesomeProfessionsSettings.CurrentSetting.BroadcasterInterval;
+            LogDebug.IsChecked = WholesomeProfessionsSettings.CurrentSetting.LogDebug;
+        }
+
+        private void BroadcasterIntervalChanged(object sender, RoutedEventArgs e)
+        {
+            WholesomeProfessionsSettings.CurrentSetting.BroadcasterInterval = (int)BroadcasterInterval.Value;
+            WholesomeProfessionsSettings.CurrentSetting.Save();
+        }
+
+        private void LogDebugChanged(object sender, RoutedEventArgs e)
+        {
+            WholesomeProfessionsSettings.CurrentSetting.LogDebug = (bool)LogDebug.IsChecked;
+            WholesomeProfessionsSettings.CurrentSetting.Save();
+        }
+
+        private void ServerRateChanged(object sender, RoutedEventArgs e)
+        {
+            WholesomeProfessionsSettings.CurrentSetting.ServerRate = (int)ServerRate.Value;
+            WholesomeProfessionsSettings.CurrentSetting.Save();
         }
     }
 }

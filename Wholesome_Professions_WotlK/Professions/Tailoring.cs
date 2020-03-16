@@ -33,6 +33,9 @@ public class Tailoring : IProfession
         RegenerateSteps();
         SetTrainer();
 
+        // Manage sell list
+        ToolBox.ManageSellList(AllSteps);
+
         // Reset save if prof level is 0
         if (ToolBox.GetProfessionLevel(ProfessionName) == 0)
             ToolBox.ClearProfessionFromSavedList(ProfessionName.ToString());
@@ -68,9 +71,8 @@ public class Tailoring : IProfession
         AllSteps.Add(new Step(280, 295, ItemDB.RuneclothGloves, 20));
         AllSteps.Add(new Step(295, 300, ItemDB.RuneclothHeadband, 5));
         AllSteps.Add(new Step(300, 325, ItemDB.BoltofNetherweave)); // Force precraft
-        AllSteps.Add(new Step(325, 335, ItemDB.BoltofImbuedNetherweave, 15));
-        AllSteps.Add(new Step(335, 345, ItemDB.NetherweaveBoots, 10));
-        AllSteps.Add(new Step(345, 350, ItemDB.NetherweaveTunic, 5));
+        AllSteps.Add(new Step(325, 340, ItemDB.NetherweavePants, 20));
+        AllSteps.Add(new Step(340, 350, ItemDB.NetherweaveRobe, 10));
 
         HasSetCurrentStep = false;
     }
@@ -90,6 +92,7 @@ public class Tailoring : IProfession
     // Should travel
     public bool ShouldTravel()
     {
+        Logger.LogDebug($"You are on continent {Usefuls.ContinentId}, you should be on {Continent}, your level is enough ? : {MyLevelIsHighEnough()}");
         return Continent != Usefuls.ContinentId && MyLevelIsHighEnough();
     }
 
@@ -129,6 +132,12 @@ public class Tailoring : IProfession
 
     private bool CheckIfShouldCraft()
     {
+        /*
+        Logger.Log("Check ouvert");
+        Logger.Log(ToolBox.IsProfessionFrameOpen().ToString());
+        Logger.Log("Ouverture");
+        ToolBox.OpenProfessionFrame(ProfessionName.ToString());*/
+
         // If basic conditions are not met
         if (CurrentStep == null || CurrentStep.stepType == Step.StepType.ListPreCraft || !MyLevelIsHighEnough())
             return false;
@@ -164,37 +173,41 @@ public class Tailoring : IProfession
         // ek = 0, kalimdor = 1, Outlands = 530, Northrend 571
         int profLevel = ToolBox.GetProfessionLevel(ProfessionName);
 
-        if (ObjectManager.Me.Faction == 116) // Horde
+        if (ToolBox.IsHorde()) // Horde
         {
             if (profLevel < 75)
             {
-                Continent = 1;
+                Continent = (int)ContinentId.Kalimdor;
                 ProfessionSpell = "Apprentice Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
+                SuppliesVendor = VendorDB.OGTailoringSupplies;
             }
             else if (profLevel >= 75 && profLevel < 150)
             {
-                Continent = 1;
+                Continent = (int)ContinentId.Kalimdor;
                 ProfessionSpell = "Journeyman Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
+                SuppliesVendor = VendorDB.OGTailoringSupplies;
             }
             else if (profLevel >= 150 && profLevel < 225)
             {
-                Continent = 1;
+                Continent = (int)ContinentId.Kalimdor;
                 ProfessionSpell = "Expert Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
+                SuppliesVendor = VendorDB.OGTailoringSupplies;
             }
             else if (profLevel >= 225 && profLevel < 300)
             {
-                Continent = 1;
+                Continent = (int)ContinentId.Kalimdor;
                 MinimumCharLevel = 35;
                 ProfessionSpell = "Artisan Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
+                SuppliesVendor = VendorDB.OGTailoringSupplies;
             }
             else if (profLevel >= 300 && profLevel < 350)
             {
-                Continent = 530;
-                MinimumCharLevel = 58;
+                Continent = (int)ContinentId.Expansion01;
+                MinimumCharLevel = 68;
                 ProfessionSpell = "Master Tailor";
                 ProfessionTrainer = VendorDB.ThrallmarTailoringTrainer;
                 SuppliesVendor = VendorDB.ShattrathTailoringSupplies;

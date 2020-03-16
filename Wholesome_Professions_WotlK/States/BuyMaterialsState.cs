@@ -3,6 +3,7 @@ using System.Threading;
 using robotManager.FiniteStateMachine;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Bot.Tasks;
+using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -59,12 +60,13 @@ namespace Wholesome_Professions_WotlK.States
                 int amountMissing = currentStep.GetAmountMissingMaterial(mat);
                 if (mat.item.canBeBought)
                 {
-                    Logger.Log($"Buying {amountMissing} {mat.item.name} from NPC {mat.item.vendor.Entry}");
+                    Npc vendor = mat.item.vendor ?? Main.currentProfession.SuppliesVendor;
+                    Logger.Log($"Buying {amountMissing} {mat.item.name} from NPC {vendor.Entry}");
                     int estimatedPrice = mat.item.estimatedPrice * mat.amount * amountMissing;
                     Logger.LogDebug($"Estimated price : {estimatedPrice}");
                     if (ObjectManager.Me.GetMoneyCopper >= mat.amount * amountMissing)
                     {
-                        if (GoToTask.ToPositionAndIntecractWithNpc(mat.item.vendor.Position, mat.item.vendor.Entry, mat.item.vendor.GossipOption))
+                        if (GoToTask.ToPositionAndIntecractWithNpc(vendor.Position, vendor.Entry, vendor.GossipOption))
                         {
                             int amountToHaveInBag = amountMissing + ItemsManager.GetItemCountById(mat.item.itemId);
                             while (ItemsManager.GetItemCountById(mat.item.itemId) < amountToHaveInBag && Bag.GetContainerNumFreeSlots > 1)

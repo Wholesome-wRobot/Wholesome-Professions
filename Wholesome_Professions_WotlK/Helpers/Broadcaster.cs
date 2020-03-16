@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -16,17 +17,63 @@ namespace Wholesome_Professions_WotlK.Helpers
         public static string farmsNeededString = null;
         public static string professionNameString = null;
 
-        public static void BroadCastSituation()
+        public static int timerInterval;
+        public static Timer broadcastTimer = new Timer();
+        public static bool timerReady;
+
+        public static void InitializeTimer()
+        {
+            timerReady = false;
+            ClearBroadCastMessages();
+            timerInterval = WholesomeProfessionsSettings.CurrentSetting.BroadcasterInterval * 1000;
+            broadcastTimer = new Timer(timerInterval);
+            broadcastTimer.AutoReset = false;
+            broadcastTimer.Elapsed += new ElapsedEventHandler(SetTimerReady);
+            broadcastTimer.Start();
+        }
+
+        // Method attached to the timer ready event
+        public static void SetTimerReady(object sender, EventArgs e)
+        {
+            timerReady = true;
+        }
+
+        public static void ClearBroadCastMessages()
+        {
+            currentStepString = null;
+            requiredLevelString = null;
+            farmsNeededString = null;
+            professionNameString = null;
+        }
+
+        private static bool IsBroadcastEmpty()
+        {
+            return currentStepString == null && requiredLevelString == null
+                && farmsNeededString == null && professionNameString == null;
+        }
+
+        private static void ResetTimer()
+        {
+            timerReady = false;
+            broadcastTimer.Stop();
+            broadcastTimer.Start();
+        }
+
+        public static void BroadCastSituation(bool forceBroadcast = false)
         {
             PreCheckBroadcast();
-            Logger.LogLineBroadcast("********** BROADCAST ************");
+            if (!IsBroadcastEmpty() && (timerReady || forceBroadcast))
+            {
+                Logger.LogLineBroadcast("********** BROADCAST ************");
 
-            Logger.LogLineBroadcast(professionNameString);
-            Logger.LogLineBroadcast(currentStepString);
-            Logger.LogLineBroadcast(requiredLevelString);
-            Logger.LogLineBroadcast(farmsNeededString);
+                Logger.LogLineBroadcast(professionNameString.ToUpper());
+                Logger.LogLineBroadcast(currentStepString);
+                Logger.LogLineBroadcastImportant(requiredLevelString);
+                Logger.LogLineBroadcastImportant(farmsNeededString);
 
-            Logger.LogLineBroadcast("*************************************");
+                Logger.LogLineBroadcast("*************************************");
+                ResetTimer();
+            }
         }
 
         private static void PreCheckBroadcast()
@@ -67,12 +114,5 @@ namespace Wholesome_Professions_WotlK.Helpers
             else
                 professionNameString = null;
         }
-
-        /*
-        public static void ClearBroadCastMessages()
-        {
-            if (broadcastMessages != null)
-                broadcastMessages.Clear();
-        }*/
     }
 }
