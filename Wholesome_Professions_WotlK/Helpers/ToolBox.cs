@@ -3,12 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
+using wManager;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
 public class ToolBox
 {
+    public static List<WoWItemQuality> vendorQuality = new List<WoWItemQuality>();
+
     // Check if Horde
     public static bool IsHorde()
     {
@@ -26,21 +29,16 @@ public class ToolBox
         // Item not found
         if (itemInList == null)
         {
-            //Logging.Write($"Adding item {profession}_{itemToAdd}*{amountToAdd} to list");
             savedList.Add($"{profession}_{itemToAdd.name}*{amountToAdd}");
         }
         // Item found
         else
         {
-            //Logging.Write($"We already have {GetAlreadyCrafted(profession, itemToAdd)}");
             int newAmount = GetAlreadyCrafted(profession, itemToAdd.name) + amountToAdd;
             savedList.Remove(itemInList);
             savedList.Add($"{profession}_{itemToAdd.name}*{newAmount}");
-            
-            //Logging.Write($"New value {profession}_{itemToAdd}*{newAmount} to list");
         }
         
-        //Logging.Write($"Saving");
         WholesomeProfessionsSave.CurrentSetting.Save();
     }
 
@@ -113,7 +111,18 @@ public class ToolBox
     // Manage WRobot sell/not sell lists
     public static void ManageSellList(List<Step> allSteps)
     {
-        wManager.wManagerSetting.CurrentSetting.Selling = false;
+        if (wManagerSetting.CurrentSetting.MailGray)
+            vendorQuality.Add(WoWItemQuality.Poor);
+        if (wManagerSetting.CurrentSetting.MailWhite)
+            vendorQuality.Add(WoWItemQuality.Common);
+        if (wManagerSetting.CurrentSetting.MailGreen)
+            vendorQuality.Add(WoWItemQuality.Uncommon);
+        if (wManagerSetting.CurrentSetting.MailBlue)
+            vendorQuality.Add(WoWItemQuality.Rare);
+        if (wManagerSetting.CurrentSetting.MailPurple)
+            vendorQuality.Add(WoWItemQuality.Epic);
+
+        wManagerSetting.CurrentSetting.Selling = false;
         wManager.Wow.Bot.States.ToTown.ForceToTown = false;
         foreach (Step step in allSteps)
         {
@@ -136,29 +145,29 @@ public class ToolBox
 
     private static void AddItemToDoNotSellList(Item item)
     {
-        if (!wManager.wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
+        if (!wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
         {
             Logger.LogDebug($"Add items {item.name} to Do not Sell List");
-            wManager.wManagerSetting.CurrentSetting.DoNotSellList.Add(item.name);
+            wManagerSetting.CurrentSetting.DoNotSellList.Add(item.name);
         }
     }
 
     private static void AddItemToSellList(Item item)
     {
-        if (!wManager.wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
+        if (!wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
         {
             Logger.LogDebug($"Add items {item.name} to Force Sell List");
-            wManager.wManagerSetting.CurrentSetting.ForceSellList.Add(item.name);
+            wManagerSetting.CurrentSetting.ForceSellList.Add(item.name);
         }
     }
 
     private static void RemoveFromSellAndNotSellList(Item item)
     {
-        if (wManager.wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
-            wManager.wManagerSetting.CurrentSetting.ForceSellList.Remove(item.name);
+        if (wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
+            wManagerSetting.CurrentSetting.ForceSellList.Remove(item.name);
 
-        if (wManager.wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
-            wManager.wManagerSetting.CurrentSetting.DoNotSellList.Remove(item.name);
+        if (wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
+            wManagerSetting.CurrentSetting.DoNotSellList.Remove(item.name);
     }
 
     public static void Craft(string skillName, Item item, int quantity)

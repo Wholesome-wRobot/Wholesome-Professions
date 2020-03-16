@@ -17,7 +17,7 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public static string version = "1.0.2";// Must match version in Version.txt
+    public static string version = "1.0.3";// Must match version in Version.txt
 
     public void Initialize()
     {
@@ -25,7 +25,7 @@ public class Main : IProduct
         WholesomeProfessionsSave.Load();
         AutoUpdater.CheckUpdate(version);
 
-        Logger.Log("Wholesome Professions WotlK product loaded");
+        Logger.Log($"Wholesome Professions WotlK version {version} loaded");
     }
 
     public void Dispose()

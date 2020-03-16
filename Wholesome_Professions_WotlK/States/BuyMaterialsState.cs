@@ -2,6 +2,7 @@
 using System.Threading;
 using robotManager.FiniteStateMachine;
 using Wholesome_Professions_WotlK.Helpers;
+using wManager;
 using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
@@ -68,6 +69,8 @@ namespace Wholesome_Professions_WotlK.States
                     {
                         if (GoToTask.ToPositionAndIntecractWithNpc(vendor.Position, vendor.Entry, vendor.GossipOption))
                         {
+                            Vendor.SellItems(wManagerSetting.CurrentSetting.ForceSellList, wManagerSetting.CurrentSetting.DoNotSellList, ToolBox.vendorQuality);
+
                             int amountToHaveInBag = amountMissing + ItemsManager.GetItemCountById(mat.item.itemId);
                             while (ItemsManager.GetItemCountById(mat.item.itemId) < amountToHaveInBag && Bag.GetContainerNumFreeSlots > 1)
                             {
