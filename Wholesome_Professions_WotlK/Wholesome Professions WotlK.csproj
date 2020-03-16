@@ -66,6 +66,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoUpdater.cs">
+      <Generator>MSBuild:Compile</Generator>
+    </Compile>
     <Compile Include="Bot\Bot.cs" />
     <Compile Include="GUI\ProductSettingsControl.xaml.cs">
       <DependentUpon>ProductSettingsControl.xaml</DependentUpon>
@@ -112,11 +115,13 @@
     <None Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Compiled\Version.txt" />
     <Content Include="Resources\Entypo-license.txt" />
     <Content Include="Resources\WindowsIcons-license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetDir)\$(ProjectName).dll" "C:\Users\Nico\Desktop\$(ProjectName).dll</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetDir)\$(ProjectName).dll" "C:\Users\Nico\Desktop\$(ProjectName).dll
+copy /Y "$(TargetDir)\$(ProjectName).dll" "$(SolutionDir)\Wholesome_Professions_WotlK\Compiled\$(ProjectName).dll</PostBuildEvent>
   </PropertyGroup>
 </Project>

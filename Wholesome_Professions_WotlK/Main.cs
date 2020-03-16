@@ -17,10 +17,13 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
+    public static string version = "1.0.0";// Must match version in Version.txt
+
     public void Initialize()
     {
-        WholesomeProfessionsSettings.Load();
+        WholesomeProfessionsSettings.Load(); 
         WholesomeProfessionsSave.Load();
+        AutoUpdater.CheckUpdate(version);
 
         Logger.Log("Wholesome Professions WotlK product loaded");
     }

@@ -15,12 +15,14 @@ public class WholesomeProfessionsSettings : Settings
     public bool LogDebug { get; set; }
     public int ServerRate { get; set; }
     public int BroadcasterInterval { get; set; }
+    public double LastUpdateDate { get; set; }
 
     public WholesomeProfessionsSettings()
     {
         LogDebug = false;
         ServerRate = 1;
         BroadcasterInterval = 5;
+        LastUpdateDate = 0;
     }
 
     public bool Save()
