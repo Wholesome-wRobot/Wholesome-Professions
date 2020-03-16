@@ -17,7 +17,7 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public static string version = "1.0.0";// Must match version in Version.txt
+    public static string version = "1.0.1";// Must match version in Version.txt
 
     public void Initialize()
     {

@@ -138,7 +138,7 @@ public class ToolBox
     {
         if (!wManager.wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
         {
-            Logger.Log($"Add items {item.name} to Do not Sell List");
+            Logger.LogDebug($"Add items {item.name} to Do not Sell List");
             wManager.wManagerSetting.CurrentSetting.DoNotSellList.Add(item.name);
         }
     }
@@ -147,7 +147,7 @@ public class ToolBox
     {
         if (!wManager.wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
         {
-            Logger.Log($"Add items {item.name} to Force Sell List");
+            Logger.LogDebug($"Add items {item.name} to Force Sell List");
             wManager.wManagerSetting.CurrentSetting.ForceSellList.Add(item.name);
         }
     }
