@@ -27,7 +27,8 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || ObjectManager.Me.IsMounted)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || ObjectManager.Me.IsMounted
+                    || !WholesomeProfessionsSettings.CurrentSetting.CraftWhileFarming)
                     return false;
 
                 if (Main.currentProfession.ShouldCraftOne())

@@ -17,6 +17,7 @@ public class WholesomeProfessionsSettings : Settings
     public int BroadcasterInterval { get; set; }
     public double LastUpdateDate { get; set; }
     public bool Autofarm { get; set; }
+    public bool CraftWhileFarming { get; set; }
 
     public WholesomeProfessionsSettings()
     {
@@ -25,6 +26,7 @@ public class WholesomeProfessionsSettings : Settings
         BroadcasterInterval = 5;
         LastUpdateDate = 0;
         Autofarm = true;
+        CraftWhileFarming = true;
     }
 
     public bool Save()

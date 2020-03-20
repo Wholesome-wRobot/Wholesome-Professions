@@ -28,6 +28,13 @@ namespace Wholesome_Professions_WotlK.GUI
             BroadcasterInterval.Value = WholesomeProfessionsSettings.CurrentSetting.BroadcasterInterval;
             LogDebug.IsChecked = WholesomeProfessionsSettings.CurrentSetting.LogDebug;
             Autofarm.IsChecked = WholesomeProfessionsSettings.CurrentSetting.Autofarm;
+            CraftWhileFarming.IsChecked = WholesomeProfessionsSettings.CurrentSetting.CraftWhileFarming;
+        }
+
+        private void CraftWhileFarmingChanged(object sender, RoutedEventArgs e)
+        {
+            WholesomeProfessionsSettings.CurrentSetting.CraftWhileFarming = (bool)CraftWhileFarming.IsChecked;
+            WholesomeProfessionsSettings.CurrentSetting.Save();
         }
 
         private void AutofarmChanged(object sender, RoutedEventArgs e)
