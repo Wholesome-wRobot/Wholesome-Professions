@@ -2,13 +2,15 @@
 using robotManager.Products;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using System.Timers;
-using Wholesome_Professions_WotlK.Bot;
+using System.Windows.Forms;
 using Wholesome_Professions_WotlK.GUI;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Plugin;
 using wManager.Wow.Helpers;
+using wManager.Wow.ObjectManager;
 
 public class Main : IProduct
 {
@@ -17,21 +19,29 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public static string version = "1.0.3";// Must match version in Version.txt
+    public static string version = "0.1.0";// Must match version in Version.txt
 
     public void Initialize()
     {
-        WholesomeProfessionsSettings.Load(); 
-        WholesomeProfessionsSave.Load();
-        AutoUpdater.CheckUpdate(version);
-
-        Logger.Log($"Wholesome Professions WotlK version {version} loaded");
+        try
+        {
+            Directory.CreateDirectory(Application.StartupPath + "\\Profiles\\Wholesome Professions\\");
+            WholesomeProfessionsSettings.Load();
+            WholesomeProfessionsSave.Load();
+            AutoUpdater.CheckUpdate(version);
+            Logger.Log($"Wholesome Professions WotlK version {version} loaded");
+            TravelHelper.AddAllOffmeshConnections();
+        }
+        catch (Exception e)
+        {
+            Logging.WriteError("Main > Initialize(): " + e);
+        }
     }
 
     public void Dispose()
     {
         try
-        {            
+        {
             Stop();
             Logging.Status = "Dispose Product Complete";
             Logging.Write("Dispose Product Complete");
@@ -47,6 +57,7 @@ public class Main : IProduct
         try
         {
             IsStarted = true;
+
             _pulseThread.DoWork += DoBackgroundPulse;
             _pulseThread.RunWorkerAsync();
 

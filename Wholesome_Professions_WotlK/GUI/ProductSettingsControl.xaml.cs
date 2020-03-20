@@ -27,6 +27,13 @@ namespace Wholesome_Professions_WotlK.GUI
             ServerRate.Value = WholesomeProfessionsSettings.CurrentSetting.ServerRate;
             BroadcasterInterval.Value = WholesomeProfessionsSettings.CurrentSetting.BroadcasterInterval;
             LogDebug.IsChecked = WholesomeProfessionsSettings.CurrentSetting.LogDebug;
+            Autofarm.IsChecked = WholesomeProfessionsSettings.CurrentSetting.Autofarm;
+        }
+
+        private void AutofarmChanged(object sender, RoutedEventArgs e)
+        {
+            WholesomeProfessionsSettings.CurrentSetting.Autofarm = (bool)Autofarm.IsChecked;
+            WholesomeProfessionsSettings.CurrentSetting.Save();
         }
 
         private void BroadcasterIntervalChanged(object sender, RoutedEventArgs e)

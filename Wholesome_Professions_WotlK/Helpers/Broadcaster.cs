@@ -88,7 +88,7 @@ namespace Wholesome_Professions_WotlK.Helpers
                 {
                     // Farms needed
                     if (profession.ItemToFarm != null && profession.AmountOfItemToFarm > 0)
-                        farmsNeededString = $"You need {profession.AmountOfItemToFarm} more {profession.ItemToFarm.name} in your bags to proceed";
+                        farmsNeededString = $"You need {profession.AmountOfItemToFarm} more {profession.ItemToFarm.name} to proceed";
                     else
                         farmsNeededString = null;
 

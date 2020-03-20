@@ -27,7 +27,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Products\</OutputPath>
+    <OutputPath>Compiled\WRobot\Products\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="Helpers\Broadcaster.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\TravelHelper.cs" />
     <Compile Include="Items\ItemHelper.cs" />
     <Compile Include="Professions\IProfession.cs" />
     <Compile Include="Items\ItemDB.cs" />
@@ -82,6 +83,10 @@
     <Compile Include="Professions\Step.cs" />
     <Compile Include="Professions\Tailoring.cs" />
     <Compile Include="Helpers\VendorDB.cs" />
+    <Compile Include="Profile\GrinderProfile.cs" />
+    <Compile Include="Profile\ProfileHandler.cs" />
+    <Compile Include="States\CraftOneState.cs" />
+    <Compile Include="States\LoadProfileState.cs" />
     <Compile Include="States\LearnRecipeFromTrainerState.cs" />
     <Compile Include="States\CraftState.cs" />
     <Compile Include="Helpers\ToolBox.cs" />
@@ -101,27 +106,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\Icons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\IconsNonShared.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Compiled\WRobot\Products\Wholesome Professions WotlK.dll" />
+    <Content Include="Compiled\WRobot\Profiles\Wholesome Professions\Horde - Frostweave Cloth.xml" />
+    <Content Include="Compiled\WRobot\Profiles\Wholesome Professions\Horde - Linen Cloth.xml" />
+    <Content Include="Compiled\WRobot\Profiles\Wholesome Professions\Horde - Mageweave Cloth.xml" />
+    <Content Include="Compiled\WRobot\Profiles\Wholesome Professions\Horde - Netherweave Cloth.xml" />
+    <Content Include="Compiled\WRobot\Profiles\Wholesome Professions\Horde - Runecloth.xml" />
+    <Content Include="Compiled\WRobot\Profiles\Wholesome Professions\Horde - Silk Cloth.xml" />
+    <Content Include="Compiled\WRobot\Profiles\Wholesome Professions\Horde - Wool Cloth.xml" />
     <Content Include="Compiled\Version.txt" />
-    <Content Include="Resources\Entypo-license.txt" />
-    <Content Include="Resources\WindowsIcons-license.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetDir)\$(ProjectName).dll" "C:\Users\Nico\Desktop\$(ProjectName).dll
-copy /Y "$(TargetDir)\$(ProjectName).dll" "$(SolutionDir)\Wholesome_Professions_WotlK\Compiled\$(ProjectName).dll</PostBuildEvent>
+    <PostBuildEvent>del "$(ProjectDir)\Compiled\WRobot\Products\$(ProjectName).pdb"
+xcopy /Y/E/R "$(ProjectDir)\Compiled" "C:\Users\Nico\Desktop"
+del "C:\Users\Nico\Desktop\Version.txt"
+xcopy /Y/E/R "$(ProjectDir)\Compiled\WRobot" "E:\WoW\WoW Wotlk\WRobot WOTLK"</PostBuildEvent>
   </PropertyGroup>
 </Project>

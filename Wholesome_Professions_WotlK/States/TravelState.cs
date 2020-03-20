@@ -1,9 +1,6 @@
 ﻿using robotManager.FiniteStateMachine;
-using robotManager.Helpful;
 using System.Collections.Generic;
-using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
-using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -52,42 +49,107 @@ namespace Wholesome_Professions_WotlK.States
 
         public override void Run()
         {
-            // ek = 0, kalimdor = 1, Outlands = 530, Northrend 571
             Logger.LogDebug("************ RUNNING TRAVEL STATE ************");
             Broadcaster.autoBroadcast = false;
 
             int destinationContinent = Main.currentProfession.Continent;
 
-            // To Outlands
-            if (destinationContinent == (int)ContinentId.Expansion01)
+            // HORDE
+            if (ToolBox.IsHorde())
             {
-                Logger.Log("Traveling to Outland");
-                KalimdorToEK();
-                EKToOutland();
+                // From EK
+                if (Usefuls.ContinentId == (int)ContinentId.Azeroth)
+                {
+                    // To Kalimdor
+                    if (destinationContinent == (int)ContinentId.Kalimdor)
+                    {
+                        Logger.Log("Traveling to Kalimdor");
+                        TravelHelper.HordeEKToKalimdor();
+                    }
+                    // To Outlands
+                    if (destinationContinent == (int)ContinentId.Expansion01)
+                    {
+                        Logger.Log("Traveling to Outland");
+                        TravelHelper.HordeEKToOutland();
+                    }
+                    // To Northrend
+                    if (destinationContinent == (int)ContinentId.Northrend)
+                    {
+                        Logger.Log("Traveling to Northrend");
+                        TravelHelper.HordeEKToKalimdor();
+                    }
+                }
+
+                // From Kalimdor
+                if (Usefuls.ContinentId == (int)ContinentId.Kalimdor)
+                {
+                    // To EK
+                    if (destinationContinent == (int)ContinentId.Azeroth)
+                    {
+                        Logger.Log("Traveling to Eastern Kingdoms");
+                        TravelHelper.HordeKalimdorToEK();
+                    }
+                    // To Outlands
+                    if (destinationContinent == (int)ContinentId.Expansion01)
+                    {
+                        Logger.Log("Traveling to Outland");
+                        TravelHelper.HordeKalimdorToEK();
+                    }
+                    // To Northrend
+                    if (destinationContinent == (int)ContinentId.Northrend)
+                    {
+                        Logger.Log("Traveling to Northrend");
+                        TravelHelper.HordeKalimdorToNorthrend();
+                    }
+                }
+
+                // From Outlands
+                if (Usefuls.ContinentId == (int)ContinentId.Expansion01)
+                {
+                    // To Kalimdor
+                    if (destinationContinent == (int)ContinentId.Kalimdor)
+                    {
+                        Logger.Log("Traveling to Kalimdor");
+                        TravelHelper.HordeOutlandToKalimdor();
+                    }
+                    // To EK
+                    if (destinationContinent == (int)ContinentId.Azeroth)
+                    {
+                        Logger.Log("Traveling to Eastern Kingdoms");
+                        TravelHelper.HordeOutlandToKalimdor();
+                    }
+                    // To Northrend
+                    if (destinationContinent == (int)ContinentId.Northrend)
+                    {
+                        Logger.Log("Traveling to Northrend");
+                        TravelHelper.HordeOutlandToKalimdor();
+                    }
+                }
+
+                // From Northrend
+                if (Usefuls.ContinentId == (int)ContinentId.Northrend)
+                {
+                    // To Kalimdor
+                    if (destinationContinent == (int)ContinentId.Kalimdor)
+                    {
+                        Logger.Log("Traveling to Kalimdor");
+                        TravelHelper.HordeNorthrendToKalimdor();
+                    }
+                    // To EK
+                    if (destinationContinent == (int)ContinentId.Azeroth)
+                    {
+                        Logger.Log("Traveling to Eastern Kingdoms");
+                        TravelHelper.HordeNorthrendToEK();
+                    }
+                    // To Outland
+                    if (destinationContinent == (int)ContinentId.Expansion01)
+                    {
+                        Logger.Log("Traveling to Outland");
+                        TravelHelper.HordeNorthrendToOutland();
+                    }
+                }
             }
-            
             Broadcaster.autoBroadcast = true;
-        }
-
-        private void KalimdorToEK()
-        {
-            if (Usefuls.ContinentId == (int)ContinentId.Kalimdor)
-            {
-                Vector3 position = new Vector3(1472.55f, -4215.7f, 59.221f);
-                if (GoToTask.ToPositionAndIntecractWithGameObject(position, 195142))
-                    Thread.Sleep(1500);
-            }
-        }
-
-        private void EKToOutland()
-        {
-            if (Usefuls.ContinentId == (int)ContinentId.Azeroth)
-            {
-                if (GoToTask.ToPosition(new Vector3(-11920.39, -3206.81, -15.35475f)))
-                    Thread.Sleep(5000);
-                if (GoToTask.ToPosition(new Vector3(-182.5485, 1023.459, 54.23014)))
-                    Thread.Sleep(1500);
-            }
         }
     }
 }

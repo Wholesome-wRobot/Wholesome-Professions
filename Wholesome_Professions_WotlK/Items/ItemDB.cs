@@ -42,9 +42,74 @@
     public static Item NetherweaveTunic = new Item();
     public static Item NetherweavePants = new Item();
     public static Item NetherweaveRobe = new Item();
+    public static Item FrostweaveCloth = new Item();
+    public static Item BoltofFrostweave = new Item();
+    public static Item EterniumThread = new Item();
+    public static Item FrostwovenBelt = new Item();
+    public static Item FrostwovenBoots = new Item();
+    public static Item FrostwovenCowl = new Item();
+    public static Item DuskweaveBelt = new Item();
+    public static Item DuskweaveCowl = new Item();
+    public static Item DuskweaveWristwraps = new Item();
+    public static Item DuskweaveGloves = new Item();
+    public static Item DuskweaveBoots = new Item();
 
     static ItemDB()
     {
+        DuskweaveBoots.name = "Duskweave Boots";
+        DuskweaveBoots.itemId = 41544;
+        DuskweaveBoots.AddMaterial(EterniumThread, 1);
+        DuskweaveBoots.AddMaterial(BoltofFrostweave, 10);
+        DuskweaveBoots.forceSell = true;
+
+        DuskweaveGloves.name = "Duskweave Gloves";
+        DuskweaveGloves.itemId = 41545;
+        DuskweaveGloves.AddMaterial(EterniumThread, 1);
+        DuskweaveGloves.AddMaterial(BoltofFrostweave, 9);
+        DuskweaveGloves.forceSell = true;
+
+        DuskweaveWristwraps.name = "Duskweave Wristwraps";
+        DuskweaveWristwraps.itemId = 41551;
+        DuskweaveWristwraps.AddMaterial(EterniumThread, 1);
+        DuskweaveWristwraps.AddMaterial(BoltofFrostweave, 8);
+        DuskweaveWristwraps.forceSell = true;
+
+        DuskweaveBelt.name = "Duskweave Belt";
+        DuskweaveBelt.itemId = 41543;
+        DuskweaveBelt.AddMaterial(EterniumThread, 1);
+        DuskweaveBelt.AddMaterial(BoltofFrostweave, 7);
+        DuskweaveBelt.forceSell = true;
+
+        FrostwovenCowl.name = "Frostwoven Cowl";
+        FrostwovenCowl.itemId = 41521;
+        FrostwovenCowl.AddMaterial(EterniumThread, 1);
+        FrostwovenCowl.AddMaterial(BoltofFrostweave, 5);
+        FrostwovenCowl.forceSell = true;
+
+        FrostwovenBoots.name = "Frostwoven Boots";
+        FrostwovenBoots.itemId = 41520;
+        FrostwovenBoots.AddMaterial(EterniumThread, 1);
+        FrostwovenBoots.AddMaterial(BoltofFrostweave, 4);
+        FrostwovenBoots.forceSell = true;
+
+        FrostwovenBelt.name = "Frostwoven Belt";
+        FrostwovenBelt.itemId = 41522;
+        FrostwovenBelt.AddMaterial(EterniumThread, 1);
+        FrostwovenBelt.AddMaterial(BoltofFrostweave, 3);
+        FrostwovenBelt.forceSell = true;
+
+        EterniumThread.name = "Eternium Thread";
+        EterniumThread.itemId = 38426;
+        EterniumThread.canBeBought = true;
+        EterniumThread.estimatedPrice = 30000;
+
+        BoltofFrostweave.name = "Bolt of Frostweave";
+        BoltofFrostweave.itemId = 41510;
+        BoltofFrostweave.AddMaterial(FrostweaveCloth, 5);
+
+        FrostweaveCloth.name = "Frostweave Cloth";
+        FrostweaveCloth.itemId = 33470;
+        FrostweaveCloth.canBeFarmed = true;
 
         NetherweaveRobe.name = "Netherweave Robe";
         NetherweaveRobe.itemId = 21854;

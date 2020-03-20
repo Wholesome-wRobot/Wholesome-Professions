@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Wholesome_Professions_WotlK.Helpers;
 using Wholesome_Professions_WotlK.Items;
+using Wholesome_Professions_WotlK.Profile;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -52,6 +53,9 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING SET CURRENT STEP STATE ************");
             Logger.Log("Calculating next step. Please wait...");
             Broadcaster.autoBroadcast = false;
+            
+            // Reset current profile if there is one loaded
+            ProfileHandler.UnloadCurrentProfile();
 
             Step selectedStep = null;
             IProfession profession = Main.currentProfession;

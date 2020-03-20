@@ -1,5 +1,4 @@
-﻿using robotManager.Helpful;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
@@ -15,6 +14,7 @@ public class ToolBox
     // Check if Horde
     public static bool IsHorde()
     {
+        Logger.LogDebug($"We are faction {ObjectManager.Me.Faction}");
         return ObjectManager.Me.Faction == (uint)PlayerFactions.Orc || ObjectManager.Me.Faction == (uint)PlayerFactions.Tauren
             || ObjectManager.Me.Faction == (uint)PlayerFactions.Undead || ObjectManager.Me.Faction == (uint)PlayerFactions.BloodElf
             || ObjectManager.Me.Faction == (uint)PlayerFactions.Troll;

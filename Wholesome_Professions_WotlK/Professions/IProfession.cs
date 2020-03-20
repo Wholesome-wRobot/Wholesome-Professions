@@ -20,6 +20,7 @@ public interface IProfession
 
     bool ShouldCraftFlag { get; set; }
     bool HasSetCurrentStep { get; set; }
+    string CurrentProfile { get; set; }
 
     void RegenerateSteps();
     
@@ -33,6 +34,9 @@ public interface IProfession
     bool ShouldBuyMaterials();
     bool ShouldTravel();
     bool ShouldSetCurrentStep();
+    bool ShouldSelectProfile();
+    bool ShouldCraftOne();
+
     void AddGeneratedStep(Step step);
     bool MyLevelIsHighEnough();
 }

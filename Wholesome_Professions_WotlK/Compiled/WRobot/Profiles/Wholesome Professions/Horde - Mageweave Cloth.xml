@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrinderProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GrinderZones>
+    <GrinderZone>
+      <Name>Feralas</Name>
+      <Hotspots>true</Hotspots>
+      <RandomizingHotspots>false</RandomizingHotspots>
+      <MinLevel>0</MinLevel>
+      <MaxLevel>100</MaxLevel>
+      <MinTargetLevel>0</MinTargetLevel>
+      <MaxTargetLevel>110</MaxTargetLevel>
+      <TargetEntry />
+      <TargetFactions>
+        <unsignedInt>45</unsignedInt>
+      </TargetFactions>
+      <Vectors3>
+        <Vector3 X="-4835.833" Y="1140.863" Z="89.67979" />
+        <Vector3 X="-4975.566" Y="1188.541" Z="55.84682" />
+        <Vector3 X="-5080.263" Y="1230.84" Z="54.39051" />
+        <Vector3 X="-5404.199" Y="1262.512" Z="22.09414" />
+        <Vector3 X="-5512.458" Y="1300.714" Z="21.45047" />
+        <Vector3 X="-5574.385" Y="1170.07" Z="26.68171" />
+      </Vectors3>
+      <Npc />
+      <BlackListRadius />
+      <NotLoop>false</NotLoop>
+    </GrinderZone>
+  </GrinderZones>
+</GrinderProfile>

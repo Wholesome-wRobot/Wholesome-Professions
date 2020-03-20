@@ -64,12 +64,12 @@ namespace Wholesome_Professions_WotlK.States
                     Npc vendor = mat.item.vendor ?? Main.currentProfession.SuppliesVendor;
                     Logger.Log($"Buying {amountMissing} {mat.item.name} from NPC {vendor.Entry}");
                     int estimatedPrice = mat.item.estimatedPrice * mat.amount * amountMissing;
-                    Logger.LogDebug($"Estimated price : {estimatedPrice}");
+                    Logger.Log($"Estimated price : {estimatedPrice}");
                     if (ObjectManager.Me.GetMoneyCopper >= mat.amount * amountMissing)
                     {
                         if (GoToTask.ToPositionAndIntecractWithNpc(vendor.Position, vendor.Entry, vendor.GossipOption))
                         {
-                            Vendor.SellItems(wManagerSetting.CurrentSetting.ForceSellList, wManagerSetting.CurrentSetting.DoNotSellList, ToolBox.vendorQuality);
+                            //Vendor.SellItems(wManagerSetting.CurrentSetting.ForceSellList, wManagerSetting.CurrentSetting.DoNotSellList, ToolBox.vendorQuality);
 
                             int amountToHaveInBag = amountMissing + ItemsManager.GetItemCountById(mat.item.itemId);
                             while (ItemsManager.GetItemCountById(mat.item.itemId) < amountToHaveInBag && Bag.GetContainerNumFreeSlots > 1)

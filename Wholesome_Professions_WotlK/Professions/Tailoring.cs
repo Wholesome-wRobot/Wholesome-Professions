@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using wManager.Wow.Class;
 using wManager.Wow.Enums;
 using Wholesome_Professions_WotlK.Helpers;
@@ -18,6 +17,7 @@ public class Tailoring : IProfession
     public int Continent { get; set; }
     public int MinimumCharLevel { get; set; }
     public string ProfessionSpell { get; set; }
+    public string CurrentProfile { get; set; }
 
     // Flags
     public bool ShouldCraftFlag { get; set; }
@@ -29,6 +29,7 @@ public class Tailoring : IProfession
     public Tailoring()
     {
         CurrentStep = null;
+        CurrentProfile = null;
         ProfessionName = SkillLine.Tailoring;
         RegenerateSteps();
         SetTrainer();
@@ -73,8 +74,23 @@ public class Tailoring : IProfession
         AllSteps.Add(new Step(300, 325, ItemDB.BoltofNetherweave)); // Force precraft
         AllSteps.Add(new Step(325, 340, ItemDB.NetherweavePants, 20));
         AllSteps.Add(new Step(340, 350, ItemDB.NetherweaveRobe, 10));
+        AllSteps.Add(new Step(350, 375, ItemDB.BoltofFrostweave));
+        AllSteps.Add(new Step(375, 380, ItemDB.FrostwovenBelt, 5));
+        AllSteps.Add(new Step(380, 385, ItemDB.FrostwovenBoots, 5));
+        AllSteps.Add(new Step(385, 395, ItemDB.FrostwovenCowl, 15));
+        AllSteps.Add(new Step(395, 400, ItemDB.DuskweaveBelt, 5));
+        AllSteps.Add(new Step(400, 410, ItemDB.DuskweaveWristwraps, 10));
+        AllSteps.Add(new Step(410, 415, ItemDB.DuskweaveGloves, 5));
+        AllSteps.Add(new Step(415, 425, ItemDB.DuskweaveBoots, 15));
 
         HasSetCurrentStep = false;
+    }
+
+    // Should Select profile
+    public bool ShouldSelectProfile()
+    {
+        return Main.currentProfession.AmountOfItemToFarm > 0 && Main.currentProfession.ItemToFarm != null
+                    && CurrentProfile == null;
     }
 
     // Should set current step
@@ -93,7 +109,7 @@ public class Tailoring : IProfession
     public bool ShouldTravel()
     {
         Logger.LogDebug($"You are on continent {Usefuls.ContinentId}, you should be on {Continent}, your level is enough ? : {MyLevelIsHighEnough()}");
-        return Continent != Usefuls.ContinentId && MyLevelIsHighEnough();
+        return Continent != Usefuls.ContinentId && MyLevelIsHighEnough() /*&& CurrentProfile != null*/;
     }
 
     // Should learn recipe from trainer
@@ -113,13 +129,25 @@ public class Tailoring : IProfession
     // Should learn profession
     public bool ShouldLearnProfession()
     {
-        return ToolBox.GetProfessionLevel(ProfessionName) == ToolBox.GetProfessionMaxLevel(ProfessionName) && MyLevelIsHighEnough();
+        return (ToolBox.GetProfessionLevel(ProfessionName) >= 0 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 75
+            || ToolBox.GetProfessionLevel(ProfessionName) >= 75 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 150
+            || ToolBox.GetProfessionLevel(ProfessionName) >= 150 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 225
+            || ToolBox.GetProfessionLevel(ProfessionName) >= 225 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 300
+            || ToolBox.GetProfessionLevel(ProfessionName) >= 300 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 350
+            || ToolBox.GetProfessionLevel(ProfessionName) >= 350 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 450)
+            && MyLevelIsHighEnough();
     }
 
     // Should sell items
     public bool ShouldSellItems()
     {
         return Bag.GetContainerNumFreeSlots <= 1;
+    }
+
+    // Should craft One
+    public bool ShouldCraftOne()
+    {
+        return CurrentStep != null && CurrentProfile != null && CurrentStep.HasMatsToCraftOne();
     }
 
     // Should craft
@@ -132,12 +160,6 @@ public class Tailoring : IProfession
 
     private bool CheckIfShouldCraft()
     {
-        /*
-        Logger.Log("Check ouvert");
-        Logger.Log(ToolBox.IsProfessionFrameOpen().ToString());
-        Logger.Log("Ouverture");
-        ToolBox.OpenProfessionFrame(ProfessionName.ToString());*/
-
         // If basic conditions are not met
         if (CurrentStep == null || CurrentStep.stepType == Step.StepType.ListPreCraft || !MyLevelIsHighEnough())
             return false;
@@ -177,6 +199,7 @@ public class Tailoring : IProfession
         {
             if (profLevel < 75)
             {
+                MinimumCharLevel = 20;
                 Continent = (int)ContinentId.Kalimdor;
                 ProfessionSpell = "Apprentice Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
@@ -184,6 +207,7 @@ public class Tailoring : IProfession
             }
             else if (profLevel >= 75 && profLevel < 150)
             {
+                MinimumCharLevel = 25;
                 Continent = (int)ContinentId.Kalimdor;
                 ProfessionSpell = "Journeyman Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
@@ -191,6 +215,7 @@ public class Tailoring : IProfession
             }
             else if (profLevel >= 150 && profLevel < 225)
             {
+                MinimumCharLevel = 30;
                 Continent = (int)ContinentId.Kalimdor;
                 ProfessionSpell = "Expert Tailor";
                 ProfessionTrainer = VendorDB.OGTailoringTrainer;
@@ -211,6 +236,14 @@ public class Tailoring : IProfession
                 ProfessionSpell = "Master Tailor";
                 ProfessionTrainer = VendorDB.ThrallmarTailoringTrainer;
                 SuppliesVendor = VendorDB.ShattrathTailoringSupplies;
+            }
+            else if (profLevel >= 350)
+            {
+                Continent = (int)ContinentId.Northrend;
+                MinimumCharLevel = 80;
+                ProfessionSpell = "Grand Master Tailor";
+                ProfessionTrainer = VendorDB.WarsongHoldTailoringTrainer;
+                SuppliesVendor = VendorDB.WarsongHoldTailoringSupplies;
             }
         }
     }

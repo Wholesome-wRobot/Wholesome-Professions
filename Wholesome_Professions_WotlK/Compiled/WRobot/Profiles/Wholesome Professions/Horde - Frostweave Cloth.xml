@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrinderProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GrinderZones>
+    <GrinderZone>
+      <Name>Zul'Drak</Name>
+      <Hotspots>true</Hotspots>
+      <RandomizingHotspots>true</RandomizingHotspots>
+      <MinLevel>0</MinLevel>
+      <MaxLevel>100</MaxLevel>
+      <MinTargetLevel>0</MinTargetLevel>
+      <MaxTargetLevel>110</MaxTargetLevel>
+      <TargetEntry />
+      <TargetFactions>
+        <unsignedInt>1771</unsignedInt>
+      </TargetFactions>
+      <Vectors3>
+        <Vector3 X="5605.22" Y="-3261.842" Z="372.3025" Type="Flying" />
+        <Vector3 X="5475.293" Y="-3412.454" Z="361.6988" Type="Flying" />
+        <Vector3 X="5619.36" Y="-3573.814" Z="361.9615" Type="Flying" />
+        <Vector3 X="5663.478" Y="-3481.54" Z="362.8027" Type="Flying" />
+      </Vectors3>
+      <Npc />
+      <BlackListRadius />
+      <NotLoop>false</NotLoop>
+    </GrinderZone>
+  </GrinderZones>
+</GrinderProfile>

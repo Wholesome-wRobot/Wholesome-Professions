@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrinderProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GrinderZones>
+    <GrinderZone>
+      <Name>Shadowmoon Valley</Name>
+      <Hotspots>true</Hotspots>
+      <RandomizingHotspots>true</RandomizingHotspots>
+      <MinLevel>0</MinLevel>
+      <MaxLevel>100</MaxLevel>
+      <MinTargetLevel>0</MinTargetLevel>
+      <MaxTargetLevel>110</MaxTargetLevel>
+      <TargetEntry />
+      <TargetFactions>
+        <unsignedInt>90</unsignedInt>
+      </TargetFactions>
+      <Vectors3>
+        <Vector3 X="-3079.553" Y="2873.711" Z="81.74976" Type="Flying" />
+        <Vector3 X="-3278.262" Y="2869.928" Z="124.4929" Type="Flying" />
+        <Vector3 X="-3416.055" Y="2969.144" Z="169.8991" Type="Flying" />
+      </Vectors3>
+      <Npc />
+      <BlackListRadius />
+      <NotLoop>false</NotLoop>
+    </GrinderZone>
+  </GrinderZones>
+</GrinderProfile>

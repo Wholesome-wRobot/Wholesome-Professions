@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrinderProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GrinderZones>
+    <GrinderZone>
+      <Name>Winterspring</Name>
+      <Hotspots>true</Hotspots>
+      <RandomizingHotspots>true</RandomizingHotspots>
+      <MinLevel>0</MinLevel>
+      <MaxLevel>100</MaxLevel>
+      <MinTargetLevel>0</MinTargetLevel>
+      <MaxTargetLevel>110</MaxTargetLevel>
+      <TargetEntry />
+      <TargetFactions>
+        <unsignedInt>82</unsignedInt>
+      </TargetFactions>
+      <Vectors3>
+		<Vector3 X="6484.755" Y="-3293.006" Z="574.2281" Type="None" />
+		<Vector3 X="6807.245" Y="-2496.857" Z="551.3576" Type="None" />
+		<Vector3 X="6767.719" Y="-2672.508" Z="543.9028" Type="None" />
+      </Vectors3>
+      <Npc />
+      <BlackListRadius />
+      <NotLoop>false</NotLoop>
+    </GrinderZone>
+  </GrinderZones>
+</GrinderProfile>

@@ -38,7 +38,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-
+            <RowDefinition Height="Auto" />
+            
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -60,10 +61,17 @@
                    HorizontalAlignment="Left"  VerticalAlignment="Center" IsChecked="True" 
                                MouseLeave="LogDebugChanged" Name="LogDebug" OnLabel="" OffLabel="" />
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Broadcaster Interval :" Margin="10" FontSize="13" FontWeight="Bold"
+        <TextBlock Grid.Row="3" Grid.Column="0" Margin="10" 
+                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Auto farm :" FontSize="13" FontWeight="Bold"  />
+
+        <Controls:ToggleSwitch Grid.Row="3" Grid.Column="1"  Margin="10,10,10,10"
+                   HorizontalAlignment="Left"  VerticalAlignment="Center" IsChecked="True" 
+                               MouseLeave="AutofarmChanged" Name="Autofarm" OnLabel="" OffLabel="" />
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Broadcaster Interval :" Margin="10" FontSize="13" FontWeight="Bold"
                    HorizontalAlignment="Right" VerticalAlignment="Center"  />
 
-        <Controls:NumericUpDown Grid.Row="3" Grid.Column="1" MouseLeave="BroadcasterIntervalChanged" Minimum="1" Maximum="30"
+        <Controls:NumericUpDown Grid.Row="4" Grid.Column="1" MouseLeave="BroadcasterIntervalChanged" Minimum="1" Maximum="30"
                                 HorizontalAlignment="Left"  VerticalAlignment="Center"
                                 Margin="10,10,10,10" Name="BroadcasterInterval" Value="5" />
     </Grid>

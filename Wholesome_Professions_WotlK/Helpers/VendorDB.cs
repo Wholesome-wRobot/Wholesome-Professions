@@ -11,6 +11,9 @@ public static class VendorDB
 
     public static Npc ShattrathTailoringSupplies = new Npc();
 
+    public static Npc WarsongHoldTailoringTrainer = new Npc();
+    public static Npc WarsongHoldTailoringSupplies = new Npc();
+
     static VendorDB()
     {
         OGTailoringSupplies.Entry = 3364;
@@ -29,5 +32,12 @@ public static class VendorDB
 
         ShattrathTailoringSupplies.Entry = 19213;
         ShattrathTailoringSupplies.Position = new Vector3(-2077.26, 5270.03, -37.3236);
+
+        WarsongHoldTailoringTrainer.Entry = 26969;
+        WarsongHoldTailoringTrainer.Position = new Vector3(2842.94, 6170.93, 104.8442);
+        WarsongHoldTailoringTrainer.GossipOption = 1;
+
+        WarsongHoldTailoringSupplies.Entry = 26941;
+        WarsongHoldTailoringSupplies.Position = new Vector3(2799.13, 6187.77, 104.9765);
     }
 }

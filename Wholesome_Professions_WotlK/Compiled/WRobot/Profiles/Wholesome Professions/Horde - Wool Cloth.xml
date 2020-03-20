@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrinderProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GrinderZones>
+    <GrinderZone>
+      <Name>Stonetalon Mountains</Name>
+      <Hotspots>true</Hotspots>
+      <RandomizingHotspots>true</RandomizingHotspots>
+      <MinLevel>0</MinLevel>
+      <MaxLevel>100</MaxLevel>
+      <MinTargetLevel>0</MinTargetLevel>
+      <MaxTargetLevel>110</MaxTargetLevel>
+      <TargetEntry />
+      <TargetFactions>
+        <unsignedInt>47</unsignedInt>
+      </TargetFactions>
+      <Vectors3>
+        <Vector3 X="1270.88" Y="246.0058" Z="14.05648" />
+        <Vector3 X="1411.702" Y="71.9572" Z="14.11518" />
+        <Vector3 X="1342.978" Y="-281.8228" Z="2.604104" />
+        <Vector3 X="1057.683" Y="-439.9227" Z="3.444974" />
+        <Vector3 X="1006.344" Y="-368.7857" Z="8.141345" />
+        <Vector3 X="1070.552" Y="-17.41069" Z="8.639123" />
+      </Vectors3>
+      <Npc>
+        <Npc>
+          <Position X="992.181" Y="1030.96" Z="105.5858" Type="Flying" />
+          <Entry>9549</Entry>
+          <Name>Borand</Name>
+          <GossipOption>-1</GossipOption>
+          <Active>true</Active>
+          <Faction>Neutral</Faction>
+          <Type>Repair</Type>
+          <VendorItemClass>Arrow</VendorItemClass>
+          <ContinentId>Kalimdor</ContinentId>
+        </Npc>
+      </Npc>
+      <BlackListRadius />
+      <NotLoop>false</NotLoop>
+    </GrinderZone>
+  </GrinderZones>
+</GrinderProfile>

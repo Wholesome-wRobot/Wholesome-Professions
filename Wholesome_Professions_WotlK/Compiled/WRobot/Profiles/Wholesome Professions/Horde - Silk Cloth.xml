@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrinderProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GrinderZones>
+    <GrinderZone>
+      <Name>Thousand Needles</Name>
+      <Hotspots>true</Hotspots>
+      <RandomizingHotspots>true</RandomizingHotspots>
+      <MinLevel>0</MinLevel>
+      <MaxLevel>100</MaxLevel>
+      <MinTargetLevel>0</MinTargetLevel>
+      <MaxTargetLevel>110</MaxTargetLevel>
+      <TargetEntry />
+      <TargetFactions>
+        <unsignedInt>131</unsignedInt>
+      </TargetFactions>
+      <Vectors3>
+		<Vector3 X="-5075.071" Y="-2118.873" Z="-44.4341" Type="None" />
+		<Vector3 X="-5063.218" Y="-2247.561" Z="-53.89034" Type="None" />
+		<Vector3 X="-5133.303" Y="-2368.067" Z="-52.54124" Type="None" />
+		<Vector3 X="-5180.117" Y="-2581.162" Z="-50.82146" Type="None" />
+	  </Vectors3>
+      <Npc />
+      <BlackListRadius />
+      <NotLoop>false</NotLoop>
+    </GrinderZone>
+  </GrinderZones>
+</GrinderProfile>

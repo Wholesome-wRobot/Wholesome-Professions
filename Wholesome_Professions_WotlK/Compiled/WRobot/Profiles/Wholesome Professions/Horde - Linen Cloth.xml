@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrinderProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GrinderZones>
+    <GrinderZone>
+      <Name>Durotar</Name>
+      <Hotspots>true</Hotspots>
+      <RandomizingHotspots>true</RandomizingHotspots>
+      <MinLevel>0</MinLevel>
+      <MaxLevel>100</MaxLevel>
+      <MinTargetLevel>0</MinTargetLevel>
+      <MaxTargetLevel>110</MaxTargetLevel>
+      <TargetEntry />
+      <TargetFactions>
+        <unsignedInt>109</unsignedInt>
+        <unsignedInt>123</unsignedInt>
+      </TargetFactions>
+      <Vectors3>
+        <Vector3 X="-206.3162" Y="-5025.988" Z="21.68029" />
+        <Vector3 X="-101.6094" Y="-4949.998" Z="18.58396" />
+        <Vector3 X="78.97974" Y="-4574.4" Z="56.20596" />
+        <Vector3 X="66.36147" Y="-4461.111" Z="45.81969" />
+        <Vector3 X="50.51084" Y="-4296.951" Z="65.62135" />
+        <Vector3 X="-71.15983" Y="-4023.285" Z="64.66227" />
+        <Vector3 X="413.9019" Y="-4226.468" Z="25.22708" />
+      </Vectors3>
+      <Npc>
+        <Npc>
+          <Position X="358.128" Y="-4706.73" Z="14.39436" Type="Flying" />
+          <Entry>3167</Entry>
+          <Name>Wuark</Name>
+          <GossipOption>-1</GossipOption>
+          <Active>true</Active>
+          <Faction>Neutral</Faction>
+          <Type>Repair</Type>
+          <VendorItemClass>Food</VendorItemClass>
+          <ContinentId>Kalimdor</ContinentId>
+        </Npc>
+      </Npc>
+      <BlackListRadius />
+      <NotLoop>false</NotLoop>
+    </GrinderZone>
+  </GrinderZones>
+</GrinderProfile>
