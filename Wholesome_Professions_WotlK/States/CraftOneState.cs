@@ -58,7 +58,7 @@ namespace Wholesome_Professions_WotlK.States
             Broadcaster.autoBroadcast = false;
 
             // Craft
-            int itemInBagsBeforeCraft = ItemsManager.GetItemCountById(currentStep.itemoCraft.itemId);
+            int itemInBagsBeforeCraft = ItemsManager.GetItemCountById(1);
 
             Logger.Log($"Crafting {currentStep.itemoCraft.name}");
             ToolBox.Craft(Main.currentProfession.ProfessionName.ToString(), currentStep.itemoCraft, 1);

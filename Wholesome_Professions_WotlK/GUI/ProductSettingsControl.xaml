@@ -68,7 +68,7 @@
                    HorizontalAlignment="Left"  VerticalAlignment="Center" IsChecked="True" 
                                MouseLeave="AutofarmChanged" Name="Autofarm" OnLabel="" OffLabel="" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Broadcaster Interval :" Margin="10" FontSize="13" FontWeight="Bold"
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Broadcaster Frequency :" Margin="10" FontSize="13" FontWeight="Bold"
                    HorizontalAlignment="Right" VerticalAlignment="Center"  />
 
         <Controls:NumericUpDown Grid.Row="4" Grid.Column="1" MouseLeave="BroadcasterIntervalChanged" Minimum="1" Maximum="30"

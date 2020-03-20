@@ -21,6 +21,7 @@ public static class VendorDB
         
         OGTailoringTrainer.Entry = 3363;
         OGTailoringTrainer.Position = new Vector3(1806.85, -4573.32, 23.00661);
+        OGTailoringTrainer.GossipOption = 1;
 
         ThrallmarTailoringTrainer.Entry = 18749;
         ThrallmarTailoringTrainer.Position = new Vector3(204.177, 2617.73, 87.2837);

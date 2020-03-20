@@ -85,6 +85,20 @@ public class Step
         return hasMatsForOne;
     }
 
+    // WIP
+    public int GetAmountICanCraft()
+    {
+        int amount = 0;
+        foreach (Item.Mat mat in itemoCraft.Materials)
+        {
+            if (ItemsManager.GetItemCountById(mat.item.itemId) > mat.amount)
+            {
+                amount = ItemsManager.GetItemCountById(mat.item.itemId) / mat.amount;
+            }
+        }
+        return amount;
+    }
+
     public int GetAmountMissingMaterial(Item.Mat mat)
     {
         // If craft all items
