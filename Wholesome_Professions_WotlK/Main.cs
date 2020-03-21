@@ -4,13 +4,11 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using System.Timers;
 using System.Windows.Forms;
 using Wholesome_Professions_WotlK.GUI;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Plugin;
 using wManager.Wow.Helpers;
-using wManager.Wow.ObjectManager;
 
 public class Main : IProduct
 {
@@ -19,7 +17,7 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public static string version = "0.1.4";// Must match version in Version.txt
+    public string version = "0.1.4";// Must match version in Version.txt
 
     public void Initialize()
     {
@@ -28,7 +26,7 @@ public class Main : IProduct
             Directory.CreateDirectory(Application.StartupPath + "\\Profiles\\Wholesome Professions\\");
             WholesomeProfessionsSettings.Load();
             WholesomeProfessionsSave.Load();
-            AutoUpdater.CheckUpdate(version);
+            AutoUpdater.CheckUpdate(this);
             Logger.Log($"Wholesome Professions WotlK version {version} loaded");
             TravelHelper.AddAllOffmeshConnections();
         }
