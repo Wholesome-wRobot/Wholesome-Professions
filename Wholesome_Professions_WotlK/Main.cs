@@ -15,23 +15,23 @@ public class Main : IProduct
     public static IProfession primaryProfession = null;
     public static IProfession secondaryProfession = null;
     public static int amountProfessionsSelected = 0;
+    public static string productName = "Wholesome Professions WotLK";
 
     private readonly BackgroundWorker _pulseThread = new BackgroundWorker();
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public string version = "0.1.4";// Must match version in Version.txt
+    public string version = "0.1.6";// Must match version in Version.txt
 
     public void Initialize()
     {
         try
         {
             Directory.CreateDirectory(Application.StartupPath + "\\Profiles\\Wholesome Professions\\");
-            //Directory.CreateDirectory(Application.StartupPath + "\\Products\\.wpupdate\\");
             WholesomeProfessionsSettings.Load();
             WholesomeProfessionsSave.Load();
             TravelHelper.AddAllOffmeshConnections();
-            Logger.Log($"Wholesome Professions WotlK version {version} loaded");
+            Logger.Log($"{productName} version {version} loaded");
         }
         catch (Exception e)
         {
