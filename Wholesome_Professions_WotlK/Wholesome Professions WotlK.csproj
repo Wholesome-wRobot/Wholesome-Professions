@@ -127,6 +127,8 @@
     <PostBuildEvent>del "$(ProjectDir)\Compiled\WRobot\Products\$(ProjectName).pdb"
 xcopy /Y/E/R "$(ProjectDir)\Compiled" "C:\Users\Nico\Desktop"
 del "C:\Users\Nico\Desktop\Version.txt"
-xcopy /Y/E/R "$(ProjectDir)\Compiled\WRobot" "E:\WoW\WoW Wotlk\WRobot WOTLK"</PostBuildEvent>
+xcopy /Y/E/R "$(ProjectDir)\Compiled\WRobot" "E:\WoW\WoW Wotlk\WRobot WOTLK"
+
+start "WRobot" "E:\WoW\WoW Wotlk\WRobot WOTLK\WRobot.exe" AutoAttachAndLog=true</PostBuildEvent>
   </PropertyGroup>
 </Project>
