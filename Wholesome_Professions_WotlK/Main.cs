@@ -3,6 +3,7 @@ using robotManager.Products;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Wholesome_Professions_WotlK.GUI;
@@ -17,19 +18,20 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public string version = "0.1.3";// Must match version in Version.txt
+    public string version = "0.1.5";// Must match version in Version.txt
+    public bool updateSucceeded = false;
 
     public void Initialize()
     {
         try
         {
             Directory.CreateDirectory(Application.StartupPath + "\\Profiles\\Wholesome Professions\\");
-            Directory.CreateDirectory(Application.StartupPath + "\\Products\\wpupdate\\");
+            //Directory.CreateDirectory(Application.StartupPath + "\\Products\\.wpupdate\\");
             WholesomeProfessionsSettings.Load();
             WholesomeProfessionsSave.Load();
             //AutoUpdater.CheckUpdate(this);
-            Logger.Log($"Wholesome Professions WotlK version {version} loaded");
             TravelHelper.AddAllOffmeshConnections();
+            Logger.Log($"Wholesome Professions WotlK version {version} loaded");
         }
         catch (Exception e)
         {
@@ -56,6 +58,8 @@ public class Main : IProduct
         try
         {
             IsStarted = true;
+
+            WRobotSettings.SetRecommendedWRobotSettings();
 
             _pulseThread.DoWork += DoBackgroundPulse;
             _pulseThread.RunWorkerAsync();
@@ -89,6 +93,8 @@ public class Main : IProduct
         {
             Lua.RunMacroText("/stopcasting");
             MovementManager.StopMove();
+
+            WRobotSettings.RestoreUserWRobotSettings();
 
             _pulseThread.DoWork -= DoBackgroundPulse;
             _pulseThread.Dispose();

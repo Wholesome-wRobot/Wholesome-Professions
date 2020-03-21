@@ -76,6 +76,7 @@
     <Compile Include="Helpers\Broadcaster.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\TravelHelper.cs" />
+    <Compile Include="Helpers\WRobotSettings.cs" />
     <Compile Include="Items\ItemHelper.cs" />
     <Compile Include="Professions\IProfession.cs" />
     <Compile Include="Items\ItemDB.cs" />

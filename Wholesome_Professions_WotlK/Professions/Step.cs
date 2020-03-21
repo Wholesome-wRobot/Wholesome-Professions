@@ -85,16 +85,20 @@ public class Step
         return hasMatsForOne;
     }
 
-    // WIP
-    public int GetAmountICanCraft()
+    // Returns the amount of the current step item I can craft
+    public int GetAmountICanCurrentlyCraft()
     {
         int amount = 0;
         foreach (Item.Mat mat in itemoCraft.Materials)
         {
             if (ItemsManager.GetItemCountById(mat.item.itemId) > mat.amount)
             {
-                amount = ItemsManager.GetItemCountById(mat.item.itemId) / mat.amount;
+                int estimatedWithCurrentMat = ItemsManager.GetItemCountById(mat.item.itemId) / mat.amount;
+                if (amount == 0 || estimatedWithCurrentMat < amount)
+                    amount = estimatedWithCurrentMat;
             }
+            else
+                return 0;
         }
         return amount;
     }

@@ -42,18 +42,18 @@ internal static class Bot
             Fsm.AddState(new Farming { Priority = 18 });
             Fsm.AddState(new ToTown { Priority = 17 });
 
-            Fsm.AddState(new SellItemsState { Priority = 11 });
+            Fsm.AddState(new SellItemsState { Priority = 16 });
 
-            Fsm.AddState(new SetCurrentStepState { Priority = 10 });
-            Fsm.AddState(new TravelState { Priority = 9 });
-            Fsm.AddState(new LearnProfessionState { Priority = 8 });
-            Fsm.AddState(new BuyAndLearnRecipeState { Priority = 7 });
-            Fsm.AddState(new LearnRecipeFromTrainerState { Priority = 6 });
-            Fsm.AddState(new BuyMaterialsState { Priority = 5 });
-            Fsm.AddState(new CraftOneState { Priority = 4 });
-            Fsm.AddState(new CraftState { Priority = 4 });
+            Fsm.AddState(new SetCurrentStepState { Priority = 13 });
+            Fsm.AddState(new TravelState { Priority = 12 });
+            Fsm.AddState(new LearnProfessionState { Priority = 11 });
+            Fsm.AddState(new BuyAndLearnRecipeState { Priority = 10 });
+            Fsm.AddState(new LearnRecipeFromTrainerState { Priority = 9 });
+            Fsm.AddState(new BuyMaterialsState { Priority = 8 });
+            Fsm.AddState(new CraftOneState { Priority = 7 });
+            Fsm.AddState(new CraftState { Priority = 6 });
+            Fsm.AddState(new LoadProfileState { Priority = 5 });
 
-            Fsm.AddState(new LoadProfileState { Priority = 3 });
             Fsm.AddState(Grinding);
             Fsm.AddState(MovementLoop);
 

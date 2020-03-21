@@ -27,7 +27,7 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || ObjectManager.Me.IsMounted
+                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || ObjectManager.Me.MountDisplayId != 0
                     || !WholesomeProfessionsSettings.CurrentSetting.CraftWhileFarming)
                     return false;
 
@@ -59,8 +59,6 @@ namespace Wholesome_Professions_WotlK.States
             Broadcaster.autoBroadcast = false;
 
             // Craft
-            int itemInBagsBeforeCraft = ItemsManager.GetItemCountById(1);
-
             Logger.Log($"Crafting {currentStep.itemoCraft.name}");
             ToolBox.Craft(Main.currentProfession.ProfessionName.ToString(), currentStep.itemoCraft, 1);
             Logger.Log("Craft complete");
