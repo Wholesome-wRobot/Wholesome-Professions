@@ -20,7 +20,7 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public string version = "0.1.4";// Must match version in Version.txt
+    public string version = "0.1.5";// Must match version in Version.txt
 
     public void Initialize()
     {
