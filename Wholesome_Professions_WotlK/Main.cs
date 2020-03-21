@@ -17,16 +17,17 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public string version = "0.1.4";// Must match version in Version.txt
+    public string version = "0.1.3";// Must match version in Version.txt
 
     public void Initialize()
     {
         try
         {
             Directory.CreateDirectory(Application.StartupPath + "\\Profiles\\Wholesome Professions\\");
+            Directory.CreateDirectory(Application.StartupPath + "\\Products\\wpupdate\\");
             WholesomeProfessionsSettings.Load();
             WholesomeProfessionsSave.Load();
-            AutoUpdater.CheckUpdate(this);
+            //AutoUpdater.CheckUpdate(this);
             Logger.Log($"Wholesome Professions WotlK version {version} loaded");
             TravelHelper.AddAllOffmeshConnections();
         }
