@@ -20,7 +20,7 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public string version = "0.1.4";// Must match version in Version.txt
+    public string version = "0.1.5";// Must match version in Version.txt
 
     public void Initialize()
     {
@@ -30,7 +30,6 @@ public class Main : IProduct
             //Directory.CreateDirectory(Application.StartupPath + "\\Products\\.wpupdate\\");
             WholesomeProfessionsSettings.Load();
             WholesomeProfessionsSave.Load();
-            AutoUpdater.CheckUpdate(this);
             TravelHelper.AddAllOffmeshConnections();
             Logger.Log($"Wholesome Professions WotlK version {version} loaded");
         }
@@ -58,6 +57,7 @@ public class Main : IProduct
     {
         try
         {
+            AutoUpdater.CheckUpdate(this);
             IsStarted = true;
 
             WRobotSettings.SetRecommendedWRobotSettings();
