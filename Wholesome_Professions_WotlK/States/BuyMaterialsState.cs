@@ -24,17 +24,26 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
+        private IProfession profession;
 
         public override bool NeedToRun
         {
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
-
-                if (Main.primaryProfession.ShouldBuyMaterials())
+                
+                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldBuyMaterials())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldBuyMaterials())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }
@@ -55,13 +64,13 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING BUY MATERIALS STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            Step currentStep = Main.primaryProfession.CurrentStep;
+            Step currentStep = profession.CurrentStep;
             foreach (Item.Mat mat in currentStep.itemoCraft.Materials)
             {
                 int amountMissing = currentStep.GetAmountMissingMaterial(mat);
                 if (mat.item.canBeBought)
                 {
-                    Npc vendor = mat.item.vendor ?? Main.primaryProfession.SuppliesVendor;
+                    Npc vendor = mat.item.vendor ?? profession.SuppliesVendor;
                     Logger.Log($"Buying {amountMissing} {mat.item.name} from NPC {vendor.Entry}");
                     int estimatedPrice = mat.item.estimatedPrice * mat.amount * amountMissing;
                     Logger.Log($"Estimated price : {estimatedPrice}");

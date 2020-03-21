@@ -23,17 +23,26 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
+        private IProfession profession;
 
         public override bool NeedToRun
         {
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
 
-                if (Main.primaryProfession.ShouldBuyAndLearnRecipe())
+                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldBuyAndLearnRecipe())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldBuyAndLearnRecipe())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }
@@ -54,10 +63,10 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING BUY AND LEARN RECIPE STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            Step currentStep = Main.primaryProfession.CurrentStep;
+            Step currentStep = profession.CurrentStep;
             var RecipeVendor = currentStep.itemoCraft.RecipeVendor;
 
-            Logger.Log($"Buying {currentStep.itemoCraft.name} recipe at NPC {Main.primaryProfession.ProfessionTrainer.Entry}");
+            Logger.Log($"Buying {currentStep.itemoCraft.name} recipe at NPC {profession.ProfessionTrainer.Entry}");
             if (GoToTask.ToPositionAndIntecractWithNpc(RecipeVendor.Position, RecipeVendor.Entry, RecipeVendor.GossipOption))
             {
                 Vendor.BuyItem(ItemsManager.GetNameById(currentStep.itemoCraft.RecipeItemId), 1);
@@ -68,7 +77,7 @@ namespace Wholesome_Professions_WotlK.States
                 Thread.Sleep(300);
             }
 
-            currentStep.knownRecipe = ToolBox.RecipeIsKnown(currentStep.itemoCraft.name, Main.primaryProfession.ProfessionName.ToString());
+            currentStep.knownRecipe = ToolBox.RecipeIsKnown(currentStep.itemoCraft.name, profession.ProfessionName.ToString());
 
             Broadcaster.autoBroadcast = true;
         }

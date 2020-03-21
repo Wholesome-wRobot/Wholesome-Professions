@@ -14,20 +14,20 @@ public class ProfileHandler
     internal static GrinderProfile Profile = new GrinderProfile();
     internal static int ZoneIdProfile;
 
-    public static void LoadNewProfile()
+    public static void LoadNewProfile(IProfession profession)
     {
         Profile = new GrinderProfile();
-        string filePath = Application.StartupPath + "\\Profiles\\Wholesome Professions\\" + Main.primaryProfession.CurrentProfile;
+        string filePath = Application.StartupPath + "\\Profiles\\Wholesome Professions\\" + profession.CurrentProfile;
 
         // If grinder School Load Profile
-        if (!string.IsNullOrWhiteSpace(Main.primaryProfession.CurrentProfile) &&
+        if (!string.IsNullOrWhiteSpace(profession.CurrentProfile) &&
             File.Exists(filePath))
         {
             Profile = XmlSerializer.Deserialize<GrinderProfile>(filePath);
             if (Profile.GrinderZones.Count <= 0)
             {
                 Logger.Log($"Profile '{filePath}' seems incorrect. Please use a Grinder profile.");
-                Main.primaryProfession.CurrentProfile = null;
+                profession.CurrentProfile = null;
             }
             else
                 Logger.Log("Profile loaded");
@@ -35,7 +35,7 @@ public class ProfileHandler
         else
         {
             Logger.LogLineBroadcastImportant($"Profile file '{filePath}' not found");
-            Main.primaryProfession.CurrentProfile = null;
+            profession.CurrentProfile = null;
             return;
         }
 
@@ -64,14 +64,14 @@ public class ProfileHandler
             if (continentId == -1)
             {
                 Logger.LogLineBroadcastImportant($"ERROR : The zone name {zoneName} from your profile is incorrect. Please use default zone names.");
-                UnloadCurrentProfile();
+                UnloadCurrentProfile(profession);
                 return;
             }
 
             if (continentId != Usefuls.ContinentId)
             {
                 Logger.Log($"{Profile.GrinderZones[ZoneIdProfile].Name} is on another continent ({continentId}). Launching traveler.");
-                Main.primaryProfession.Continent = continentId;
+                profession.Continent = continentId;
                 return;
             }
 
@@ -122,12 +122,12 @@ public class ProfileHandler
         Bot.MovementLoop.PathLoop = Profile.GrinderZones[ZoneIdProfile].Vectors3;
     }
 
-    public static void UnloadCurrentProfile()
+    public static void UnloadCurrentProfile(IProfession profession)
     {
-        if (Main.primaryProfession != null && Main.primaryProfession.CurrentProfile != null)
+        if (profession != null && profession.CurrentProfile != null)
         {
-            Logger.Log($"Unloading profile {Main.primaryProfession.CurrentProfile}");
-            Main.primaryProfession.CurrentProfile = null;
+            Logger.Log($"Unloading profile {profession.CurrentProfile}");
+            profession.CurrentProfile = null;
 
             Profile = new GrinderProfile();
             Bot.MovementLoop.PathLoop.Clear();

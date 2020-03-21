@@ -21,6 +21,7 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
+        private IProfession profession;
 
         public override bool NeedToRun
         {
@@ -29,9 +30,17 @@ namespace Wholesome_Professions_WotlK.States
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
-
+                
                 if (Main.primaryProfession.ShouldCraft())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession.ShouldCraft())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }
@@ -50,7 +59,7 @@ namespace Wholesome_Professions_WotlK.States
         public override void Run()
         {
             Logger.LogDebug("************ RUNNING CRAFT STATE ************");
-            Step currentStep = Main.primaryProfession.CurrentStep;
+            Step currentStep = profession.CurrentStep;
 
             MovementManager.StopMoveNewThread();
 
@@ -61,7 +70,7 @@ namespace Wholesome_Professions_WotlK.States
             //Debugger.Break();
 
             // amountAlreadyCrafted NOT USED ANYMORE ?????
-            //int amountAlreadyCrafted = ToolBox.GetAlreadyCrafted(Main.currentProfession.ProfessionName.ToString(), currentStep.itemoCraft.name);
+            //int amountAlreadyCrafted = ToolBox.GetAlreadyCrafted(profession.ProfessionName.ToString(), currentStep.itemoCraft.name);
             //Logger.Log($"We've already crafted {amountAlreadyCrafted} {currentStep.itemoCraft.name}");
 
             // Craft
@@ -76,7 +85,7 @@ namespace Wholesome_Professions_WotlK.States
             int goalAmount = amountToCraft + itemInBagsBeforeCraft;
 
             Logger.Log($"Crafting {amountToCraft} x {currentStep.itemoCraft.name}");
-            ToolBox.Craft(Main.primaryProfession.ProfessionName.ToString(), currentStep.itemoCraft, amountToCraft);
+            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.itemoCraft, amountToCraft);
             Thread.Sleep(100);
             while (ItemsManager.GetItemCountById(currentStep.itemoCraft.itemId) < goalAmount && currentStep.HasMatsToCraftOne()
                 && Bag.GetContainerNumFreeSlots > 1)
@@ -90,9 +99,9 @@ namespace Wholesome_Professions_WotlK.States
                     else if (currentStep.stepType == Step.StepType.CraftToLevel)
                     {
                         Logger.Log($"Craft {currentStep.itemoCraft.name} until level up : " +
-                            $"{ToolBox.GetProfessionLevel(Main.primaryProfession.ProfessionName)}/{currentStep.levelToReach}");
+                            $"{ToolBox.GetProfessionLevel(profession.ProfessionName)}/{currentStep.levelToReach}");
                         // record item
-                        ToolBox.AddCraftedItemToSettings(Main.primaryProfession.ProfessionName.ToString(), currentStep.itemoCraft);
+                        ToolBox.AddCraftedItemToSettings(profession.ProfessionName.ToString(), currentStep.itemoCraft);
                     }
                 }
                 Thread.Sleep(200);
@@ -108,7 +117,7 @@ namespace Wholesome_Professions_WotlK.States
 
             Logger.Log("Craft complete");
             Lua.RunMacroText("/stopcasting");
-            Main.primaryProfession.RegenerateSteps();
+            profession.RegenerateSteps();
 
             Broadcaster.autoBroadcast = true;
         }

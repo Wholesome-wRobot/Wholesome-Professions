@@ -88,7 +88,8 @@ internal static class Bot
             Fsm.StopEngine();
             Fight.StopFight();
             MovementManager.StopMove();
-            ProfileHandler.UnloadCurrentProfile();
+            ProfileHandler.UnloadCurrentProfile(Main.primaryProfession);
+            ProfileHandler.UnloadCurrentProfile(Main.secondaryProfession);
         }
         catch (Exception e)
         {

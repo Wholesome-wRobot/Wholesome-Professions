@@ -21,6 +21,7 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
+        private IProfession profession;
 
         public override bool NeedToRun
         {
@@ -30,8 +31,16 @@ namespace Wholesome_Professions_WotlK.States
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
                     return false;
 
-                if (Main.primaryProfession.ShouldTravel())
+                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldTravel())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldTravel())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }
@@ -52,7 +61,7 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING TRAVEL STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            int destinationContinent = Main.primaryProfession.Continent;
+            int destinationContinent = profession.Continent;
 
             // HORDE
             if (ToolBox.IsHorde())
