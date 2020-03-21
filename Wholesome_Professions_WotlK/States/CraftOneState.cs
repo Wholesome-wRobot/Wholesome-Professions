@@ -21,6 +21,7 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
+        private IProfession profession;
 
         public override bool NeedToRun
         {
@@ -30,9 +31,17 @@ namespace Wholesome_Professions_WotlK.States
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || ObjectManager.Me.MountDisplayId != 0
                     || !WholesomeProfessionsSettings.CurrentSetting.CraftWhileFarming)
                     return false;
-
+                
                 if (Main.primaryProfession.ShouldCraftOne())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession.ShouldCraftOne())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }
@@ -51,7 +60,7 @@ namespace Wholesome_Professions_WotlK.States
         public override void Run()
         {
             Logger.LogDebug("************ RUNNING CRAFT ONE STATE ************");
-            Step currentStep = Main.primaryProfession.CurrentStep;
+            Step currentStep = profession.CurrentStep;
 
             MovementManager.StopMoveNewThread();
 
@@ -60,7 +69,7 @@ namespace Wholesome_Professions_WotlK.States
 
             // Craft
             Logger.Log($"Crafting {currentStep.itemoCraft.name}");
-            ToolBox.Craft(Main.primaryProfession.ProfessionName.ToString(), currentStep.itemoCraft, 1);
+            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.itemoCraft, 1);
             Logger.Log("Craft complete");
             Lua.RunMacroText("/stopcasting");
 

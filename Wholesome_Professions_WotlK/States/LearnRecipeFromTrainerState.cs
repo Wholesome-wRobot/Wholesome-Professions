@@ -23,6 +23,7 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
+        private IProfession profession;
 
         public override bool NeedToRun
         {
@@ -32,8 +33,16 @@ namespace Wholesome_Professions_WotlK.States
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
                     return false;
 
-                if (Main.primaryProfession.ShouldLearnRecipeFromTrainer())
+                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldLearnRecipeFromTrainer())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldLearnRecipeFromTrainer())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }
@@ -54,8 +63,8 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING LEARN RECIPE FROM TRAINER ************");
             Broadcaster.autoBroadcast = false;
 
-            Step currentStep = Main.primaryProfession.CurrentStep;
-            Npc trainer = Main.primaryProfession.ProfessionTrainer;
+            Step currentStep = profession.CurrentStep;
+            Npc trainer = profession.ProfessionTrainer;
 
             Logger.Log($"Learning {currentStep.itemoCraft.name} at NPC {trainer.Entry}");
             if (GoToTask.ToPositionAndIntecractWithNpc(trainer.Position, trainer.Entry, trainer.GossipOption))
@@ -64,7 +73,7 @@ namespace Wholesome_Professions_WotlK.States
                 Thread.Sleep(1000);
             }
 
-            currentStep.knownRecipe = ToolBox.RecipeIsKnown(currentStep.itemoCraft.name, Main.primaryProfession.ProfessionName.ToString());
+            currentStep.knownRecipe = ToolBox.RecipeIsKnown(currentStep.itemoCraft.name, profession.ProfessionName.ToString());
 
             Broadcaster.autoBroadcast = true;
         }

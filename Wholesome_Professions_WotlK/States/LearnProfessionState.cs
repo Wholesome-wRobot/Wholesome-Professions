@@ -23,7 +23,6 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
-
         private IProfession profession;
 
         public override bool NeedToRun
@@ -31,15 +30,15 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
-
-                if (Main.primaryProfession != null && Main.primaryProfession.ShouldLearnProfession())
+                
+                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldLearnProfession())
                 {
                     profession = Main.primaryProfession;
                     return true;
                 }
-                if (Main.secondaryProfession != null && Main.secondaryProfession.ShouldLearnProfession())
+                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldLearnProfession())
                 {
                     profession = Main.secondaryProfession;
                     return true;

@@ -20,6 +20,7 @@ namespace Wholesome_Professions_WotlK.States
         }
 
         private int _priority;
+        private IProfession profession;
 
         public override bool NeedToRun
         {
@@ -30,7 +31,15 @@ namespace Wholesome_Professions_WotlK.States
                     return false;
 
                 if (Main.primaryProfession.ShouldSellItems())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession.ShouldSellItems())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }

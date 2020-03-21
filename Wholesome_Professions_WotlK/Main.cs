@@ -21,7 +21,7 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public string version = "0.1.7";// Must match version in Version.txt
+    public string version = "0.1.8"; // Must match version in Version.txt
 
     public void Initialize()
     {
@@ -156,8 +156,7 @@ public class Main : IProduct
     private void SetProfessions()
     {
         primaryProfession = new Tailoring();
-        //primaryProfession = new Enchanting();
-        //secondaryProfession = new Tailoring();
+        secondaryProfession = new Empty();
         amountProfessionsSelected = 2;
     }
 }
