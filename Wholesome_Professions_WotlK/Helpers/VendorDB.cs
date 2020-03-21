@@ -3,42 +3,60 @@ using wManager.Wow.Class;
 
 public static class VendorDB
 {
-    public static Npc OGTailoringSupplies = new Npc();
-    public static Npc OGTailoringTrainer = new Npc();
+    // ***************** ENCHANTING *****************
+    public static Npc OGEnchantingSupplies = new Npc()
+    {
+        Entry = 3346,
+        Position = new Vector3(1918.26, -4436.26, 24.77395, "None")
+    };
+    public static Npc OGEnchantingTrainer = new Npc()
+    {
+        Entry = 3345,
+        Position = new Vector3(1912.18, -4436.61, 24.79994, "None")
+    };
 
-    public static Npc ThrallmarTailoringTrainer = new Npc();
-    public static Npc ThrallmarTailoringSupplies = new Npc();
-
-    public static Npc ShattrathTailoringSupplies = new Npc();
-
-    public static Npc WarsongHoldTailoringTrainer = new Npc();
-    public static Npc WarsongHoldTailoringSupplies = new Npc();
+    // ***************** TAILORING *****************
+    public static Npc OGTailoringSupplies = new Npc()
+    {
+        Entry = 3364,
+        Position = new Vector3(1792.65, -4565.39, 23.0066)
+    };
+    public static Npc OGTailoringTrainer = new Npc()
+    {
+        Entry = 3363,
+        Position = new Vector3(1806.85, -4573.32, 23.00661),
+        GossipOption = 1
+    };
+    public static Npc ThrallmarTailoringTrainer = new Npc()
+    {
+        Entry = 18749,
+        Position = new Vector3(204.177, 2617.73, 87.2837),
+        GossipOption = 1
+    };
+    public static Npc ThrallmarTailoringSupplies = new Npc()
+    {
+        Entry = 18749,
+        Position = new Vector3(204.177, 2617.73, 87.2837),
+        GossipOption = 2
+    };
+    public static Npc ShattrathTailoringSupplies = new Npc()
+    {
+        Entry = 19213,
+        Position = new Vector3(-2077.26, 5270.03, -37.3236)
+    };
+    public static Npc WarsongHoldTailoringTrainer = new Npc()
+    {
+        Entry = 26969,
+        Position = new Vector3(2842.94, 6170.93, 104.8442),
+        GossipOption = 1
+    };
+    public static Npc WarsongHoldTailoringSupplies = new Npc()
+    {
+        Entry = 26941,
+        Position = new Vector3(2799.13, 6187.77, 104.9765)
+    };
 
     static VendorDB()
     {
-        OGTailoringSupplies.Entry = 3364;
-        OGTailoringSupplies.Position = new Vector3(1792.65, -4565.39, 23.0066);
-        
-        OGTailoringTrainer.Entry = 3363;
-        OGTailoringTrainer.Position = new Vector3(1806.85, -4573.32, 23.00661);
-        OGTailoringTrainer.GossipOption = 1;
-
-        ThrallmarTailoringTrainer.Entry = 18749;
-        ThrallmarTailoringTrainer.Position = new Vector3(204.177, 2617.73, 87.2837);
-        ThrallmarTailoringTrainer.GossipOption = 1;
-
-        ThrallmarTailoringSupplies.Entry = 18749;
-        ThrallmarTailoringSupplies.Position = new Vector3(204.177, 2617.73, 87.2837);
-        ThrallmarTailoringSupplies.GossipOption = 2;
-
-        ShattrathTailoringSupplies.Entry = 19213;
-        ShattrathTailoringSupplies.Position = new Vector3(-2077.26, 5270.03, -37.3236);
-
-        WarsongHoldTailoringTrainer.Entry = 26969;
-        WarsongHoldTailoringTrainer.Position = new Vector3(2842.94, 6170.93, 104.8442);
-        WarsongHoldTailoringTrainer.GossipOption = 1;
-
-        WarsongHoldTailoringSupplies.Entry = 26941;
-        WarsongHoldTailoringSupplies.Position = new Vector3(2799.13, 6187.77, 104.9765);
     }
 }

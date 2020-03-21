@@ -26,10 +26,10 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
 
-                if (Main.currentProfession.ShouldSellItems())
+                if (Main.primaryProfession.ShouldSellItems())
                     return true;
 
                 return false;

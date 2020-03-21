@@ -106,7 +106,12 @@ internal static class Bot
     private static void ScreenReloaded()
     {
         Logger.Log("Reloading steps");
-        if (Main.currentProfession != null)
-            Main.currentProfession.HasSetCurrentStep = false;
+        if (Main.amountProfessionsSelected > 0)
+        {
+            if (Main.primaryProfession != null)
+                Main.primaryProfession.HasSetCurrentStep = false;
+            if (Main.secondaryProfession != null)
+                Main.secondaryProfession.HasSetCurrentStep = false;
+        }
     }
 }

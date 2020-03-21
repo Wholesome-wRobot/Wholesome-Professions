@@ -50,7 +50,7 @@ public class Step
 
     public int GetRemainingProfessionLevels()
     {
-        int remainingLevels =  levelToReach - ToolBox.GetProfessionLevel(Main.currentProfession.ProfessionName);
+        int remainingLevels =  levelToReach - ToolBox.GetProfessionLevel(Main.primaryProfession.ProfessionName);
         return (remainingLevels + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
     }
 

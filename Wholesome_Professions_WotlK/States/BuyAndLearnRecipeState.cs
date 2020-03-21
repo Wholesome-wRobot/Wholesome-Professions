@@ -29,10 +29,10 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || Main.currentProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
                     return false;
 
-                if (Main.currentProfession.ShouldBuyAndLearnRecipe())
+                if (Main.primaryProfession.ShouldBuyAndLearnRecipe())
                     return true;
 
                 return false;
@@ -54,10 +54,10 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING BUY AND LEARN RECIPE STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            Step currentStep = Main.currentProfession.CurrentStep;
+            Step currentStep = Main.primaryProfession.CurrentStep;
             var RecipeVendor = currentStep.itemoCraft.RecipeVendor;
 
-            Logger.Log($"Buying {currentStep.itemoCraft.name} recipe at NPC {Main.currentProfession.ProfessionTrainer.Entry}");
+            Logger.Log($"Buying {currentStep.itemoCraft.name} recipe at NPC {Main.primaryProfession.ProfessionTrainer.Entry}");
             if (GoToTask.ToPositionAndIntecractWithNpc(RecipeVendor.Position, RecipeVendor.Entry, RecipeVendor.GossipOption))
             {
                 Vendor.BuyItem(ItemsManager.GetNameById(currentStep.itemoCraft.RecipeItemId), 1);
@@ -68,7 +68,7 @@ namespace Wholesome_Professions_WotlK.States
                 Thread.Sleep(300);
             }
 
-            currentStep.knownRecipe = ToolBox.RecipeIsKnown(currentStep.itemoCraft.name, Main.currentProfession.ProfessionName.ToString());
+            currentStep.knownRecipe = ToolBox.RecipeIsKnown(currentStep.itemoCraft.name, Main.primaryProfession.ProfessionName.ToString());
 
             Broadcaster.autoBroadcast = true;
         }

@@ -27,10 +27,10 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || Main.currentProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
                     return false;
 
-                if (Main.currentProfession.ShouldTravel())
+                if (Main.primaryProfession.ShouldTravel())
                     return true;
 
                 return false;
@@ -52,7 +52,7 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING TRAVEL STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            int destinationContinent = Main.currentProfession.Continent;
+            int destinationContinent = Main.primaryProfession.Continent;
 
             // HORDE
             if (ToolBox.IsHorde())

@@ -28,10 +28,10 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
 
-                if (Main.currentProfession.ShouldSetCurrentStep())
+                if (Main.primaryProfession.ShouldSetCurrentStep())
                     return true;
 
                 return false;
@@ -58,7 +58,7 @@ namespace Wholesome_Professions_WotlK.States
             ProfileHandler.UnloadCurrentProfile();
 
             Step selectedStep = null;
-            IProfession profession = Main.currentProfession;
+            IProfession profession = Main.primaryProfession;
             int currentLevel = ToolBox.GetProfessionLevel(profession.ProfessionName);
 
             // Search for Priority Steps
@@ -137,7 +137,7 @@ namespace Wholesome_Professions_WotlK.States
                 profession.CurrentStep = selectedStep;
             }
 
-            Main.currentProfession.HasSetCurrentStep = true;
+            Main.primaryProfession.HasSetCurrentStep = true;
             Broadcaster.autoBroadcast = true;
             Broadcaster.BroadCastSituation(true);
         }

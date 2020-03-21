@@ -30,10 +30,10 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || Main.currentProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
                     return false;
 
-                if (Main.currentProfession.ShouldBuyMaterials())
+                if (Main.primaryProfession.ShouldBuyMaterials())
                     return true;
 
                 return false;
@@ -55,13 +55,13 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING BUY MATERIALS STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            Step currentStep = Main.currentProfession.CurrentStep;
+            Step currentStep = Main.primaryProfession.CurrentStep;
             foreach (Item.Mat mat in currentStep.itemoCraft.Materials)
             {
                 int amountMissing = currentStep.GetAmountMissingMaterial(mat);
                 if (mat.item.canBeBought)
                 {
-                    Npc vendor = mat.item.vendor ?? Main.currentProfession.SuppliesVendor;
+                    Npc vendor = mat.item.vendor ?? Main.primaryProfession.SuppliesVendor;
                     Logger.Log($"Buying {amountMissing} {mat.item.name} from NPC {vendor.Entry}");
                     int estimatedPrice = mat.item.estimatedPrice * mat.amount * amountMissing;
                     Logger.Log($"Estimated price : {estimatedPrice}");

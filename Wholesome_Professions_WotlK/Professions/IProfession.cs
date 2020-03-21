@@ -17,14 +17,13 @@ public interface IProfession
     int AmountOfItemToFarm { get; set; }
     int Continent { get; set; }
     int MinimumCharLevel { get; set; }
-
-    bool ShouldCraftFlag { get; set; }
+    
     bool HasSetCurrentStep { get; set; }
     string CurrentProfile { get; set; }
 
     void RegenerateSteps();
     
-    void SetTrainer();
+    void SetContext();
 
     bool ShouldCraft();
     bool ShouldSellItems();

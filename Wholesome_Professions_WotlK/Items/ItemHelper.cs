@@ -44,9 +44,9 @@ namespace Wholesome_Professions_WotlK.Items
                 int pickFromVirtualBag = 0;
 
                 // If it's current step and it's a level step, make sure we mitigate to match amount goal
-                if (s == Main.currentProfession.CurrentStep && s.stepType == Step.StepType.CraftToLevel && s.estimatedAmountOfCrafts != 0)
+                if (s == Main.primaryProfession.CurrentStep && s.stepType == Step.StepType.CraftToLevel && s.estimatedAmountOfCrafts != 0)
                     s.estimatedAmountOfCrafts = s.GetRemainingProfessionLevels();
-                else if (s == Main.currentProfession.CurrentStep && s.stepType == Step.StepType.CraftAll)
+                else if (s == Main.primaryProfession.CurrentStep && s.stepType == Step.StepType.CraftAll)
                     pickFromVirtualBag = PickFromVirtualBag(s.itemoCraft, s.estimatedAmountOfCrafts);
 
                 if (ToolBox.GetProfessionLevel(profession.ProfessionName) < s.levelToReach)

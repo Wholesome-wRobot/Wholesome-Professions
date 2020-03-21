@@ -82,6 +82,7 @@
     <Compile Include="Items\ItemDB.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Professions\Step.cs" />
+    <Compile Include="Professions\Enchanting.cs" />
     <Compile Include="Professions\Tailoring.cs" />
     <Compile Include="Helpers\VendorDB.cs" />
     <Compile Include="Profile\GrinderProfile.cs" />

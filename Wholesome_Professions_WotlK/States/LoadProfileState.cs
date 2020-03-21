@@ -28,10 +28,10 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || !WholesomeProfessionsSettings.CurrentSetting.Autofarm)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || !WholesomeProfessionsSettings.CurrentSetting.Autofarm)
                     return false;
 
-                if (Main.currentProfession.ShouldSelectProfile())
+                if (Main.primaryProfession.ShouldSelectProfile())
                     return true;
 
                 return false;
@@ -51,14 +51,14 @@ namespace Wholesome_Professions_WotlK.States
         public override void Run()
         {
             Logger.LogDebug("************ RUNNING LOAD PROFILE STATE ************");
-            Step currentStep = Main.currentProfession.CurrentStep;
+            Step currentStep = Main.primaryProfession.CurrentStep;
 
             string faction = ToolBox.IsHorde() ? "Horde" : "Alliance";
 
-            string profileName = $"{faction} - {Main.currentProfession.ItemToFarm.name}.xml";
+            string profileName = $"{faction} - {Main.primaryProfession.ItemToFarm.name}.xml";
 
             Logger.Log($"Loading profile {profileName}");
-            Main.currentProfession.CurrentProfile = profileName;
+            Main.primaryProfession.CurrentProfile = profileName;
 
             ProfileHandler.LoadNewProfile();
         }

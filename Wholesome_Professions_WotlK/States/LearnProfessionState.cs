@@ -1,5 +1,4 @@
 ﻿using robotManager.FiniteStateMachine;
-using robotManager.Helpful;
 using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
@@ -25,16 +24,26 @@ namespace Wholesome_Professions_WotlK.States
 
         private int _priority;
 
+        private IProfession profession;
+
         public override bool NeedToRun
         {
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.currentProfession == null || Main.currentProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
                     return false;
 
-                if (Main.currentProfession.ShouldLearnProfession())
+                if (Main.primaryProfession != null && Main.primaryProfession.ShouldLearnProfession())
+                {
+                    profession = Main.primaryProfession;
                     return true;
+                }
+                if (Main.secondaryProfession != null && Main.secondaryProfession.ShouldLearnProfession())
+                {
+                    profession = Main.secondaryProfession;
+                    return true;
+                }
 
                 return false;
             }
@@ -55,13 +64,13 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING LEARN PROFESSION STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            Npc trainer = Main.currentProfession.ProfessionTrainer;
+            Npc trainer = profession.ProfessionTrainer;
 
             // Learn Profession
-            Logger.Log($"Learning {Main.currentProfession.ProfessionSpell} at NPC {trainer.Entry}");
+            Logger.Log($"Learning {profession.ProfessionSpell} at NPC {trainer.Entry}");
             if (GoToTask.ToPositionAndIntecractWithNpc(trainer.Position, trainer.Entry, trainer.GossipOption))
             {
-                ToolBox.LearnthisSpell(Main.currentProfession.ProfessionSpell);
+                ToolBox.LearnthisSpell(profession.ProfessionSpell);
                 Thread.Sleep(1000);
             }
 

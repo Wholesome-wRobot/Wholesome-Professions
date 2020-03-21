@@ -78,7 +78,7 @@ namespace Wholesome_Professions_WotlK.Helpers
 
         private static void PreCheckBroadcast()
         {
-            IProfession profession = Main.currentProfession;
+            IProfession profession = Main.primaryProfession;
             if (profession != null)
             {
                 // profession name
@@ -101,7 +101,7 @@ namespace Wholesome_Professions_WotlK.Helpers
                         currentStepString = null;
 
                     // Minimum level required not met
-                    if (!Main.currentProfession.MyLevelIsHighEnough())
+                    if (!Main.primaryProfession.MyLevelIsHighEnough())
                         requiredLevelString = $"You must be at least level {profession.MinimumCharLevel} to progress";
                     else
                         requiredLevelString = null;

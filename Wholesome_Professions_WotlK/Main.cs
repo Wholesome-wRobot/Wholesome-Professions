@@ -3,7 +3,6 @@ using robotManager.Products;
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Wholesome_Professions_WotlK.GUI;
@@ -13,13 +12,15 @@ using wManager.Wow.Helpers;
 
 public class Main : IProduct
 {
-    public static IProfession currentProfession = null;
+    public static IProfession primaryProfession = null;
+    public static IProfession secondaryProfession = null;
+    public static int amountProfessionsSelected = 0;
+
     private readonly BackgroundWorker _pulseThread = new BackgroundWorker();
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
     public string version = "0.1.5";// Must match version in Version.txt
-    public bool updateSucceeded = false;
 
     public void Initialize()
     {
@@ -29,7 +30,7 @@ public class Main : IProduct
             //Directory.CreateDirectory(Application.StartupPath + "\\Products\\.wpupdate\\");
             WholesomeProfessionsSettings.Load();
             WholesomeProfessionsSave.Load();
-            //AutoUpdater.CheckUpdate(this);
+            AutoUpdater.CheckUpdate(this);
             TravelHelper.AddAllOffmeshConnections();
             Logger.Log($"Wholesome Professions WotlK version {version} loaded");
         }
@@ -69,7 +70,7 @@ public class Main : IProduct
             if (Bot.Pulse())
             {
                 PluginsManager.LoadAllPlugins();
-                currentProfession = new Tailoring();
+                SetProfessions();
                 Logging.Status = "Start Product Complete";
                 Logging.Write("Start Product Complete");
             }
@@ -150,5 +151,12 @@ public class Main : IProduct
             }
             return null;
         }
+    }
+
+    private void SetProfessions()
+    {
+        primaryProfession = new Enchanting();
+        secondaryProfession = new Tailoring();
+        amountProfessionsSelected = 2;
     }
 }
