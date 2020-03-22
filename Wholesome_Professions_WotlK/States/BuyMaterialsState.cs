@@ -34,12 +34,12 @@ namespace Wholesome_Professions_WotlK.States
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
                 
-                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldBuyMaterials())
+                if (Main.primaryProfession.ShouldBuyMaterials())
                 {
                     profession = Main.primaryProfession;
                     return true;
                 }
-                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldBuyMaterials())
+                if (Main.secondaryProfession.ShouldBuyMaterials())
                 {
                     profession = Main.secondaryProfession;
                     return true;
@@ -65,32 +65,32 @@ namespace Wholesome_Professions_WotlK.States
             Broadcaster.autoBroadcast = false;
 
             Step currentStep = profession.CurrentStep;
-            foreach (Item.Mat mat in currentStep.itemoCraft.Materials)
+            foreach (Item.Mat mat in currentStep.ItemoCraft.Materials)
             {
                 int amountMissing = currentStep.GetAmountMissingMaterial(mat);
-                if (mat.item.canBeBought)
+                if (mat.Item.CanBeBought)
                 {
-                    Npc vendor = mat.item.vendor ?? profession.SuppliesVendor;
-                    Logger.Log($"Buying {amountMissing} {mat.item.name} from NPC {vendor.Entry}");
-                    int estimatedPrice = mat.item.estimatedPrice * mat.amount * amountMissing;
+                    Npc vendor = mat.Item.Vendor ?? profession.SuppliesVendor;
+                    Logger.Log($"Buying {amountMissing} {mat.Item.Name} from NPC {vendor.Entry}");
+                    int estimatedPrice = mat.Item.EstimatedPrice * mat.Amount * amountMissing;
                     Logger.Log($"Estimated price : {estimatedPrice}");
-                    if (ObjectManager.Me.GetMoneyCopper >= mat.amount * amountMissing)
+                    if (ObjectManager.Me.GetMoneyCopper >= mat.Amount * amountMissing)
                     {
                         if (GoToTask.ToPositionAndIntecractWithNpc(vendor.Position, vendor.Entry, vendor.GossipOption))
                         {
                             //Vendor.SellItems(wManagerSetting.CurrentSetting.ForceSellList, wManagerSetting.CurrentSetting.DoNotSellList, ToolBox.vendorQuality);
 
-                            int amountToHaveInBag = amountMissing + ItemsManager.GetItemCountById(mat.item.itemId);
-                            while (ItemsManager.GetItemCountById(mat.item.itemId) < amountToHaveInBag && Bag.GetContainerNumFreeSlots > 1)
+                            int amountToHaveInBag = amountMissing + ItemsManager.GetItemCountById(mat.Item.ItemId);
+                            while (ItemsManager.GetItemCountById(mat.Item.ItemId) < amountToHaveInBag && Bag.GetContainerNumFreeSlots > 1)
                             {
-                                Logger.LogDebug($"Buying {mat.item.name}");
-                                Vendor.BuyItem(ItemsManager.GetNameById(mat.item.itemId), amountMissing);
+                                Logger.LogDebug($"Buying {mat.Item.Name}");
+                                Vendor.BuyItem(ItemsManager.GetNameById(mat.Item.ItemId), amountMissing);
                                 Thread.Sleep(200);
                             }
                         }
                     }
                     else
-                        Logger.Log($"You don't have enough money to buy {mat.amount * amountMissing} x {mat.item.name} ({estimatedPrice} Copper).");
+                        Logger.Log($"You don't have enough money to buy {mat.Amount * amountMissing} x {mat.Item.Name} ({estimatedPrice} Copper).");
                 }
             }
 

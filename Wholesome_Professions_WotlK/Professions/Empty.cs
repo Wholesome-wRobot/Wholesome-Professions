@@ -7,6 +7,7 @@ public class Empty : IProfession
     public SkillLine ProfessionName { get; set; }
     public Step CurrentStep { get; set; }
     public List<Step> AllSteps { get; set; } = new List<Step>();
+    public List<Item> PrerequisiteItems { get; set; } = new List<Item>();
 
     public Npc ProfessionTrainer { get; set; } = new Npc();
     public Npc SuppliesVendor { get; set; } = new Npc();

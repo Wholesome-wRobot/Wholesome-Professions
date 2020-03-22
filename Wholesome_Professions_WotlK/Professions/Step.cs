@@ -1,62 +1,61 @@
-﻿using System;
-using Wholesome_Professions_WotlK.Helpers;
+﻿using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Helpers;
 
 public class Step
 {
-    public int minlevel;
-    public int levelToReach;
-    public Item itemoCraft;
-    public int estimatedAmountOfCrafts;
-    public bool knownRecipe;
+    public int Minlevel { get; set; }
+    public int LevelToReach { get; set; }
+    public Item ItemoCraft { get; set; }
+    public int EstimatedAmountOfCrafts { get; set; }
+    public bool KnownRecipe { get; set; }
+    public StepType Type { get; set; }
     public enum StepType
     {
         CraftToLevel,
         CraftAll, // auto generated when checking steps
         ListPreCraft // forced precraft from the list
     }
-    public StepType stepType;
 
     // Craft to level
     public Step(int minlevel, int levelToReach, Item itemoCraft, int estimatedAmountOfCrafts = 0)
     {
-        this.minlevel = minlevel;
-        this.levelToReach = levelToReach;
-        this.itemoCraft = itemoCraft;
-        this.estimatedAmountOfCrafts = (estimatedAmountOfCrafts + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
+        Minlevel = minlevel;
+        LevelToReach = levelToReach;
+        ItemoCraft = itemoCraft;
+        EstimatedAmountOfCrafts = (estimatedAmountOfCrafts + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
 
         if (estimatedAmountOfCrafts == 0)
-            stepType = StepType.ListPreCraft;
+            Type = StepType.ListPreCraft;
         else
-            stepType = StepType.CraftToLevel;
+            Type = StepType.CraftToLevel;
     }
 
     // Craft all
     public Step(Item itemoCraft, int estimatedAmountOfCrafts)
     {
-        this.itemoCraft = itemoCraft;
-        this.estimatedAmountOfCrafts = estimatedAmountOfCrafts;
-        stepType = StepType.CraftAll;
+        ItemoCraft = itemoCraft;
+        EstimatedAmountOfCrafts = estimatedAmountOfCrafts;
+        Type = StepType.CraftAll;
     }
 
     public void LogMissingMaterials()
     {
-        foreach (Item.Mat mat in itemoCraft.Materials)
+        foreach (Item.Mat mat in ItemoCraft.Materials)
         {
             if (GetAmountMissingMaterial(mat) > 0)
-                Logger.Log($"{mat.item.name} x {GetAmountMissingMaterial(mat)}");
+                Logger.Log($"{mat.Item.Name} x {GetAmountMissingMaterial(mat)}");
         }
     }
 
     public int GetRemainingProfessionLevels()
     {
-        int remainingLevels =  levelToReach - ToolBox.GetProfessionLevel(Main.primaryProfession.ProfessionName);
+        int remainingLevels =  LevelToReach - ToolBox.GetProfessionLevel(Main.primaryProfession.ProfessionName);
         return (remainingLevels + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
     }
 
     public bool HasAllMats()
     {
-        foreach (Item.Mat mat in itemoCraft.Materials)
+        foreach (Item.Mat mat in ItemoCraft.Materials)
         {
             if (GetAmountMissingMaterial(mat) > 0)
                 return false;
@@ -66,9 +65,9 @@ public class Step
 
     public bool CanBuyRemainingMats()
     {
-        foreach (Item.Mat mat in itemoCraft.Materials)
+        foreach (Item.Mat mat in ItemoCraft.Materials)
         {
-            if (GetAmountMissingMaterial(mat) > 0 && !mat.item.canBeBought)
+            if (GetAmountMissingMaterial(mat) > 0 && !mat.Item.CanBeBought)
                 return false;
         }
         return true;
@@ -77,9 +76,9 @@ public class Step
     public bool HasMatsToCraftOne()
     {
         bool hasMatsForOne = true;
-        foreach (Item.Mat mat in itemoCraft.Materials)
+        foreach (Item.Mat mat in ItemoCraft.Materials)
         {
-            if (ItemsManager.GetItemCountById(mat.item.itemId) < mat.amount)
+            if (ItemsManager.GetItemCountById(mat.Item.ItemId) < mat.Amount)
                 hasMatsForOne =  false;
         }
         return hasMatsForOne;
@@ -89,11 +88,11 @@ public class Step
     public int GetAmountICanCurrentlyCraft()
     {
         int amount = 0;
-        foreach (Item.Mat mat in itemoCraft.Materials)
+        foreach (Item.Mat mat in ItemoCraft.Materials)
         {
-            if (ItemsManager.GetItemCountById(mat.item.itemId) > mat.amount)
+            if (ItemsManager.GetItemCountById(mat.Item.ItemId) > mat.Amount)
             {
-                int estimatedWithCurrentMat = ItemsManager.GetItemCountById(mat.item.itemId) / mat.amount;
+                int estimatedWithCurrentMat = ItemsManager.GetItemCountById(mat.Item.ItemId) / mat.Amount;
                 if (amount == 0 || estimatedWithCurrentMat < amount)
                     amount = estimatedWithCurrentMat;
             }
@@ -106,16 +105,16 @@ public class Step
     public int GetAmountMissingMaterial(Item.Mat mat)
     {
         // If craft all items
-        if (stepType == StepType.CraftAll)
+        if (Type == StepType.CraftAll)
         {
-            return (estimatedAmountOfCrafts * mat.amount) - ItemsManager.GetItemCountById(mat.item.itemId);
+            return (EstimatedAmountOfCrafts * mat.Amount) - ItemsManager.GetItemCountById(mat.Item.ItemId);
             //return Math.Max(0, (estimatedAmountOfCrafts * mat.amount) - ToolBox.GetAlreadyCrafted(Main.currentProfession.ProfessionName.ToString(), mat.item.name));
         }
         // or if we only need to craft until we level up
         else
         {
             Logger.LogDebug($"{GetRemainingProfessionLevels()} levels to gain");
-            return (GetRemainingProfessionLevels() * mat.amount) - ItemsManager.GetItemCountById(mat.item.itemId);
+            return (GetRemainingProfessionLevels() * mat.Amount) - ItemsManager.GetItemCountById(mat.Item.ItemId);
         }
     }
 }

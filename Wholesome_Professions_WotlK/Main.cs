@@ -155,8 +155,8 @@ public class Main : IProduct
 
     private void SetProfessions()
     {
-        primaryProfession = new Tailoring();
-        secondaryProfession = new Empty();
+        primaryProfession = new Enchanting();
+        secondaryProfession = new Tailoring();
         amountProfessionsSelected = 2;
     }
 }

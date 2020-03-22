@@ -19,16 +19,16 @@ namespace Wholesome_Professions_WotlK.Items
 
             foreach (Item.Mat mat in itemToCraft.Materials)
             {
-                int amountOfItemsToFarm = GetTotalNeededMat(mat.item, profession);
-                if (mat.item.canBeFarmed && amountOfItemsToFarm > 0)
+                int amountOfItemsToFarm = GetTotalNeededMat(mat.Item, profession);
+                if (mat.Item.CanBeFarmed && amountOfItemsToFarm > 0)
                 {
-                    profession.ItemToFarm = mat.item;
+                    profession.ItemToFarm = mat.Item;
                     profession.AmountOfItemToFarm = amountOfItemsToFarm;
-                    Logger.LogDebug($"Found item that needs to be farmed for {itemToCraft.name} : {profession.AmountOfItemToFarm} {mat.item.name}");
+                    Logger.LogDebug($"Found item that needs to be farmed for {itemToCraft.Name} : {profession.AmountOfItemToFarm} {mat.Item.Name}");
                     return true;
                 }
                 //Recursion
-                return NeedToFarmItemFor(mat.item, profession);
+                return NeedToFarmItemFor(mat.Item, profession);
             }
             profession.ItemToFarm = null;
             profession.AmountOfItemToFarm = 0;
@@ -44,13 +44,13 @@ namespace Wholesome_Professions_WotlK.Items
                 int pickFromVirtualBag = 0;
 
                 // If it's current step and it's a level step, make sure we mitigate to match amount goal
-                if (s == profession.CurrentStep && s.stepType == Step.StepType.CraftToLevel && s.estimatedAmountOfCrafts != 0)
-                    s.estimatedAmountOfCrafts = s.GetRemainingProfessionLevels();
-                else if (s == profession.CurrentStep && s.stepType == Step.StepType.CraftAll)
-                    pickFromVirtualBag = PickFromVirtualBag(s.itemoCraft, s.estimatedAmountOfCrafts);
+                if (s == profession.CurrentStep && s.Type == Step.StepType.CraftToLevel && s.EstimatedAmountOfCrafts != 0)
+                    s.EstimatedAmountOfCrafts = s.GetRemainingProfessionLevels();
+                else if (s == profession.CurrentStep && s.Type == Step.StepType.CraftAll)
+                    pickFromVirtualBag = PickFromVirtualBag(s.ItemoCraft, s.EstimatedAmountOfCrafts);
 
-                if (ToolBox.GetProfessionLevel(profession.ProfessionName) < s.levelToReach)
-                    amount += GetMaterialAmountInItem(s.itemoCraft, itemToSearch, s.estimatedAmountOfCrafts - pickFromVirtualBag);
+                if (ToolBox.GetProfessionLevel(profession.ProfessionName) < s.LevelToReach)
+                    amount += GetMaterialAmountInItem(s.ItemoCraft, itemToSearch, s.EstimatedAmountOfCrafts - pickFromVirtualBag);
             }
             virtualBag.Clear();
             return amount;
@@ -62,16 +62,16 @@ namespace Wholesome_Professions_WotlK.Items
             int amount = 0;
             foreach (Item.Mat mat in item.Materials)
             {
-                int amountInVirtualBag = PickFromVirtualBag(mat.item, mat.amount * amountToCraft);
-                if (mat.item == itemToSearch)
+                int amountInVirtualBag = PickFromVirtualBag(mat.Item, mat.Amount * amountToCraft);
+                if (mat.Item == itemToSearch)
                 {
-                    Logger.LogDebug($"Material {itemToSearch.name} : {mat.amount} * {amountToCraft} found in Item {item.name} : " +
-                        $"{mat.amount * amountToCraft - amountInVirtualBag} (+ {amountInVirtualBag} in bag)");
-                    amount += mat.amount * amountToCraft - amountInVirtualBag;
+                    Logger.LogDebug($"Material {itemToSearch.Name} : {mat.Amount} * {amountToCraft} found in Item {item.Name} : " +
+                        $"{mat.Amount * amountToCraft - amountInVirtualBag} (+ {amountInVirtualBag} in bag)");
+                    amount += mat.Amount * amountToCraft - amountInVirtualBag;
                 }
 
                 // Recursion
-                amount += GetMaterialAmountInItem(mat.item, itemToSearch, amountToCraft * mat.amount - amountInVirtualBag);
+                amount += GetMaterialAmountInItem(mat.Item, itemToSearch, amountToCraft * mat.Amount - amountInVirtualBag);
             }
             return amount;
         }
@@ -81,21 +81,21 @@ namespace Wholesome_Professions_WotlK.Items
         {
             //Logger.Log($"Checking {item.name} (we have {ItemsManager.GetItemCountById(item.itemId)})");
             // If I have the item in my bags and it's not already added to virtual bag, add it
-            int itemAlreadyInBags = ItemsManager.GetItemCountById(item.itemId);
+            int itemAlreadyInBags = ItemsManager.GetItemCountById(item.ItemId);
             if (itemAlreadyInBags > 0)
             {
                 ItemInVirtualBag itemInBag = new ItemInVirtualBag();
 
-                if (!virtualBag.Exists(i => i.id == item.itemId))
+                if (!virtualBag.Exists(i => i.id == item.ItemId))
                 {
-                    itemInBag.id = item.itemId;
+                    itemInBag.id = item.ItemId;
                     itemInBag.amount = itemAlreadyInBags;
                     //Logger.Log($"Adding {itemInBag.amount} {item.name} in virtual bag");
                     virtualBag.Add(itemInBag);
                 }
                 else
                 {
-                    itemInBag = virtualBag.Find(i => i.id == item.itemId);
+                    itemInBag = virtualBag.Find(i => i.id == item.ItemId);
                     //Logger.Log($"{itemInBag.amount} {item.name} already in virtual bag");
                 }
 

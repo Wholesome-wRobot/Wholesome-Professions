@@ -77,10 +77,11 @@
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\TravelHelper.cs" />
     <Compile Include="Helpers\WRobotSettings.cs" />
-    <Compile Include="Items\ItemHelper.cs" />
+    <Compile Include="ItemsAndSpells\ItemHelper.cs" />
+    <Compile Include="Professions\Profession.cs" />
     <Compile Include="Professions\IProfession.cs" />
-    <Compile Include="Items\ItemDB.cs" />
-    <Compile Include="Items\Item.cs" />
+    <Compile Include="ItemsAndSpells\ItemDB.cs" />
+    <Compile Include="ItemsAndSpells\Item.cs" />
     <Compile Include="Professions\Step.cs" />
     <Compile Include="Professions\Enchanting.cs" />
     <Compile Include="Professions\Empty.cs" />

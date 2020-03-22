@@ -33,12 +33,12 @@ namespace Wholesome_Professions_WotlK.States
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
                 
-                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldLearnProfession())
+                if (Main.primaryProfession.ShouldLearnProfession())
                 {
                     profession = Main.primaryProfession;
                     return true;
                 }
-                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldLearnProfession())
+                if (Main.secondaryProfession.ShouldLearnProfession())
                 {
                     profession = Main.secondaryProfession;
                     return true;

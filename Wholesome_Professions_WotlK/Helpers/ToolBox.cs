@@ -23,20 +23,20 @@ public class ToolBox
     // Add +x to crafted item to settings
     public static void AddCraftedItemToSettings(string profession, Item itemToAdd, int amountToAdd = 1)
     {
-        string itemInList = SearchForCraftedItemInSavedList(profession, itemToAdd.name);
+        string itemInList = SearchForCraftedItemInSavedList(profession, itemToAdd.Name);
         List<string> savedList = WholesomeProfessionsSave.CurrentSetting.AlreadyCrafted;
 
         // Item not found
         if (itemInList == null)
         {
-            savedList.Add($"{profession}_{itemToAdd.name}*{amountToAdd}");
+            savedList.Add($"{profession}_{itemToAdd.Name}*{amountToAdd}");
         }
         // Item found
         else
         {
-            int newAmount = GetAlreadyCrafted(profession, itemToAdd.name) + amountToAdd;
+            int newAmount = GetAlreadyCrafted(profession, itemToAdd.Name) + amountToAdd;
             savedList.Remove(itemInList);
-            savedList.Add($"{profession}_{itemToAdd.name}*{newAmount}");
+            savedList.Add($"{profession}_{itemToAdd.Name}*{newAmount}");
         }
         
         WholesomeProfessionsSave.CurrentSetting.Save();
@@ -126,10 +126,10 @@ public class ToolBox
         wManager.Wow.Bot.States.ToTown.ForceToTown = false;
         foreach (Step step in allSteps)
         {
-            SetSellListForOneItem(step.itemoCraft);
-            foreach (Item.Mat mat in step.itemoCraft.Materials)
+            SetSellListForOneItem(step.ItemoCraft);
+            foreach (Item.Mat mat in step.ItemoCraft.Materials)
             {
-                SetSellListForOneItem(mat.item);
+                SetSellListForOneItem(mat.Item);
             }
         }
     }
@@ -137,7 +137,7 @@ public class ToolBox
     private static void SetSellListForOneItem(Item item)
     {
         RemoveFromSellAndNotSellList(item);
-        if (item.forceSell)
+        if (item.ForceSell)
             AddItemToSellList(item);
         else
             AddItemToDoNotSellList(item);
@@ -145,29 +145,29 @@ public class ToolBox
 
     private static void AddItemToDoNotSellList(Item item)
     {
-        if (!wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
+        if (!wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.Name))
         {
-            Logger.LogDebug($"Add items {item.name} to Do not Sell List");
-            wManagerSetting.CurrentSetting.DoNotSellList.Add(item.name);
+            Logger.LogDebug($"Add items {item.Name} to Do not Sell List");
+            wManagerSetting.CurrentSetting.DoNotSellList.Add(item.Name);
         }
     }
 
     private static void AddItemToSellList(Item item)
     {
-        if (!wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
+        if (!wManagerSetting.CurrentSetting.ForceSellList.Contains(item.Name))
         {
-            Logger.LogDebug($"Add items {item.name} to Force Sell List");
-            wManagerSetting.CurrentSetting.ForceSellList.Add(item.name);
+            Logger.LogDebug($"Add items {item.Name} to Force Sell List");
+            wManagerSetting.CurrentSetting.ForceSellList.Add(item.Name);
         }
     }
 
     private static void RemoveFromSellAndNotSellList(Item item)
     {
-        if (wManagerSetting.CurrentSetting.ForceSellList.Contains(item.name))
-            wManagerSetting.CurrentSetting.ForceSellList.Remove(item.name);
+        if (wManagerSetting.CurrentSetting.ForceSellList.Contains(item.Name))
+            wManagerSetting.CurrentSetting.ForceSellList.Remove(item.Name);
 
-        if (wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.name))
-            wManagerSetting.CurrentSetting.DoNotSellList.Remove(item.name);
+        if (wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.Name))
+            wManagerSetting.CurrentSetting.DoNotSellList.Remove(item.Name);
     }
 
     public static void Craft(string skillName, Item item, int quantity)
@@ -185,7 +185,7 @@ public class ToolBox
              end 
             for i=1,GetNumTradeSkills() do
              local name, _, _, _ = GetTradeSkillInfo(i)
-            if (name == '{item.name}') then
+            if (name == '{item.Name}') then
             DoTradeSkill(i, {quantity})
             end
              end

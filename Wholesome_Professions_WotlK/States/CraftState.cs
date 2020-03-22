@@ -74,34 +74,34 @@ namespace Wholesome_Professions_WotlK.States
             //Logger.Log($"We've already crafted {amountAlreadyCrafted} {currentStep.itemoCraft.name}");
 
             // Craft
-            int itemInBagsBeforeCraft = ItemsManager.GetItemCountById(currentStep.itemoCraft.itemId);
+            int itemInBagsBeforeCraft = ItemsManager.GetItemCountById(currentStep.ItemoCraft.ItemId);
             int amountToCraft = 0;
 
-            if (currentStep.stepType == Step.StepType.CraftAll)
-                amountToCraft = currentStep.estimatedAmountOfCrafts;
-            else if (currentStep.stepType == Step.StepType.CraftToLevel)
+            if (currentStep.Type == Step.StepType.CraftAll)
+                amountToCraft = currentStep.EstimatedAmountOfCrafts;
+            else if (currentStep.Type == Step.StepType.CraftToLevel)
                 amountToCraft = currentStep.GetRemainingProfessionLevels();
 
             int goalAmount = amountToCraft + itemInBagsBeforeCraft;
 
-            Logger.Log($"Crafting {amountToCraft} x {currentStep.itemoCraft.name}");
-            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.itemoCraft, amountToCraft);
+            Logger.Log($"Crafting {amountToCraft} x {currentStep.ItemoCraft.Name}");
+            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.ItemoCraft, amountToCraft);
             Thread.Sleep(100);
-            while (ItemsManager.GetItemCountById(currentStep.itemoCraft.itemId) < goalAmount && currentStep.HasMatsToCraftOne()
+            while (ItemsManager.GetItemCountById(currentStep.ItemoCraft.ItemId) < goalAmount && currentStep.HasMatsToCraftOne()
                 && Bag.GetContainerNumFreeSlots > 1)
             {
                 // Log
-                if (ItemsManager.GetItemCountById(currentStep.itemoCraft.itemId) != itemInBagsBeforeCraft)
+                if (ItemsManager.GetItemCountById(currentStep.ItemoCraft.ItemId) != itemInBagsBeforeCraft)
                 {
-                    itemInBagsBeforeCraft = ItemsManager.GetItemCountById(currentStep.itemoCraft.itemId);
-                    if (currentStep.stepType == Step.StepType.CraftAll)
-                        Logger.Log($"Crafted : {currentStep.itemoCraft.name} {itemInBagsBeforeCraft}/{goalAmount}");
-                    else if (currentStep.stepType == Step.StepType.CraftToLevel)
+                    itemInBagsBeforeCraft = ItemsManager.GetItemCountById(currentStep.ItemoCraft.ItemId);
+                    if (currentStep.Type == Step.StepType.CraftAll)
+                        Logger.Log($"Crafted : {currentStep.ItemoCraft.Name} {itemInBagsBeforeCraft}/{goalAmount}");
+                    else if (currentStep.Type == Step.StepType.CraftToLevel)
                     {
-                        Logger.Log($"Craft {currentStep.itemoCraft.name} until level up : " +
-                            $"{ToolBox.GetProfessionLevel(profession.ProfessionName)}/{currentStep.levelToReach}");
+                        Logger.Log($"Craft {currentStep.ItemoCraft.Name} until level up : " +
+                            $"{ToolBox.GetProfessionLevel(profession.ProfessionName)}/{currentStep.LevelToReach}");
                         // record item
-                        ToolBox.AddCraftedItemToSettings(profession.ProfessionName.ToString(), currentStep.itemoCraft);
+                        ToolBox.AddCraftedItemToSettings(profession.ProfessionName.ToString(), currentStep.ItemoCraft);
                     }
                 }
                 Thread.Sleep(200);

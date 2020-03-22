@@ -7,12 +7,12 @@ public static class VendorDB
     public static Npc OGEnchantingSupplies = new Npc()
     {
         Entry = 3346,
-        Position = new Vector3(1918.26, -4436.26, 24.77395, "None")
+        Position = new Vector3(1918.26, -4436.26, 24.77395)
     };
     public static Npc OGEnchantingTrainer = new Npc()
     {
         Entry = 3345,
-        Position = new Vector3(1912.18, -4436.61, 24.79994, "None")
+        Position = new Vector3(1912.18, -4436.61, 24.79994)
     };
 
     // ***************** TAILORING *****************

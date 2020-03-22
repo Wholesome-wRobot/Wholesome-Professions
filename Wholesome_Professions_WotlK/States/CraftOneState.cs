@@ -68,8 +68,8 @@ namespace Wholesome_Professions_WotlK.States
             Broadcaster.autoBroadcast = false;
 
             // Craft
-            Logger.Log($"Crafting {currentStep.itemoCraft.name}");
-            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.itemoCraft, 1);
+            Logger.Log($"Crafting {currentStep.ItemoCraft.Name}");
+            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.ItemoCraft, 1);
             Logger.Log("Craft complete");
             Lua.RunMacroText("/stopcasting");
 

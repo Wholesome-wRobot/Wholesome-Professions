@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Wholesome_Professions_WotlK.Helpers;
 using Wholesome_Professions_WotlK.Items;
-using Wholesome_Professions_WotlK.Profile;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -69,12 +68,27 @@ namespace Wholesome_Professions_WotlK.States
             Step selectedStep = null;
             int currentLevel = ToolBox.GetProfessionLevel(profession.ProfessionName);
 
+            // First check if we need a prerequisite item
+            Logger.LogDebug($"*** Checking for prerequisite items step");
+            if (profession.CurrentStep != null && profession.PrerequisiteItems.Count > 0)
+            {
+                foreach(Item item in profession.PrerequisiteItems)
+                {
+                    if (ItemsManager.GetItemCountById(item.ItemId) < 1)
+                    {
+                        Logger.LogDebug($"We need 1 {item.Name} to proceed");
+                        profession.AddGeneratedStep(new Step(item, 1));
+                        return;
+                    }
+                }
+            }
+
             // Search for Priority Steps
             Logger.LogDebug($"*** Checking for priority steps");
             foreach (Step step in profession.AllSteps)
             {
-                Logger.LogDebug($"Checking {step.itemoCraft.name}");
-                if (step.stepType == Step.StepType.CraftAll)
+                Logger.LogDebug($"Checking {step.ItemoCraft.Name}");
+                if (step.Type == Step.StepType.CraftAll)
                 {
                     selectedStep = step;
                     break;
@@ -87,8 +101,8 @@ namespace Wholesome_Professions_WotlK.States
                 Logger.LogDebug($"*** Checking for normal steps");
                 foreach (Step step in profession.AllSteps)
                 {
-                    Logger.LogDebug($"Checking {step.itemoCraft.name}");
-                    if (step.stepType != Step.StepType.CraftAll && currentLevel >= step.minlevel && currentLevel < step.levelToReach)
+                    Logger.LogDebug($"Checking {step.ItemoCraft.Name}");
+                    if (step.Type != Step.StepType.CraftAll && currentLevel >= step.Minlevel && currentLevel < step.LevelToReach)
                     {
                         selectedStep = step;
                         break;
@@ -104,43 +118,43 @@ namespace Wholesome_Professions_WotlK.States
             else
             {
                 // Log current step information
-                if (selectedStep.stepType == Step.StepType.CraftAll)
-                    Logger.LogDebug($"SELECTED STEP : Craft all {selectedStep.itemoCraft.name} x {selectedStep.estimatedAmountOfCrafts}");
-                else if (selectedStep.stepType == Step.StepType.CraftToLevel)
+                if (selectedStep.Type == Step.StepType.CraftAll)
+                    Logger.LogDebug($"SELECTED STEP : Craft all {selectedStep.ItemoCraft.Name} x {selectedStep.EstimatedAmountOfCrafts}");
+                else if (selectedStep.Type == Step.StepType.CraftToLevel)
                 {
-                    Logger.LogDebug($"SELECTED STEP : Craft to level {selectedStep.itemoCraft.name} x {selectedStep.GetRemainingProfessionLevels()}");
-                    selectedStep.estimatedAmountOfCrafts = selectedStep.GetRemainingProfessionLevels();
+                    Logger.LogDebug($"SELECTED STEP : Craft to level {selectedStep.ItemoCraft.Name} x {selectedStep.GetRemainingProfessionLevels()}");
+                    selectedStep.EstimatedAmountOfCrafts = selectedStep.GetRemainingProfessionLevels();
                 }
 
                 // If the selected step is a forced list, we generate and reset
-                if (selectedStep.stepType == Step.StepType.ListPreCraft)
+                if (selectedStep.Type == Step.StepType.ListPreCraft)
                 {
                     Logger.LogDebug("ADDING FORCED CRAFT");
-                    profession.AddGeneratedStep(new Step(selectedStep.itemoCraft, ItemHelper.GetTotalNeededMat(selectedStep.itemoCraft, profession)));
+                    profession.AddGeneratedStep(new Step(selectedStep.ItemoCraft, ItemHelper.GetTotalNeededMat(selectedStep.ItemoCraft, profession)));
                     return;
                 }
 
                 // If the selected step requires a precraft, we generate and reset
-                foreach (Item.Mat materialToPreCraft in selectedStep.itemoCraft.Materials)
+                foreach (Item.Mat materialToPreCraft in selectedStep.ItemoCraft.Materials)
                 {
-                    if (!materialToPreCraft.item.canBeBought && !materialToPreCraft.item.canBeFarmed)
+                    if (!materialToPreCraft.Item.CanBeBought && !materialToPreCraft.Item.CanBeFarmed)
                     {
-                        int amountMatNeeded = ItemHelper.GetTotalNeededMat(materialToPreCraft.item, profession);
-                        Logger.LogDebug($"We need to PRECRAFT {amountMatNeeded} {materialToPreCraft.item.name}");
+                        int amountMatNeeded = ItemHelper.GetTotalNeededMat(materialToPreCraft.Item, profession);
+                        Logger.LogDebug($"We need to PRECRAFT {amountMatNeeded} {materialToPreCraft.Item.Name}");
                         if (amountMatNeeded > 0)
                         {
-                            profession.AddGeneratedStep(new Step(materialToPreCraft.item, amountMatNeeded));
+                            profession.AddGeneratedStep(new Step(materialToPreCraft.Item, amountMatNeeded));
                             return;
                         }
                     }
                 }
 
-                if (ItemHelper.NeedToFarmItemFor(selectedStep.itemoCraft, profession))
-                    Logger.LogDebug($"{profession.AmountOfItemToFarm} more {profession.ItemToFarm.name} needed");
+                if (ItemHelper.NeedToFarmItemFor(selectedStep.ItemoCraft, profession))
+                    Logger.LogDebug($"{profession.AmountOfItemToFarm} more {profession.ItemToFarm.Name} needed");
 
                 // Set the knowRecipe flag of the selected step
-                selectedStep.knownRecipe = ToolBox.RecipeIsKnown(selectedStep.itemoCraft.name, profession.ToString());
-                Logger.LogDebug($"Recipe is known : {selectedStep.knownRecipe}");
+                selectedStep.KnownRecipe = ToolBox.RecipeIsKnown(selectedStep.ItemoCraft.Name, profession.ToString());
+                Logger.LogDebug($"Recipe is known : {selectedStep.KnownRecipe}");
 
                 profession.CurrentStep = selectedStep;
             }

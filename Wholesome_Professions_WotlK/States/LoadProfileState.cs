@@ -64,7 +64,12 @@ namespace Wholesome_Professions_WotlK.States
 
             string faction = ToolBox.IsHorde() ? "Horde" : "Alliance";
 
-            string profileName = $"{faction} - {profession.ItemToFarm.name}.xml";
+            // Setting profile name
+            string profileName;
+            if (profession.ItemToFarm.Profile != null)
+                profileName = profession.ItemToFarm.Profile;
+            else
+                profileName = $"{faction} - {profession.ItemToFarm.Name}.xml";
 
             Logger.Log($"Loading profile {profileName}");
             profession.CurrentProfile = profileName;

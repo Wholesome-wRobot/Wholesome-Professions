@@ -33,12 +33,12 @@ namespace Wholesome_Professions_WotlK.States
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
                     return false;
 
-                if (Main.primaryProfession.CurrentStep != null && Main.primaryProfession.ShouldLearnRecipeFromTrainer())
+                if (Main.primaryProfession.ShouldLearnRecipeFromTrainer())
                 {
                     profession = Main.primaryProfession;
                     return true;
                 }
-                if (Main.secondaryProfession.CurrentStep != null && Main.secondaryProfession.ShouldLearnRecipeFromTrainer())
+                if (Main.secondaryProfession.ShouldLearnRecipeFromTrainer())
                 {
                     profession = Main.secondaryProfession;
                     return true;
@@ -66,14 +66,14 @@ namespace Wholesome_Professions_WotlK.States
             Step currentStep = profession.CurrentStep;
             Npc trainer = profession.ProfessionTrainer;
 
-            Logger.Log($"Learning {currentStep.itemoCraft.name} at NPC {trainer.Entry}");
+            Logger.Log($"Learning {currentStep.ItemoCraft.Name} at NPC {trainer.Entry}");
             if (GoToTask.ToPositionAndIntecractWithNpc(trainer.Position, trainer.Entry, trainer.GossipOption))
             {
-                ToolBox.LearnthisSpell(currentStep.itemoCraft.name);
+                ToolBox.LearnthisSpell(currentStep.ItemoCraft.Name);
                 Thread.Sleep(1000);
             }
 
-            currentStep.knownRecipe = ToolBox.RecipeIsKnown(currentStep.itemoCraft.name, profession.ProfessionName.ToString());
+            currentStep.KnownRecipe = ToolBox.RecipeIsKnown(currentStep.ItemoCraft.Name, profession.ProfessionName.ToString());
 
             Broadcaster.autoBroadcast = true;
         }

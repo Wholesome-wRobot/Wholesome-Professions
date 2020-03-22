@@ -88,15 +88,15 @@ namespace Wholesome_Professions_WotlK.Helpers
                 {
                     // Farms needed
                     if (profession.ItemToFarm != null && profession.AmountOfItemToFarm > 0)
-                        farmsNeededString = $"You need {profession.AmountOfItemToFarm} more {profession.ItemToFarm.name} to proceed";
+                        farmsNeededString = $"You need {profession.AmountOfItemToFarm} more {profession.ItemToFarm.Name} to proceed";
                     else
                         farmsNeededString = null;
 
                     // Current step (craft all)
-                    if (profession.CurrentStep.stepType == Step.StepType.CraftAll)
-                        currentStepString = $"STEP : Craft all {profession.CurrentStep.itemoCraft.name} x {profession.CurrentStep.estimatedAmountOfCrafts}";
-                    else if (profession.CurrentStep.stepType == Step.StepType.CraftToLevel)
-                        currentStepString = $"STEP : Craft {profession.CurrentStep.itemoCraft.name} to reach level {profession.CurrentStep.levelToReach}";
+                    if (profession.CurrentStep.Type == Step.StepType.CraftAll)
+                        currentStepString = $"STEP : Craft all {profession.CurrentStep.ItemoCraft.Name} x {profession.CurrentStep.EstimatedAmountOfCrafts}";
+                    else if (profession.CurrentStep.Type == Step.StepType.CraftToLevel)
+                        currentStepString = $"STEP : Craft {profession.CurrentStep.ItemoCraft.Name} to reach level {profession.CurrentStep.LevelToReach}";
                     else
                         currentStepString = null;
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using wManager.Wow.Class;
 using wManager.Wow.Enums;
 
@@ -9,7 +8,8 @@ public interface IProfession
 
     Step CurrentStep { get; set; }
     List<Step> AllSteps { get; }
-    
+    List<Item> PrerequisiteItems { get; set; }
+
     Npc ProfessionTrainer { get; }
     Npc SuppliesVendor { get; }
     string ProfessionSpell { get; set; }
@@ -22,7 +22,6 @@ public interface IProfession
     string CurrentProfile { get; set; }
 
     void RegenerateSteps();
-    
     void SetContext();
 
     bool ShouldCraft();
