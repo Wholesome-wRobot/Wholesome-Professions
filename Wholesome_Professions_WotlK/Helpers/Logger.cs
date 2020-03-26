@@ -10,10 +10,10 @@ namespace Wholesome_Professions_WotlK.Helpers
             Logging.Write($"[{Main.productName}] " + str, Logging.LogType.Normal, Color.DodgerBlue);
         }
 
-        public static void LogLineBroadcast(string str)
+        public static void LogLineBroadcast(string str, Color c)
         {
             if (str != null)
-                Logging.Write($"[{Main.productName}] " + str, Logging.LogType.Normal, Color.MediumBlue);
+                Logging.Write($"[{Main.productName}] " + str, Logging.LogType.Normal, c);
         }
 
         public static void LogLineBroadcastImportant(string str)

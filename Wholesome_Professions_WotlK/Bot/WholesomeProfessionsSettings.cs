@@ -18,6 +18,7 @@ public class WholesomeProfessionsSettings : Settings
     public double LastUpdateDate { get; set; }
     public bool Autofarm { get; set; }
     public bool CraftWhileFarming { get; set; }
+    public bool FilterLoot { get; set; }
 
     public WholesomeProfessionsSettings()
     {
@@ -27,6 +28,7 @@ public class WholesomeProfessionsSettings : Settings
         LastUpdateDate = 0;
         Autofarm = true;
         CraftWhileFarming = true;
+        FilterLoot = false;
     }
 
     public bool Save()

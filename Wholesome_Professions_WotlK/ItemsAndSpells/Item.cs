@@ -16,6 +16,14 @@ public class Item
     public Npc RecipeVendor { get; set; }
     public int RecipeItemId { get; set; }
     public string Profile { get; set; }
+    public Spell Spell { get; set; }
+    public bool IsEnchant { get; set; }
+    public bool IsAPrerequisiteItem { get; set; }
+    public bool ContainsBuyableMats { get; set; }
+    public bool VendorFirst { get; set; }
+    public string EnchantGearType { get; set; }
+    public Item SplitsInto { get; set; }
+    public int AmountRequiredToSplit { get; set; }
 
     public struct Mat
     {
@@ -29,6 +37,8 @@ public class Item
         Vendor = null;
         RecipeVendor = null;
         Profile = null;
+        EnchantGearType = null;
+        SplitsInto = null;
     }
 
     public void AddMaterial(Item item, int amountToCraft)
@@ -39,6 +49,8 @@ public class Item
             Amount = amountToCraft
         };
         Materials.Add(matToAdd);
-        Logger.LogDebug($"ItemDB : Material {matToAdd.Item.Name} x {matToAdd.Amount} added to item {Name} in DB");
+        if (item.CanBeBought)
+            ContainsBuyableMats = true;
+        //Logger.LogDebug($"ItemDB : Material {matToAdd.Item.Name} x {matToAdd.Amount} added to item {Name} in DB");
     }
 }

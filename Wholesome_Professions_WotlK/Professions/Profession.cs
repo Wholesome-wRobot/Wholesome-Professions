@@ -5,141 +5,465 @@ using Wholesome_Professions_WotlK.Helpers;
 using Wholesome_Professions_WotlK.Items;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
+using wManager;
 
-public class Profession : IProfession
+public abstract class Profession : IProfession
 {
-    public SkillLine ProfessionName { get; set; }
+    public SkillLine Name { get; set; }
     public Step CurrentStep { get; set; }
     public List<Step> AllSteps { get; set; } = new List<Step>();
 
     public Npc ProfessionTrainer { get; set; } = new Npc();
     public Npc SuppliesVendor { get; set; } = new Npc();
-    public int Continent { get; set; }
     public int MinimumCharLevel { get; set; }
     public string ProfessionSpell { get; set; }
-    public string CurrentProfile { get; set; }
+    public string City { get; set; }
+    public List<WoWItem> ItemsToDisenchant { get; set; } = new List<WoWItem>();
     public List<Item> PrerequisiteItems { get; set; } = new List<Item>();
 
     // Flags
-    public bool HasSetCurrentStep { get; set; }
+    public bool MustRecalculateStep { get; set; }
+    public bool HasCheckedIfWeKnowRecipe { get; set; }
 
+    public int Phase { get; set; }
     public Item ItemToFarm { get; set; }
     public int AmountOfItemToFarm { get; set; }
-    
+    public WoWItem ItemToDelete { get; set; }
+    public string ItemToSplit { get; set; }
+    public IProfession OtherProfession { get; set; }
+
     protected Profession(SkillLine professionName)
     {
         CurrentStep = null;
-        CurrentProfile = null;
-        ProfessionName = professionName;
-
-        // Manage sell list
-        ToolBox.ManageSellList(AllSteps);
+        Name = professionName;
+        ItemToDelete = null;
+        ItemToSplit = null;
 
         // Reset save if prof level is 0
-        if (ToolBox.GetProfessionLevel(ProfessionName) == 0)
-            ToolBox.ClearProfessionFromSavedList(ProfessionName.ToString());
+        if (ToolBox.GetProfessionLevel(Name) == 0)
+            ToolBox.ClearProfessionFromSavedList(Name.ToString());
     }
 
-    // Should Select profile
-    public bool ShouldSelectProfile()
-    {
-        return AmountOfItemToFarm > 0 && ItemToFarm != null && CurrentProfile == null;
-    }
-
-    // Should set current step
-    public bool ShouldSetCurrentStep()
-    {
-        return !HasSetCurrentStep;
-    }
-
-    // Should buy Materials
-    public bool ShouldBuyMaterials()
-    {
-        if (CurrentStep == null)
-            return false;
-
-        return CurrentStep.CanBuyRemainingMats() && !CurrentStep.HasMatsToCraftOne() && MyLevelIsHighEnough();
-    }
-
-    // Should travel
-    public bool ShouldTravel()
-    {
-        if (CurrentStep == null)
-            return false;
-
-        Logger.LogDebug($"You are on continent {Usefuls.ContinentId}, you should be on {Continent}, your level is enough ? : {MyLevelIsHighEnough()}");
-        return Continent != Usefuls.ContinentId && MyLevelIsHighEnough();
-    }
-
-    // Should learn recipe from trainer
-    public bool ShouldLearnRecipeFromTrainer()
-    {
-        if (CurrentStep == null)
-            return false;
-
-        var RecipeVendor = CurrentStep.ItemoCraft.RecipeVendor;
-        return !CurrentStep.KnownRecipe && RecipeVendor == null && MyLevelIsHighEnough();
-    }
-
-    // Should buy and learn recipe
-    public bool ShouldBuyAndLearnRecipe()
-    {
-        if (CurrentStep == null)
-            return false;
-
-        var RecipeVendor = CurrentStep.ItemoCraft.RecipeVendor;
-        return !CurrentStep.KnownRecipe && RecipeVendor != null && MyLevelIsHighEnough();
-    }
-
-    // Should learn profession
-    public bool ShouldLearnProfession()
-    {
-        if (CurrentStep == null)
-            return false;
-
-        return (ToolBox.GetProfessionLevel(ProfessionName) >= 0 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 75
-            || ToolBox.GetProfessionLevel(ProfessionName) >= 75 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 150
-            || ToolBox.GetProfessionLevel(ProfessionName) >= 150 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 225
-            || ToolBox.GetProfessionLevel(ProfessionName) >= 225 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 300
-            || ToolBox.GetProfessionLevel(ProfessionName) >= 300 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 350
-            || ToolBox.GetProfessionLevel(ProfessionName) >= 350 && ToolBox.GetProfessionMaxLevel(ProfessionName) < 450)
-            && MyLevelIsHighEnough();
-    }
-
-    // Should sell items
+    // ************************ Should sell items ************************
     public bool ShouldSellItems()
     {
+        // Reset Debug frame since it's the top state
+        FrameHelper.ClearDebugString();
+
         return Bag.GetContainerNumFreeSlots <= 1;
     }
 
-    // Should craft One
-    public bool ShouldCraftOne()
+    // ************************ SET CURRENT STEP ************************
+    public bool ShouldSetCurrentStep()
     {
-        return CurrentStep != null && CurrentProfile != null && CurrentStep.HasMatsToCraftOne();
+        string keyName = $"{Name}.SETSTEP";
+        if (!MustRecalculateStep)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Has already set current step");
+            return false;
+        }
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
     }
 
-    // Should craft
-    public bool ShouldCraft()
+    // ************************ Should Split Item ************************
+    public bool ShouldSplitItem()
     {
-        // If basic conditions are not met
-        if (CurrentStep == null || CurrentStep.Type == Step.StepType.ListPreCraft || !MyLevelIsHighEnough())
-            return false;
+        string keyName = $"{Name}.SPLITITEM";
+        ItemToSplit = null;
 
-        // If items needed to farm
-        if (ItemHelper.NeedToFarmItemFor(CurrentStep.ItemoCraft, this))
-            return false;
-
-        // Craft 
-        if (CurrentStep.Type == Step.StepType.CraftAll || CurrentStep.Type == Step.StepType.CraftToLevel)
+        if (CurrentStep == null)
         {
-            Logger.LogDebug($"Should run {CurrentStep.Type.ToString()} {CurrentStep.ItemoCraft.Name}");
-            return true;
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
         }
 
-        Logger.Log("WARNING: No step to run after check");
+        Item _tempItemToGetAfterSplit = CurrentStep.ItemoCraft.Materials.Find(i => i.Item.SplitsInto != null).Item;
+
+        if (CurrentStep.ItemoCraft.SplitsInto == null && _tempItemToGetAfterSplit == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No item to merge");
+            return false;
+        }
+        Item _itemToSplit = _tempItemToGetAfterSplit.SplitsInto;
+        foreach (WoWItem item in Bag.GetBagItem())
+        {
+            if (item.Name == _itemToSplit.Name
+                && ItemsManager.GetItemCountById(_itemToSplit.ItemId) > _itemToSplit.AmountRequiredToSplit)
+            {
+                ItemToSplit = _itemToSplit.Name;
+                break;
+            }
+        }
+        if (ItemToSplit == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No item to merge");
+            return false;
+        }
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Disenchant ************************
+    public abstract bool ShouldDisenchant();
+
+    // ************************ Should Disenchant ************************
+    public abstract bool ShouldEnchant();
+
+    // ************************ Should Filter loot ************************
+    public bool ShouldFilterLoot()
+    {
+        string keyName = $"{Name}.FILTERLOOT";
+        bool weKnowEnchanting = Main.primaryProfession.Name == SkillLine.Enchanting || Main.secondaryProfession.Name == SkillLine.Enchanting;
+        ItemToDelete = null;
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        // Search for item to delete in bag
+        foreach (WoWItem item in Bag.GetBagItem())
+        {
+            if (ToolBox.vendorSellQuality.Contains((WoWItemQuality)item.GetItemInfo.ItemRarity)
+                && !wManagerSetting.CurrentSetting.DoNotSellList.Contains(item.Name)
+                || (weKnowEnchanting && item.IsEquippableItem && item.GetItemInfo.ItemRarity > 1))
+            {
+                ItemToDelete = item;
+                break;
+            }
+        }
+        if (Bot.ProfileName == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No Bot profile loaded");
+            return false;
+        }
+        if (ItemToDelete == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No item to delete");
+            return false;
+        }
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Travel ************************
+    public bool ShouldTravel()
+    {
+        string keyName = $"{Name}.TRAVEL";
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        if (Phase > OtherProfession.Phase)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
+            return false;
+        }
+        if (!Bot.HasSetContinent)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Bot hasn't set continent");
+            return false;
+        }
+        if (Bot.Continent == (ContinentId)Usefuls.ContinentId)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "We are on good continent");
+            return false;
+        }
+        if (!MyLevelIsHighEnough())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Level up first");
+            return false;
+        }
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Learn Profession ************************
+    public bool ShouldLearnProfession()
+    {
+        string keyName = $"{Name}.LEARNPROF";
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        if (Phase > OtherProfession.Phase)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
+            return false;
+        }
+        if (!ConfirmVendor())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Wait before vendors");
+            return false;
+        }
+        if (!MyLevelIsHighEnough())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Level up first");
+            return false;
+        }
+
+        bool shoulTrain = (ToolBox.GetProfessionLevel(Name) >= 0 && ToolBox.GetProfessionMaxLevel(Name) < 75
+            || ToolBox.GetProfessionLevel(Name) >= 75 && ToolBox.GetProfessionMaxLevel(Name) < 150
+            || ToolBox.GetProfessionLevel(Name) >= 150 && ToolBox.GetProfessionMaxLevel(Name) < 225
+            || ToolBox.GetProfessionLevel(Name) >= 225 && ToolBox.GetProfessionMaxLevel(Name) < 300
+            || ToolBox.GetProfessionLevel(Name) >= 300 && ToolBox.GetProfessionMaxLevel(Name) < 350
+            || ToolBox.GetProfessionLevel(Name) >= 350 && ToolBox.GetProfessionMaxLevel(Name) < 450);
+
+        if (!shoulTrain)
+            return false;
+
+        FrameHelper.UpdateDebugFrame($"{Name}.LEARNPROF", "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Buy And Learn Recipe ************************
+    public bool ShouldBuyAndLearnRecipe()
+    {
+        string keyName = $"{Name}.BUY&LEARN";
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        if (Phase > OtherProfession.Phase)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
+            return false;
+        }
+        if (!ConfirmVendor())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Wait before vendors");
+            return false;
+        }
+        if (CurrentStep.KnownRecipe)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "We already know the recipe");
+            return false;
+        }
+        var RecipeVendor = CurrentStep.ItemoCraft.RecipeVendor;
+        if (RecipeVendor == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Not a recipe we buy");
+            return false;
+        }
+        if (!MyLevelIsHighEnough())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Level up first");
+            return false;
+        }
+
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Learn Recipe From Trainer ************************
+    public bool ShouldLearnRecipeFromTrainer()
+    {
+        string keyName = $"{Name}.LEARNRECIPE";
+        Logger.LogDebug($"{Name} : ShouldLearnRecipeFromTrainer()");
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        if (Phase > OtherProfession.Phase)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
+            return false;
+        }
+        if (!ConfirmVendor())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Wait before vendoring");
+            return false;
+        }
+        if (!HasCheckedIfWeKnowRecipe)
+            CurrentStep.KnownRecipe = ToolBox.RecipeIsKnown(CurrentStep.ItemoCraft.Name, this);
+
+        if (CurrentStep.KnownRecipe)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "We already know the recipe");
+            return false;
+        }
+        var RecipeVendor = CurrentStep.ItemoCraft.RecipeVendor;
+        if (RecipeVendor != null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "This recipe should be bought");
+            return false;
+        }
+        if (!MyLevelIsHighEnough())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Level up first");
+            return false;
+        }
+
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Buy Materials ************************
+    public bool ShouldBuyMaterials()
+    {
+        string keyName = $"{Name}.BUYMATS";
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        if (Phase > OtherProfession.Phase)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
+            return false;
+        }
+        if (!ConfirmVendor())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Wait before vendors");
+            return false;
+        }
+        if (!CurrentStep.CanBuyRemainingMats())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Remaining mats are not buyable");
+            return false;
+        }
+        if (CurrentStep.HasMatsToCraftOne())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "We have mats to craft one");
+            return false;
+        }
+        if (!MyLevelIsHighEnough())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Level up first");
+            return false;
+        }
+
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Craft One ************************
+    public bool ShouldCraftOne()
+    {
+        string keyName = $"{Name}.CRAFTONE";
+        Logger.LogDebug($"{Name} : ShouldCraftOne()");
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        if (Phase > OtherProfession.Phase)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
+            return false;
+        }
+        if (Bot.ProfileName == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No Bot profile loaded");
+            return false;
+        }
+        if (!CurrentStep.HasMatsToCraftOne())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "We don't have mats to craft one");
+            return false;
+        }
+        if (CurrentStep.Type != Step.StepType.CraftAll)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Current step is not CraftAll");
+            return false;
+        }
+        if (AmountOfItemToFarm <= 0)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No item left to farm");
+            return false;
+        }
+
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // ************************ Should Craft ************************
+    public bool ShouldCraft()
+    {
+        string keyName = $"{Name}.CRAFT";
+        Logger.LogDebug($"{Name} : Checking if should craft");
+        if (CurrentStep == null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No step");
+            return false;
+        }
+        if (Phase > OtherProfession.Phase)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
+            return false;
+        }
+        if (!MyLevelIsHighEnough())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Level up first");
+            return false;
+        }
+        if (CurrentStep.ItemoCraft.IsEnchant)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "This is an enchant");
+            return false;
+        }
+        if (CurrentStep.Type == Step.StepType.ListPreCraft)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Current step is a ListPrecraft");
+            return false;
+        }
+        if (AmountOfItemToFarm > 0)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "There are still items to farm");
+            return false;
+        }
+        if (!CurrentStep.HasAllMats())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "We're missing mats");
+            return false;
+        }
+        if (CurrentStep.Type == Step.StepType.CraftAll || CurrentStep.Type == Step.StepType.CraftToLevel)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+            return true;
+        }
+        FrameHelper.UpdateDebugFrame(keyName, "WARNING : NO STEP AFTER CHECK");
         return false;
     }
 
+    // ************************ Should Load Profile ************************
+    public bool ShouldLoadProfile()
+    {
+        string keyName = $"{Name}.LOADPROFILE";
+
+        if (AmountOfItemToFarm <= 0 && Bot.ProfileName != null && Bot.ProfileProfession == Name.ToString())
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "Unloading profile");
+            ProfileHandler.UnloadCurrentProfile();
+            return false;
+        }
+        if (AmountOfItemToFarm <= 0)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, "No Items to farm");
+            return false;
+        }
+        if (Bot.ProfileName != null)
+        {
+            FrameHelper.UpdateDebugFrame(keyName, $"{Bot.ProfileName}");
+            return false;
+        }
+
+        FrameHelper.UpdateDebugFrame(keyName, "RUNNING");
+        return true;
+    }
+
+    // Farm before vendor
+    public bool ConfirmVendor()
+    {
+        return (!CurrentStep.ItemoCraft.VendorFirst && AmountOfItemToFarm <= 0 && OtherProfession.AmountOfItemToFarm <= 0)
+            || CurrentStep.ItemoCraft.VendorFirst || City == ToolBox.GetCurrentCity();
+    }
+
+    // Returns whether our level is at least the minimum level of current context
     public bool MyLevelIsHighEnough()
     {
         return ObjectManager.Me.Level >= MinimumCharLevel;
@@ -147,10 +471,30 @@ public class Profession : IProfession
 
     public void AddGeneratedStep(Step step)
     {
-        AllSteps.Add(step);
-        HasSetCurrentStep = false;
+        if (!AllSteps.Contains(step))
+        {
+            AllSteps.Add(step);
+            MustRecalculateStep = true;
+            ToolBox.SetSellListForOneItem(step.ItemoCraft);
+            foreach (Item.Mat mat in step.ItemoCraft.Materials)
+            {
+                ToolBox.SetSellListForOneItem(mat.Item);
+            }
+        }
     }
 
-    public void SetContext() { }
-    public void RegenerateSteps() { }
+    public void SetOtherProfession()
+    {
+        if (Main.primaryProfession != null && Main.secondaryProfession != null)
+        {
+            if (Name == Main.primaryProfession.Name)
+                OtherProfession = Main.secondaryProfession;
+            else
+                OtherProfession = Main.primaryProfession;
+            Logger.LogDebug($"{Name} : Other profession is {OtherProfession.Name}");
+        }
+    }
+
+    public abstract void SetContext();
+    public abstract void RegenerateSteps();
 }

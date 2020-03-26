@@ -5,6 +5,7 @@ using Wholesome_Professions_WotlK.Helpers;
 using wManager;
 using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Class;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -72,6 +73,15 @@ namespace Wholesome_Professions_WotlK.States
                 {
                     Npc vendor = mat.Item.Vendor ?? profession.SuppliesVendor;
                     Logger.Log($"Buying {amountMissing} {mat.Item.Name} from NPC {vendor.Entry}");
+
+                    // Check if continent ok
+                    if ((ContinentId)Usefuls.ContinentId != vendor.ContinentId)
+                    {
+                        Logger.Log($"The vendor is on continent {vendor.ContinentId}, launching traveler");
+                        Bot.SetContinent(vendor.ContinentId);
+                        return;
+                    }
+
                     int estimatedPrice = mat.Item.EstimatedPrice * mat.Amount * amountMissing;
                     Logger.Log($"Estimated price : {estimatedPrice}");
                     if (ObjectManager.Me.GetMoneyCopper >= mat.Amount * amountMissing)

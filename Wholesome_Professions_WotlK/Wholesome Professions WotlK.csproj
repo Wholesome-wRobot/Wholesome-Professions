@@ -43,6 +43,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RDManaged">
+      <HintPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Bin\RDManaged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="robotManager">
       <HintPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Bin\robotManager.dll</HintPath>
       <Private>False</Private>
@@ -70,6 +74,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Compile>
     <Compile Include="Bot\Bot.cs" />
+    <Compile Include="GUI\FrameHelper.cs" />
     <Compile Include="GUI\ProductSettingsControl.xaml.cs">
       <DependentUpon>ProductSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -89,6 +94,10 @@
     <Compile Include="Helpers\VendorDB.cs" />
     <Compile Include="Profile\GrinderProfile.cs" />
     <Compile Include="Profile\ProfileHandler.cs" />
+    <Compile Include="States\EnchantState.cs" />
+    <Compile Include="States\SplitItemState.cs" />
+    <Compile Include="States\FilterLootState.cs" />
+    <Compile Include="States\DisenchantState.cs" />
     <Compile Include="States\CraftOneState.cs" />
     <Compile Include="States\LoadProfileState.cs" />
     <Compile Include="States\LearnRecipeFromTrainerState.cs" />

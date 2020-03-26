@@ -6,28 +6,30 @@ using System.Windows.Forms;
 using Wholesome_Professions_WotlK.Helpers;
 using Wholesome_Professions_WotlK.Profile;
 using wManager.Wow.Bot.Tasks;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
 public class ProfileHandler
 {
-    internal static GrinderProfile Profile = new GrinderProfile();
+    public static GrinderProfile Profile = new GrinderProfile();
     internal static int ZoneIdProfile;
 
-    public static void LoadNewProfile(IProfession profession)
+    public static void LoadNewProfile(string profession, string profileName)
     {
         Profile = new GrinderProfile();
-        string filePath = Application.StartupPath + "\\Profiles\\Wholesome Professions\\" + profession.CurrentProfile;
+        string filePath = Application.StartupPath + "\\Profiles\\Wholesome Professions\\" + profileName;
+        Bot.ProfileName = profileName;
 
         // If grinder School Load Profile
-        if (!string.IsNullOrWhiteSpace(profession.CurrentProfile) &&
-            File.Exists(filePath))
+        if (!string.IsNullOrWhiteSpace(profileName) && File.Exists(filePath))
         {
             Profile = XmlSerializer.Deserialize<GrinderProfile>(filePath);
             if (Profile.GrinderZones.Count <= 0)
             {
                 Logger.Log($"Profile '{filePath}' seems incorrect. Please use a Grinder profile.");
-                profession.CurrentProfile = null;
+                UnloadCurrentProfile();
+                return;
             }
             else
                 Logger.Log("Profile loaded");
@@ -35,7 +37,7 @@ public class ProfileHandler
         else
         {
             Logger.LogLineBroadcastImportant($"Profile file '{filePath}' not found");
-            profession.CurrentProfile = null;
+            UnloadCurrentProfile();
             return;
         }
 
@@ -53,8 +55,6 @@ public class ProfileHandler
             NpcDB.AddNpcRange(zone.Npc);
         }
 
-        //TravelHelper.GetContinentFromZoneName(Profile.GrinderZones[ZoneIdProfile].Name);
-
         // Go to first hotspot or travel
         if (Profile.GrinderZones.Count > 0)
         {
@@ -64,24 +64,29 @@ public class ProfileHandler
             if (continentId == -1)
             {
                 Logger.LogLineBroadcastImportant($"ERROR : The zone name {zoneName} from your profile is incorrect. Please use default zone names.");
-                UnloadCurrentProfile(profession);
+                UnloadCurrentProfile();
                 return;
             }
 
             if (continentId != Usefuls.ContinentId)
             {
                 Logger.Log($"{Profile.GrinderZones[ZoneIdProfile].Name} is on another continent ({continentId}). Launching traveler.");
-                profession.Continent = continentId;
+                Bot.SetContinent((ContinentId)continentId);
                 return;
             }
 
-            Logger.Log($"Heading to first spot {Profile.GrinderZones[ZoneIdProfile].Vectors3[0]}");
+            Bot.ProfileProfession = profession;
+            Logger.Log($"Heading to first spot {Profile.GrinderZones[ZoneIdProfile].Vectors3[0]} in {Profile.GrinderZones[ZoneIdProfile].Name}");
             Broadcaster.autoBroadcast = false;
+            Broadcaster.BroadCastSituation();
             GoToTask.ToPosition(Profile.GrinderZones[ZoneIdProfile].Vectors3[0], 50);
             Broadcaster.autoBroadcast = true;
         }
         else
+        {
             Logger.LogDebug("No grinder zone found");
+            UnloadCurrentProfile();
+        }
     }
 
     internal static void SelectZone()
@@ -122,12 +127,13 @@ public class ProfileHandler
         Bot.MovementLoop.PathLoop = Profile.GrinderZones[ZoneIdProfile].Vectors3;
     }
 
-    public static void UnloadCurrentProfile(IProfession profession)
+    public static void UnloadCurrentProfile()
     {
-        if (profession != null && profession.CurrentProfile != null)
+        if (Bot.ProfileName != null)
         {
-            Logger.Log($"Unloading profile {profession.CurrentProfile}");
-            profession.CurrentProfile = null;
+            Logger.Log($"Unloading profile {Bot.ProfileName}");
+            Bot.ProfileName = null;
+            Bot.ProfileProfession = null;
 
             Profile = new GrinderProfile();
             Bot.MovementLoop.PathLoop.Clear();

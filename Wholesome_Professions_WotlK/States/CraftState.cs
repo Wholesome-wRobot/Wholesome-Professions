@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -84,8 +85,7 @@ namespace Wholesome_Professions_WotlK.States
 
             int goalAmount = amountToCraft + itemInBagsBeforeCraft;
 
-            Logger.Log($"Crafting {amountToCraft} x {currentStep.ItemoCraft.Name}");
-            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.ItemoCraft, amountToCraft);
+            ToolBox.Craft(profession.Name.ToString(), currentStep.ItemoCraft, amountToCraft);
             Thread.Sleep(100);
             while (ItemsManager.GetItemCountById(currentStep.ItemoCraft.ItemId) < goalAmount && currentStep.HasMatsToCraftOne()
                 && Bag.GetContainerNumFreeSlots > 1)
@@ -99,9 +99,9 @@ namespace Wholesome_Professions_WotlK.States
                     else if (currentStep.Type == Step.StepType.CraftToLevel)
                     {
                         Logger.Log($"Craft {currentStep.ItemoCraft.Name} until level up : " +
-                            $"{ToolBox.GetProfessionLevel(profession.ProfessionName)}/{currentStep.LevelToReach}");
+                            $"{ToolBox.GetProfessionLevel(profession.Name)}/{currentStep.LevelToReach}");
                         // record item
-                        ToolBox.AddCraftedItemToSettings(profession.ProfessionName.ToString(), currentStep.ItemoCraft);
+                        ToolBox.AddCraftedItemToSettings(profession.Name.ToString(), currentStep.ItemoCraft);
                     }
                 }
                 Thread.Sleep(200);
@@ -111,11 +111,15 @@ namespace Wholesome_Professions_WotlK.States
                 {
                     Thread.Sleep(200);
                     if (!ObjectManager.Me.IsCast)
+                    {
+                        Logger.Log("The craft has been interrupted");
                         break;
+                    }
                 }
             }
 
             Logger.Log("Craft complete");
+            ToolBox.CloseProfessionFrame();
             Lua.RunMacroText("/stopcasting");
             profession.RegenerateSteps();
 

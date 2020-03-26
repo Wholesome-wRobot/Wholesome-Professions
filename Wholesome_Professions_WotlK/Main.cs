@@ -16,6 +16,7 @@ public class Main : IProduct
     public static IProfession secondaryProfession = null;
     public static int amountProfessionsSelected = 0;
     public static string productName = "Wholesome Professions WotLK";
+    public static int wowVersion = GetWowVersion();
 
     private readonly BackgroundWorker _pulseThread = new BackgroundWorker();
     public bool IsStarted { get; private set; } = false;
@@ -59,6 +60,8 @@ public class Main : IProduct
         {
             AutoUpdater.CheckUpdate(this);
             IsStarted = true;
+            FrameHelper.CreateDebugFrame();
+            FrameHelper.CreateBroadcastFrame();
 
             WRobotSettings.SetRecommendedWRobotSettings();
 
@@ -155,8 +158,16 @@ public class Main : IProduct
 
     private void SetProfessions()
     {
-        primaryProfession = new Enchanting();
-        secondaryProfession = new Tailoring();
+        primaryProfession = new Tailoring();
+        secondaryProfession = new Enchanting();
+        primaryProfession.SetOtherProfession();
+        secondaryProfession.SetOtherProfession();
         amountProfessionsSelected = 2;
+    }
+
+    private static int GetWowVersion()
+    {
+        string[] forWow = wManager.Information.ForWow.Split(new Char[] { '.' });
+        return Int32.Parse(forWow[0]);
     }
 }

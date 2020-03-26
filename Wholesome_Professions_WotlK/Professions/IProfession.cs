@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using wManager.Wow.Class;
 using wManager.Wow.Enums;
+using wManager.Wow.ObjectManager;
 
 public interface IProfession
 {
-    SkillLine ProfessionName { get; }
+    SkillLine Name { get; }
 
     Step CurrentStep { get; set; }
     List<Step> AllSteps { get; }
@@ -15,14 +16,20 @@ public interface IProfession
     string ProfessionSpell { get; set; }
     Item ItemToFarm { get; set; }
     int AmountOfItemToFarm { get; set; }
-    int Continent { get; set; }
     int MinimumCharLevel { get; set; }
-    
-    bool HasSetCurrentStep { get; set; }
-    string CurrentProfile { get; set; }
+    List<WoWItem> ItemsToDisenchant { get; set; }
+    WoWItem ItemToDelete { get; set; }
+    string ItemToSplit { get; set; }
+    string City { get; set; }
+    IProfession OtherProfession { get; set; }
+    int Phase { get; set; }
+
+    bool MustRecalculateStep { get; set; }
+    bool HasCheckedIfWeKnowRecipe { get; set; }
 
     void RegenerateSteps();
     void SetContext();
+    void SetOtherProfession();
 
     bool ShouldCraft();
     bool ShouldSellItems();
@@ -32,8 +39,12 @@ public interface IProfession
     bool ShouldBuyMaterials();
     bool ShouldTravel();
     bool ShouldSetCurrentStep();
-    bool ShouldSelectProfile();
+    bool ShouldLoadProfile();
     bool ShouldCraftOne();
+    bool ShouldDisenchant();
+    bool ShouldFilterLoot();
+    bool ShouldSplitItem();
+    bool ShouldEnchant();
 
     void AddGeneratedStep(Step step);
     bool MyLevelIsHighEnough();

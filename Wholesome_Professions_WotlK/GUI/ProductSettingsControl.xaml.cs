@@ -29,6 +29,13 @@ namespace Wholesome_Professions_WotlK.GUI
             LogDebug.IsChecked = WholesomeProfessionsSettings.CurrentSetting.LogDebug;
             Autofarm.IsChecked = WholesomeProfessionsSettings.CurrentSetting.Autofarm;
             CraftWhileFarming.IsChecked = WholesomeProfessionsSettings.CurrentSetting.CraftWhileFarming;
+            FilterLoot.IsChecked = WholesomeProfessionsSettings.CurrentSetting.FilterLoot;
+        }
+
+        private void FilterLootChanged(object sender, RoutedEventArgs e)
+        {
+            WholesomeProfessionsSettings.CurrentSetting.FilterLoot = (bool)FilterLoot.IsChecked;
+            WholesomeProfessionsSettings.CurrentSetting.Save();
         }
 
         private void CraftWhileFarmingChanged(object sender, RoutedEventArgs e)

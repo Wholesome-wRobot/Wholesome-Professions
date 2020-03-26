@@ -4,6 +4,7 @@ using System.Threading;
 using robotManager.FiniteStateMachine;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Bot.Tasks;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -61,12 +62,21 @@ namespace Wholesome_Professions_WotlK.States
         public override void Run()
         {
             Logger.LogDebug("************ RUNNING BUY AND LEARN RECIPE STATE ************");
-            Broadcaster.autoBroadcast = false;
 
             Step currentStep = profession.CurrentStep;
             var RecipeVendor = currentStep.ItemoCraft.RecipeVendor;
-
             Logger.Log($"Buying {currentStep.ItemoCraft.Name} recipe at NPC {profession.ProfessionTrainer.Entry}");
+
+            // Check if continent ok
+            if ((ContinentId)Usefuls.ContinentId != RecipeVendor.ContinentId)
+            {
+                Logger.Log($"The vendor is on continent {RecipeVendor.ContinentId}, launching traveler");
+                Bot.SetContinent(RecipeVendor.ContinentId);
+                return;
+            }
+
+            Broadcaster.autoBroadcast = false;
+            
             if (GoToTask.ToPositionAndIntecractWithNpc(RecipeVendor.Position, RecipeVendor.Entry, RecipeVendor.GossipOption))
             {
                 Vendor.BuyItem(ItemsManager.GetNameById(currentStep.ItemoCraft.RecipeItemId), 1);
@@ -77,7 +87,7 @@ namespace Wholesome_Professions_WotlK.States
                 Thread.Sleep(300);
             }
 
-            currentStep.KnownRecipe = ToolBox.RecipeIsKnown(currentStep.ItemoCraft.Name, profession.ProfessionName.ToString());
+            currentStep.KnownRecipe = ToolBox.RecipeIsKnown(currentStep.ItemoCraft.Name, profession);
 
             Broadcaster.autoBroadcast = true;
         }

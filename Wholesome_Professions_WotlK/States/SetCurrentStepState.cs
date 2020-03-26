@@ -63,22 +63,25 @@ namespace Wholesome_Professions_WotlK.States
             Broadcaster.autoBroadcast = false;
             
             // Reset current profile if there is one loaded
-            ProfileHandler.UnloadCurrentProfile(profession);
+            ProfileHandler.UnloadCurrentProfile();
 
             Step selectedStep = null;
-            int currentLevel = ToolBox.GetProfessionLevel(profession.ProfessionName);
+            int currentLevel = ToolBox.GetProfessionLevel(profession.Name);
 
             // First check if we need a prerequisite item
-            Logger.LogDebug($"*** Checking for prerequisite items step");
-            if (profession.CurrentStep != null && profession.PrerequisiteItems.Count > 0)
+            if (profession.PrerequisiteItems.Count > 0)
             {
-                foreach(Item item in profession.PrerequisiteItems)
+                foreach (Item item in profession.PrerequisiteItems)
                 {
                     if (ItemsManager.GetItemCountById(item.ItemId) < 1)
                     {
-                        Logger.LogDebug($"We need 1 {item.Name} to proceed");
-                        profession.AddGeneratedStep(new Step(item, 1));
-                        return;
+                        Step stepToAdd = new Step(profession, item, 1);
+                        if (!profession.AllSteps.Exists(s => s.ItemoCraft.Name == item.Name))
+                        {
+                            Logger.LogDebug($"Adding prerequisite step {item}");
+                            profession.AddGeneratedStep(stepToAdd);
+                            return;
+                        }
                     }
                 }
             }
@@ -117,6 +120,14 @@ namespace Wholesome_Professions_WotlK.States
             }
             else
             {
+                // If the selected step is a forced list, we generate and reset
+                if (selectedStep.Type == Step.StepType.ListPreCraft)
+                {
+                    Logger.LogDebug("ADDING FORCED CRAFT");
+                    profession.AddGeneratedStep(new Step(profession, selectedStep.ItemoCraft, ItemHelper.GetTotalNeededMat(profession, selectedStep.ItemoCraft)));
+                    return;
+                }
+
                 // Log current step information
                 if (selectedStep.Type == Step.StepType.CraftAll)
                     Logger.LogDebug($"SELECTED STEP : Craft all {selectedStep.ItemoCraft.Name} x {selectedStep.EstimatedAmountOfCrafts}");
@@ -126,40 +137,35 @@ namespace Wholesome_Professions_WotlK.States
                     selectedStep.EstimatedAmountOfCrafts = selectedStep.GetRemainingProfessionLevels();
                 }
 
-                // If the selected step is a forced list, we generate and reset
-                if (selectedStep.Type == Step.StepType.ListPreCraft)
-                {
-                    Logger.LogDebug("ADDING FORCED CRAFT");
-                    profession.AddGeneratedStep(new Step(selectedStep.ItemoCraft, ItemHelper.GetTotalNeededMat(selectedStep.ItemoCraft, profession)));
-                    return;
-                }
-
                 // If the selected step requires a precraft, we generate and reset
                 foreach (Item.Mat materialToPreCraft in selectedStep.ItemoCraft.Materials)
                 {
                     if (!materialToPreCraft.Item.CanBeBought && !materialToPreCraft.Item.CanBeFarmed)
                     {
-                        int amountMatNeeded = ItemHelper.GetTotalNeededMat(materialToPreCraft.Item, profession);
-                        Logger.LogDebug($"We need to PRECRAFT {amountMatNeeded} {materialToPreCraft.Item.Name}");
+                        int amountMatNeeded = ItemHelper.GetTotalNeededMat(profession, materialToPreCraft.Item);
                         if (amountMatNeeded > 0)
                         {
-                            profession.AddGeneratedStep(new Step(materialToPreCraft.Item, amountMatNeeded));
+                            Logger.LogDebug($"We need to PRECRAFT {amountMatNeeded} {materialToPreCraft.Item.Name}");
+                            profession.AddGeneratedStep(new Step(profession, materialToPreCraft.Item, amountMatNeeded));
                             return;
                         }
                     }
                 }
 
-                if (ItemHelper.NeedToFarmItemFor(selectedStep.ItemoCraft, profession))
+                profession.CurrentStep = selectedStep;
+
+                // Set the amount of items needed to farm
+                ItemHelper.CalculateFarmAmountFor(profession, selectedStep.ItemoCraft);
+                if (profession.AmountOfItemToFarm > 0)
                     Logger.LogDebug($"{profession.AmountOfItemToFarm} more {profession.ItemToFarm.Name} needed");
 
-                // Set the knowRecipe flag of the selected step
-                selectedStep.KnownRecipe = ToolBox.RecipeIsKnown(selectedStep.ItemoCraft.Name, profession.ToString());
-                Logger.LogDebug($"Recipe is known : {selectedStep.KnownRecipe}");
 
-                profession.CurrentStep = selectedStep;
+                // Set the knowRecipe flag of the selected step
+                profession.CurrentStep.KnownRecipe = ToolBox.RecipeIsKnown(selectedStep.ItemoCraft.Name, profession);
+                Logger.LogDebug($"Recipe is known : {selectedStep.KnownRecipe}");
             }
 
-            profession.HasSetCurrentStep = true;
+            profession.MustRecalculateStep = false;
             Broadcaster.autoBroadcast = true;
             Broadcaster.BroadCastSituation(true);
         }

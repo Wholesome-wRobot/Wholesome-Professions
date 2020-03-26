@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
-using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
 namespace Wholesome_Professions_WotlK.States
 {
-    class LoadProfileState : State
+    class FilterLootState : State
     {
         public override string DisplayName
         {
-            get { return "Starting profile"; }
+            get { return "Filtering Loot"; }
         }
 
         public override int Priority
@@ -29,15 +28,16 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || !WholesomeProfessionsSettings.CurrentSetting.Autofarm)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 
+                    || !WholesomeProfessionsSettings.CurrentSetting.FilterLoot)
                     return false;
                 
-                if (Main.primaryProfession.ShouldLoadProfile())
+                if (Main.primaryProfession.ShouldFilterLoot())
                 {
                     profession = Main.primaryProfession;
                     return true;
                 }
-                if (Main.secondaryProfession.ShouldLoadProfile())
+                if (Main.secondaryProfession.ShouldFilterLoot())
                 {
                     profession = Main.secondaryProfession;
                     return true;
@@ -59,20 +59,15 @@ namespace Wholesome_Professions_WotlK.States
 
         public override void Run()
         {
-            Logger.LogDebug("************ RUNNING LOAD PROFILE STATE ************");
-            Step currentStep = profession.CurrentStep;
+            Logger.LogDebug("************ RUNNING FILTER LOOT STATE ************");
+            MovementManager.StopMoveNewThread();
 
-            string faction = ToolBox.IsHorde() ? "Horde" : "Alliance";
+            // Deactivate broadcast
+            Broadcaster.autoBroadcast = false;
+            Logger.Log($"Deleting {profession.ItemToDelete.Name}");
+            ToolBox.DeleteItemByName(profession.ItemToDelete);
 
-            // Setting profile name
-            string profileName;
-            if (profession.ItemToFarm.Profile != null)
-                profileName = profession.ItemToFarm.Profile;
-            else
-                profileName = $"{faction} - {profession.ItemToFarm.Name}.xml";
-
-            Logger.Log($"Loading profile {profileName}");
-            ProfileHandler.LoadNewProfile(profession.Name.ToString(), profileName);
+            Broadcaster.autoBroadcast = true;
         }
     }
 }

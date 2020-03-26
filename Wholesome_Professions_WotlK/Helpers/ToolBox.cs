@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager;
@@ -9,7 +10,7 @@ using wManager.Wow.ObjectManager;
 
 public class ToolBox
 {
-    public static List<WoWItemQuality> vendorQuality = new List<WoWItemQuality>();
+    public static List<WoWItemQuality> vendorSellQuality = new List<WoWItemQuality>();
 
     // Check if Horde
     public static bool IsHorde()
@@ -111,22 +112,25 @@ public class ToolBox
     // Manage WRobot sell/not sell lists
     public static void ManageSellList(List<Step> allSteps)
     {
-        if (wManagerSetting.CurrentSetting.MailGray)
-            vendorQuality.Add(WoWItemQuality.Poor);
-        if (wManagerSetting.CurrentSetting.MailWhite)
-            vendorQuality.Add(WoWItemQuality.Common);
-        if (wManagerSetting.CurrentSetting.MailGreen)
-            vendorQuality.Add(WoWItemQuality.Uncommon);
-        if (wManagerSetting.CurrentSetting.MailBlue)
-            vendorQuality.Add(WoWItemQuality.Rare);
-        if (wManagerSetting.CurrentSetting.MailPurple)
-            vendorQuality.Add(WoWItemQuality.Epic);
+        if (wManagerSetting.CurrentSetting.SellGray)
+            vendorSellQuality.Add(WoWItemQuality.Poor);
+        if (wManagerSetting.CurrentSetting.SellWhite)
+            vendorSellQuality.Add(WoWItemQuality.Common);
+        if (wManagerSetting.CurrentSetting.SellGreen)
+            vendorSellQuality.Add(WoWItemQuality.Uncommon);
+        if (wManagerSetting.CurrentSetting.SellBlue)
+            vendorSellQuality.Add(WoWItemQuality.Rare);
+        if (wManagerSetting.CurrentSetting.SellPurple)
+            vendorSellQuality.Add(WoWItemQuality.Epic);
 
         wManagerSetting.CurrentSetting.Selling = false;
+
+        if (!wManagerSetting.CurrentSetting.DoNotSellList.Contains("Hearthstone"))
+            wManagerSetting.CurrentSetting.DoNotSellList.Add("Hearthstone");
+
         wManager.Wow.Bot.States.ToTown.ForceToTown = false;
         foreach (Step step in allSteps)
         {
-            SetSellListForOneItem(step.ItemoCraft);
             foreach (Item.Mat mat in step.ItemoCraft.Materials)
             {
                 SetSellListForOneItem(mat.Item);
@@ -134,13 +138,20 @@ public class ToolBox
         }
     }
 
-    private static void SetSellListForOneItem(Item item)
+    public static void SetSellListForOneItem(Item item)
     {
         RemoveFromSellAndNotSellList(item);
+        if (item.IsEnchant)
+            return;
+
         if (item.ForceSell)
             AddItemToSellList(item);
         else
+        {
             AddItemToDoNotSellList(item);
+            if (item.SplitsInto != null)
+                AddItemToDoNotSellList(item.SplitsInto);
+        }
     }
 
     private static void AddItemToDoNotSellList(Item item)
@@ -172,60 +183,35 @@ public class ToolBox
 
     public static void Craft(string skillName, Item item, int quantity)
     {
-        SpellManager.CastSpellByNameLUA(skillName);
-        Lua.LuaDoString($@"
-            if (TradeSkillFrame:IsVisible() ) then
-             TradeSkillFrame:Hide();
-             end
-            if not TradeSkillFrame then
-             CastSpellByName('{skillName}')
-             end
-             if TradeSkillFrame:IsVisible() == nil then
-             CastSpellByName('{skillName}')
-             end 
-            for i=1,GetNumTradeSkills() do
-             local name, _, _, _ = GetTradeSkillInfo(i)
-            if (name == '{item.Name}') then
-            DoTradeSkill(i, {quantity})
-            end
-             end
-             if (TradeSkillFrame:IsVisible() and {quantity} < 2) then
-            TradeSkillFrame:Hide();
-            end
-            ");
+        OpenProfessionFrame(skillName);
+        if (item.IsEnchant)
+        {
+            UseProfessionSkill(item, 1);
+            WoWItem itemToEnchant = EquippedItems.GetEquippedItems().Find(i => i.GetItemInfo.ItemEquipLoc == item.EnchantGearType);
+            for (var i = 0; i < quantity; i++)
+            {
+                int itemSlot = GetGearSlot(itemToEnchant);
+                Logger.Log($"Enchanting {itemToEnchant.Name}");
+                Lua.RunMacroText($"/use {itemSlot}");
+                Lua.LuaDoString("ReplaceEnchant()");
+                Usefuls.WaitIsCasting();
+            }
+        }
+        else
+        {
+            UseProfessionSkill(item, quantity);
+        }
         Usefuls.WaitIsCasting();
     }
 
-    public static bool IsTradeSkillOpen()
-    {
-        return Lua.LuaDoString<bool>($"if TradeSkillFrame:IsVisible() then return true end");
-    }
-
-    public static bool RecipeIsKnown(string recipeName, string profession)
-    {
-        SpellManager.CastSpellByNameLUA(profession);
-        bool recipeIsKnown =  Lua.LuaDoString <bool> (@"
-                                    tradeskillName, currentLevel, maxLevel, skillLineModifier = GetTradeSkillLine();
-                                    tradeItemCount = GetNumTradeSkills()
-                                    for i = 1, tradeItemCount do
-                                            tradeItemName, tradeItemType, _, _ = GetTradeSkillInfo(i)
-                                            if tradeItemName == """ + recipeName + @""" then
-                                                return true;
-                                            end
-                                    end");
-        Thread.Sleep(300);
-        SpellManager.CastSpellByNameLUA(profession);
-        return recipeIsKnown;
-    }
-
-    public static bool IsProfessionFrameOpen()
+    public static bool ProfessionFrameOpen()
     {
         return Lua.LuaDoString<bool>($"return TradeSkillFrame:IsVisible()");
     }
 
     public static void OpenProfessionFrame(string skillName)
     {
-        if (!IsProfessionFrameOpen())
+        if (!ProfessionFrameOpen())
         {
             CloseProfessionFrame();
             Lua.LuaDoString($"CastSpellByName('{skillName}')");
@@ -236,8 +222,84 @@ public class ToolBox
 
     public static void CloseProfessionFrame()
     {
-        if (!IsProfessionFrameOpen())
-            Lua.LuaDoString("TradeSkillFrame:Hide()");
+        Lua.LuaDoString("TradeSkillFrame:Hide()");
+    }
+
+    public static void UseProfessionSkill(Item item, int quantity)
+    {
+        Logger.Log($"Crafting {quantity} x {item.Name}");
+        Lua.LuaDoString($@"
+            for i=1,GetNumTradeSkills() do
+                local name, _, _, _ = GetTradeSkillInfo(i)
+                if (name == '{item.Name}') then
+                    DoTradeSkill(i, {quantity})
+                end
+            end");
+    }
+
+    public static bool RecipeIsKnown(string recipeName, IProfession profession)
+    {
+        SpellManager.CastSpellByNameLUA(profession.Name.ToString());
+        bool recipeIsKnown =  Lua.LuaDoString <bool> (@"
+                                    tradeskillName, currentLevel, maxLevel, skillLineModifier = GetTradeSkillLine();
+                                    tradeItemCount = GetNumTradeSkills()
+                                    for i = 1, tradeItemCount do
+                                            tradeItemName, tradeItemType, _, _ = GetTradeSkillInfo(i)
+                                            if tradeItemName == """ + recipeName + @""" then
+                                                return true;
+                                            end
+                                    end");
+        Thread.Sleep(300);
+        SpellManager.CastSpellByNameLUA(profession.Name.ToString());
+        profession.HasCheckedIfWeKnowRecipe = true;
+        return recipeIsKnown;
+    }
+
+    public static void DeleteItemByName(WoWItem item)
+    {
+        List<int> itemContainerBagIdAndSlot = Bag.GetItemContainerBagIdAndSlot(item.Entry);
+        Lua.LuaDoString(string.Format("PickupContainerItem({0}, {1})", itemContainerBagIdAndSlot[0], itemContainerBagIdAndSlot[1]), false);
+        Lua.LuaDoString("DeleteCursorItem()", false);
+        Thread.Sleep(100);
+    }
+
+    public static int GetGearSlot(WoWItem item)
+    {
+        switch (item.GetItemInfo.ItemEquipLoc)
+        {
+            case "INVTYPE_AMMO": return 0;
+            case "INVTYPE_HEAD": return 1;
+            case "INVTYPE_NECK": return 2;
+            case "INVTYPE_SHOULDER": return 3;
+            case "INVTYPE_BODY": return 4;
+            case "INVTYPE_CHEST": return 5;
+            case "INVTYPE_ROBE": return 5;
+            case "INVTYPE_WAIST": return 6;
+            case "INVTYPE_LEGS": return 7;
+            case "INVTYPE_FEET": return 8;
+            case "INVTYPE_WRIST": return 9;
+            case "INVTYPE_HAND": return 10;
+            case "INVTYPE_FINGER": return 11;
+            case "INVTYPE_TRINKET": return 13;
+            case "INVTYPE_CLOAK": return 15;
+            case "INVTYPE_WEAPON": return 16;
+            case "INVTYPE_SHIELD": return 17;
+            case "INVTYPE_2HWEAPON": return 16;
+            case "INVTYPE_WEAPONMAINHAND": return 16;
+            case "INVTYPE_WEAPONOFFHAND": return 17;
+            case "INVTYPE_HOLDABLE": return 17;
+            case "INVTYPE_RANGED": return 18;
+            case "INVTYPE_THROWN": return 18;
+            case "INVTYPE_RANGEDRIGHT": return 18;
+            case "INVTYPE_RELIC": return 18;
+            case "INVTYPE_TABARD": return 19;
+            default: return -1;
+        }
+    }
+
+    public static string GetCurrentCity()
+    {
+        return Lua.LuaDoString<string>("return GetZoneText();");
     }
 }
 

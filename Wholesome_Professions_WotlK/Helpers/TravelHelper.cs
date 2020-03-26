@@ -138,41 +138,6 @@ public static class TravelHelper
                 new Vector3(1339.75, -4639.255, 53.52875),
                 new Vector3(1334.665, -4644.297, 53.52875),
                 new Vector3(1326.729, -4649.013, 53.99952)
-            }, (int) ContinentId.Kalimdor, OffMeshConnectionType.Bidirectional, true),
-
-            // Orgrimmar avoid bonfires
-            new OffMeshConnection(new List<Vector3>
-            {
-                new Vector3(1663.28, -4346.712, 32.03524),
-                new Vector3(1659.953, -4351.468, 28.83975),
-                new Vector3(1656.177, -4357.337, 25.34673),
-                new Vector3(1655.595, -4364.225, 23.89616),
-                new Vector3(1657.976, -4370.762, 24.05593),
-                new Vector3(1661.927, -4376.513, 24.58414),
-                new Vector3(1666.831, -4381.477, 23.80528),
-                new Vector3(1672.36, -4385.776, 22.80081),
-                new Vector3(1679.218, -4387.557, 22.79654),
-                new Vector3(1685.867, -4385.605, 24.19398),
-                new Vector3(1691.992, -4381.783, 24.69983),
-                new Vector3(1698.621, -4379.039, 25.92191),
-                new Vector3(1705.783, -4379.576, 27.83204),
-                new Vector3(1712.008, -4383.197, 30.26145),
-                new Vector3(1717.356, -4388.021, 31.84975),
-                new Vector3(1721.925, -4393.634, 33.13778),
-                new Vector3(1726.311, -4399.072, 34.24639),
-                new Vector3(1730.621, -4404.898, 35.87472),
-                new Vector3(1734.231, -4411.148, 37.22543),
-                new Vector3(1737.234, -4417.733, 36.65648),
-                new Vector3(1739.424, -4424.603, 36.8005),
-                new Vector3(1739.787, -4431.816, 37.53835),
-                new Vector3(1739.139, -4439.018, 38.00449),
-                new Vector3(1737.568, -4445.816, 37.60702),
-                new Vector3(1735.495, -4452.748, 37.06969),
-                new Vector3(1733.802, -4459.771, 35.8798),
-                new Vector3(1732.162, -4466.576, 34.50483),
-                new Vector3(1730.692, -4473.662, 33.34413),
-                new Vector3(1730.769, -4480.856, 31.772),
-                new Vector3(1733.318, -4487.608, 30.22909)
             }, (int) ContinentId.Kalimdor, OffMeshConnectionType.Bidirectional, true)
         };
 

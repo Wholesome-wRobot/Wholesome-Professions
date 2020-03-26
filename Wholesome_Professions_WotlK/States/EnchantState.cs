@@ -1,20 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using robotManager.FiniteStateMachine;
+using System.Collections.Generic;
 using System.Threading;
-using robotManager.FiniteStateMachine;
 using Wholesome_Professions_WotlK.Helpers;
-using wManager.Wow.Bot.Tasks;
-using wManager.Wow.Class;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
 namespace Wholesome_Professions_WotlK.States
 {
-    class LearnRecipeFromTrainerState : State
+    class EnchantState : State
     {
         public override string DisplayName
         {
-            get { return "Learning recipe from trainer"; }
+            get { return "Enchanting"; }
         }
 
         public override int Priority
@@ -33,13 +31,13 @@ namespace Wholesome_Professions_WotlK.States
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
                     || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
-
-                if (Main.primaryProfession.ShouldLearnRecipeFromTrainer())
+                
+                if (Main.primaryProfession.ShouldEnchant())
                 {
                     profession = Main.primaryProfession;
                     return true;
                 }
-                if (Main.secondaryProfession.ShouldLearnRecipeFromTrainer())
+                if (Main.secondaryProfession.ShouldEnchant())
                 {
                     profession = Main.secondaryProfession;
                     return true;
@@ -61,29 +59,36 @@ namespace Wholesome_Professions_WotlK.States
 
         public override void Run()
         {
-            Logger.LogDebug("************ RUNNING LEARN RECIPE FROM TRAINER ************");
+            Logger.LogDebug("************ RUNNING ENCHANT STATE ************");
+            Step currentStep = profession.CurrentStep;
+
+            MovementManager.StopMoveNewThread();
+
+            // Deactivate broadcast
             Broadcaster.autoBroadcast = false;
 
-            Step currentStep = profession.CurrentStep;
-            Npc trainer = profession.ProfessionTrainer;
+            //Debugger.Launch();
+            //Debugger.Break();
 
-            Logger.Log($"Learning {currentStep.ItemoCraft.Name} at NPC {trainer.Entry}");
+            // amountAlreadyCrafted NOT USED ANYMORE ?????
+            //int amountAlreadyCrafted = ToolBox.GetAlreadyCrafted(profession.ProfessionName.ToString(), currentStep.itemoCraft.name);
+            //Logger.Log($"We've already crafted {amountAlreadyCrafted} {currentStep.itemoCraft.name}");
 
-            // Check if continent ok
-            if ((ContinentId)Usefuls.ContinentId != trainer.ContinentId)
+            // Craft (has to be craft to level)
+            int amountEnchant = currentStep.GetRemainingProfessionLevels();
+            Logger.Log($"Enchanting x {amountEnchant}");
+
+            for (int i = 0; i < amountEnchant; i++)
             {
-                Logger.Log($"The trainer is on continent {trainer.ContinentId}, launching traveler");
-                Bot.SetContinent(trainer.ContinentId);
-                return;
+                ToolBox.Craft(profession.Name.ToString(), currentStep.ItemoCraft, 1);
+                Thread.Sleep(100);
             }
 
-            if (GoToTask.ToPositionAndIntecractWithNpc(trainer.Position, trainer.Entry, trainer.GossipOption))
-            {
-                ToolBox.LearnthisSpell(currentStep.ItemoCraft.Name);
-                Thread.Sleep(1000);
-            }
+            Logger.Log("Enchant complete");
+            ToolBox.CloseProfessionFrame();
+            Lua.RunMacroText("/stopcasting");
 
-            currentStep.KnownRecipe = ToolBox.RecipeIsKnown(currentStep.ItemoCraft.Name, profession);
+            profession.RegenerateSteps();
 
             Broadcaster.autoBroadcast = true;
         }

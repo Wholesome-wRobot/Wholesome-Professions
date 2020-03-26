@@ -28,7 +28,7 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || Main.primaryProfession.CurrentStep == null)
+                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
                     return false;
 
                 if (Main.primaryProfession.ShouldTravel())
@@ -61,28 +61,28 @@ namespace Wholesome_Professions_WotlK.States
             Logger.LogDebug("************ RUNNING TRAVEL STATE ************");
             Broadcaster.autoBroadcast = false;
 
-            int destinationContinent = profession.Continent;
+            ContinentId destinationContinent = Bot.Continent;
 
             // HORDE
             if (ToolBox.IsHorde())
             {
                 // From EK
-                if (Usefuls.ContinentId == (int)ContinentId.Azeroth)
+                if ((ContinentId)Usefuls.ContinentId == ContinentId.Azeroth)
                 {
                     // To Kalimdor
-                    if (destinationContinent == (int)ContinentId.Kalimdor)
+                    if (destinationContinent == ContinentId.Kalimdor)
                     {
                         Logger.Log("Traveling to Kalimdor");
                         TravelHelper.HordeEKToKalimdor();
                     }
                     // To Outlands
-                    if (destinationContinent == (int)ContinentId.Expansion01)
+                    if (destinationContinent == ContinentId.Expansion01)
                     {
                         Logger.Log("Traveling to Outland");
                         TravelHelper.HordeEKToOutland();
                     }
                     // To Northrend
-                    if (destinationContinent == (int)ContinentId.Northrend)
+                    if (destinationContinent == ContinentId.Northrend)
                     {
                         Logger.Log("Traveling to Northrend");
                         TravelHelper.HordeEKToKalimdor();
@@ -90,22 +90,22 @@ namespace Wholesome_Professions_WotlK.States
                 }
 
                 // From Kalimdor
-                if (Usefuls.ContinentId == (int)ContinentId.Kalimdor)
+                if ((ContinentId)Usefuls.ContinentId == ContinentId.Kalimdor)
                 {
                     // To EK
-                    if (destinationContinent == (int)ContinentId.Azeroth)
+                    if (destinationContinent == ContinentId.Azeroth)
                     {
                         Logger.Log("Traveling to Eastern Kingdoms");
                         TravelHelper.HordeKalimdorToEK();
                     }
                     // To Outlands
-                    if (destinationContinent == (int)ContinentId.Expansion01)
+                    if (destinationContinent == ContinentId.Expansion01)
                     {
                         Logger.Log("Traveling to Outland");
                         TravelHelper.HordeKalimdorToEK();
                     }
                     // To Northrend
-                    if (destinationContinent == (int)ContinentId.Northrend)
+                    if (destinationContinent == ContinentId.Northrend)
                     {
                         Logger.Log("Traveling to Northrend");
                         TravelHelper.HordeKalimdorToNorthrend();
@@ -113,22 +113,22 @@ namespace Wholesome_Professions_WotlK.States
                 }
 
                 // From Outlands
-                if (Usefuls.ContinentId == (int)ContinentId.Expansion01)
+                if ((ContinentId)Usefuls.ContinentId == ContinentId.Expansion01)
                 {
                     // To Kalimdor
-                    if (destinationContinent == (int)ContinentId.Kalimdor)
+                    if (destinationContinent == ContinentId.Kalimdor)
                     {
                         Logger.Log("Traveling to Kalimdor");
                         TravelHelper.HordeOutlandToKalimdor();
                     }
                     // To EK
-                    if (destinationContinent == (int)ContinentId.Azeroth)
+                    if (destinationContinent == ContinentId.Azeroth)
                     {
                         Logger.Log("Traveling to Eastern Kingdoms");
                         TravelHelper.HordeOutlandToKalimdor();
                     }
                     // To Northrend
-                    if (destinationContinent == (int)ContinentId.Northrend)
+                    if (destinationContinent == ContinentId.Northrend)
                     {
                         Logger.Log("Traveling to Northrend");
                         TravelHelper.HordeOutlandToKalimdor();
@@ -136,22 +136,22 @@ namespace Wholesome_Professions_WotlK.States
                 }
 
                 // From Northrend
-                if (Usefuls.ContinentId == (int)ContinentId.Northrend)
+                if ((ContinentId)Usefuls.ContinentId == ContinentId.Northrend)
                 {
                     // To Kalimdor
-                    if (destinationContinent == (int)ContinentId.Kalimdor)
+                    if (destinationContinent == ContinentId.Kalimdor)
                     {
                         Logger.Log("Traveling to Kalimdor");
                         TravelHelper.HordeNorthrendToKalimdor();
                     }
                     // To EK
-                    if (destinationContinent == (int)ContinentId.Azeroth)
+                    if (destinationContinent == ContinentId.Azeroth)
                     {
                         Logger.Log("Traveling to Eastern Kingdoms");
                         TravelHelper.HordeNorthrendToEK();
                     }
                     // To Outland
-                    if (destinationContinent == (int)ContinentId.Expansion01)
+                    if (destinationContinent == ContinentId.Expansion01)
                     {
                         Logger.Log("Traveling to Outland");
                         TravelHelper.HordeNorthrendToOutland();

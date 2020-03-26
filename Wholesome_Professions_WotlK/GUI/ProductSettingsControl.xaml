@@ -29,11 +29,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -45,10 +44,10 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10" 
-               Margin="10" FontWeight="Bold" FontSize="15"
+               Margin="30" FontWeight="Bold" FontSize="20"
                Text="Wholesome Professions WotLK" HorizontalAlignment="Center" />
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Server rate :" Margin="10" FontSize="13" FontWeight="Bold"
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Server rate :" Margin="10" FontSize="13"
                    HorizontalAlignment="Right" VerticalAlignment="Center"  />
 
         <Controls:NumericUpDown Grid.Row="1" Grid.Column="1" MouseLeave="ServerRateChanged" Minimum="1" Maximum="20"
@@ -56,20 +55,20 @@
                                 Margin="10,10,10,10" Name="ServerRate" Value="1" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" 
-                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Log debug :" FontSize="13" FontWeight="Bold"  />
+                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Log debug :" FontSize="13"  />
 
         <Controls:ToggleSwitch Grid.Row="2" Grid.Column="1"  Margin="10,10,10,10"
                    HorizontalAlignment="Left"  VerticalAlignment="Center" IsChecked="True" 
                                MouseLeave="LogDebugChanged" Name="LogDebug" OnLabel="" OffLabel="" />
 
         <TextBlock Grid.Row="3" Grid.Column="0" Margin="10" 
-                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Auto farm :" FontSize="13" FontWeight="Bold"  />
+                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Auto farm :" FontSize="13" />
 
         <Controls:ToggleSwitch Grid.Row="3" Grid.Column="1"  Margin="10,10,10,10"
                    HorizontalAlignment="Left"  VerticalAlignment="Center" IsChecked="True" 
                                MouseLeave="AutofarmChanged" Name="Autofarm" OnLabel="" OffLabel="" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Broadcaster Frequency :" Margin="10" FontSize="13" FontWeight="Bold"
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Broadcaster Frequency :" Margin="10" FontSize="13"
                    HorizontalAlignment="Right" VerticalAlignment="Center"  />
 
         <Controls:NumericUpDown Grid.Row="4" Grid.Column="1" MouseLeave="BroadcasterIntervalChanged" Minimum="1" Maximum="30"
@@ -77,10 +76,17 @@
                                 Margin="10,10,10,10" Name="BroadcasterInterval" Value="5" />
 
         <TextBlock Grid.Row="5" Grid.Column="0" Margin="10" 
-                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Craft while farming :" FontSize="13" FontWeight="Bold"  />
+                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Craft while farming :" FontSize="13" />
 
         <Controls:ToggleSwitch Grid.Row="5" Grid.Column="1"  Margin="10,10,10,10"
                    HorizontalAlignment="Left"  VerticalAlignment="Center" IsChecked="True" 
                                MouseLeave="CraftWhileFarmingChanged" Name="CraftWhileFarming" OnLabel="" OffLabel="" />
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Margin="10" 
+                   HorizontalAlignment="Right" VerticalAlignment="Center"  Text="Filter Loot :" FontSize="13" />
+
+        <Controls:ToggleSwitch Grid.Row="6" Grid.Column="1"  Margin="10,10,10,10"
+                   HorizontalAlignment="Left"  VerticalAlignment="Center" IsChecked="True" 
+                               MouseLeave="FilterLootChanged" Name="FilterLoot" OnLabel="" OffLabel="" />
     </Grid>
 </UserControl>

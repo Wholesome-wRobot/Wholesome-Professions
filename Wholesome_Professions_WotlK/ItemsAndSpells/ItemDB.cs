@@ -1,4 +1,6 @@
-﻿public static class ItemDB
+﻿using wManager.Wow.Class;
+
+public static class ItemDB
 {
     public static Item LinenCloth = new Item();
     public static Item BoltOfLinenCloth = new Item();
@@ -55,15 +57,40 @@
     public static Item CopperRod = new Item();
     public static Item StrangeDust = new Item();
     public static Item LesserMagicEssence = new Item();
+    public static Item GreaterMagicEssence = new Item();
+    public static Item EnchantBracerMinorHealth = new Item();
+    public static Item EnchantBracerMinorStamina = new Item();
 
     static ItemDB()
     {
         // *************** ENCHANTING ***************
+        // Enchants are treated as items to facilitate mats calculation
+
+        EnchantBracerMinorStamina.Name = "Enchant Bracer - Minor Stamina";
+        EnchantBracerMinorStamina.IsEnchant = true;
+        EnchantBracerMinorStamina.Spell = new Spell("Enchant Bracer - Minor Stamina");
+        EnchantBracerMinorStamina.AddMaterial(StrangeDust, 3);
+        EnchantBracerMinorStamina.EnchantGearType = "INVTYPE_WRIST";
+
+        EnchantBracerMinorHealth.Name = "Enchant Bracer - Minor Health";
+        EnchantBracerMinorHealth.IsEnchant = true;
+        EnchantBracerMinorHealth.Spell = new Spell("Enchant Bracer - Minor Health");
+        EnchantBracerMinorHealth.AddMaterial(StrangeDust, 1);
+        EnchantBracerMinorHealth.EnchantGearType = "INVTYPE_WRIST";
+        EnchantBracerMinorHealth.VendorFirst = true;
+
+        GreaterMagicEssence.Name = "Greater Magic Essence";
+        GreaterMagicEssence.ItemId = 10939;
+        GreaterMagicEssence.CanBeFarmed = true;
+        GreaterMagicEssence.Profile = "Horde - Enchanting 1.xml";
+        GreaterMagicEssence.SplitsInto = LesserMagicEssence;
 
         LesserMagicEssence.Name = "Lesser Magic Essence";
         LesserMagicEssence.ItemId = 10938;
         LesserMagicEssence.CanBeFarmed = true;
         LesserMagicEssence.Profile = "Horde - Enchanting 1.xml";
+        LesserMagicEssence.SplitsInto = GreaterMagicEssence;
+        LesserMagicEssence.AmountRequiredToSplit = 3;
 
         StrangeDust.Name = "Strange Dust";
         StrangeDust.ItemId = 10940;
@@ -80,6 +107,9 @@
         RunedCopperRod.AddMaterial(CopperRod, 1);
         RunedCopperRod.AddMaterial(StrangeDust, 3);
         RunedCopperRod.AddMaterial(LesserMagicEssence, 1);
+        RunedCopperRod.IsAPrerequisiteItem = true;
+        ToolBox.SetSellListForOneItem(RunedCopperRod);
+        RunedCopperRod.VendorFirst = true;
 
         // *************** TAILORING ***************
 
@@ -133,6 +163,7 @@
         BoltofFrostweave.Name = "Bolt of Frostweave";
         BoltofFrostweave.ItemId = 41510;
         BoltofFrostweave.AddMaterial(FrostweaveCloth, 5);
+        BoltofFrostweave.VendorFirst = true;
 
         FrostweaveCloth.Name = "Frostweave Cloth";
         FrostweaveCloth.ItemId = 33470;
@@ -161,6 +192,7 @@
         BoltofNetherweave.Name = "Bolt of Netherweave";
         BoltofNetherweave.ItemId = 21840;
         BoltofNetherweave.AddMaterial(NetherweaveCloth, 5);
+        BoltofNetherweave.VendorFirst = true;
 
         NetherweaveCloth.Name = "Netherweave Cloth";
         NetherweaveCloth.ItemId = 21877;
@@ -192,6 +224,7 @@
         BoltofRunecloth.Name = "Bolt of Runecloth";
         BoltofRunecloth.ItemId = 14048;
         BoltofRunecloth.AddMaterial(Runecloth, 4);
+        BoltofRunecloth.VendorFirst = true;
 
         Runecloth.Name = "Runecloth";
         Runecloth.ItemId = 14047;
@@ -247,6 +280,7 @@
         BoltOfMageweave.Name = "Bolt of Mageweave";
         BoltOfMageweave.ItemId = 4339;
         BoltOfMageweave.AddMaterial(MageweaveCloth, 4);
+        BoltOfMageweave.VendorFirst = true;
 
         MageweaveCloth.Name = "Mageweave Cloth";
         MageweaveCloth.ItemId = 4338;
@@ -285,6 +319,7 @@
         BoltOfSilkCloth.Name = "Bolt of Silk Cloth";
         BoltOfSilkCloth.ItemId = 4305;
         BoltOfSilkCloth.AddMaterial(SilkCloth, 4);
+        BoltOfSilkCloth.VendorFirst = true;
 
         DoublestitchedWoolenShoulders.Name = "Double-stitched Woolen Shoulders";
         DoublestitchedWoolenShoulders.ItemId = 4314;
@@ -314,6 +349,7 @@
         BoltofWoolenCloth.Name = "Bolt of Woolen Cloth";
         BoltofWoolenCloth.ItemId = 2997;
         BoltofWoolenCloth.AddMaterial(WoolCloth, 3);
+        BoltofWoolenCloth.VendorFirst = true;
 
         LinenCloth.Name = "Linen Cloth";
         LinenCloth.ItemId = 2589;
@@ -322,6 +358,7 @@
         BoltOfLinenCloth.Name = "Bolt of Linen Cloth";
         BoltOfLinenCloth.ItemId = 2996;
         BoltOfLinenCloth.AddMaterial(LinenCloth, 2);
+        BoltOfLinenCloth.VendorFirst = true;
 
         CoarseThread.Name = "Coarse Thread";
         CoarseThread.ItemId = 2320;

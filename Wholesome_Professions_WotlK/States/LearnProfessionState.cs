@@ -4,6 +4,7 @@ using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Class;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -67,9 +68,19 @@ namespace Wholesome_Professions_WotlK.States
 
             // Learn Profession
             Logger.Log($"Learning {profession.ProfessionSpell} at NPC {trainer.Entry}");
+
+            // Check if continent ok
+            if ((ContinentId)Usefuls.ContinentId != trainer.ContinentId)
+            {
+                Logger.Log($"The trainer is on continent {trainer.ContinentId}, launching traveler");
+                Bot.SetContinent(trainer.ContinentId);
+                return;
+            }
+
             if (GoToTask.ToPositionAndIntecractWithNpc(trainer.Position, trainer.Entry, trainer.GossipOption))
             {
                 ToolBox.LearnthisSpell(profession.ProfessionSpell);
+                profession.HasCheckedIfWeKnowRecipe = false;
                 Thread.Sleep(1000);
             }
 

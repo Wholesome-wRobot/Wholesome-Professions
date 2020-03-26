@@ -8,6 +8,7 @@ public class Step
     public Item ItemoCraft { get; set; }
     public int EstimatedAmountOfCrafts { get; set; }
     public bool KnownRecipe { get; set; }
+    public IProfession StepProfession { get; set; }
     public StepType Type { get; set; }
     public enum StepType
     {
@@ -17,11 +18,12 @@ public class Step
     }
 
     // Craft to level
-    public Step(int minlevel, int levelToReach, Item itemoCraft, int estimatedAmountOfCrafts = 0)
+    public Step(IProfession profession, int minlevel, int levelToReach, Item itemoCraft, int estimatedAmountOfCrafts = 0)
     {
         Minlevel = minlevel;
         LevelToReach = levelToReach;
         ItemoCraft = itemoCraft;
+        StepProfession = profession;
         EstimatedAmountOfCrafts = (estimatedAmountOfCrafts + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
 
         if (estimatedAmountOfCrafts == 0)
@@ -31,12 +33,20 @@ public class Step
     }
 
     // Craft all
-    public Step(Item itemoCraft, int estimatedAmountOfCrafts)
+    public Step(IProfession profession, Item itemoCraft, int estimatedAmountOfCrafts)
     {
         ItemoCraft = itemoCraft;
         EstimatedAmountOfCrafts = estimatedAmountOfCrafts;
         Type = StepType.CraftAll;
     }
+    /*
+    // Farm Mat
+    public Step(IProfession profession, int minlevel, int levelToReach, Item itemoCraft)
+    {
+        ItemoCraft = itemoCraft;
+        EstimatedAmountOfCrafts = levelToReach - ;
+        Type = StepType.FarmMat;
+    }*/
 
     public void LogMissingMaterials()
     {
@@ -49,7 +59,7 @@ public class Step
 
     public int GetRemainingProfessionLevels()
     {
-        int remainingLevels =  LevelToReach - ToolBox.GetProfessionLevel(Main.primaryProfession.ProfessionName);
+        int remainingLevels =  LevelToReach - ToolBox.GetProfessionLevel(StepProfession.Name);
         return (remainingLevels + WholesomeProfessionsSettings.CurrentSetting.ServerRate - 1) / WholesomeProfessionsSettings.CurrentSetting.ServerRate;
     }
 
@@ -65,12 +75,13 @@ public class Step
 
     public bool CanBuyRemainingMats()
     {
+        bool canBuyRemainingMats = false;
         foreach (Item.Mat mat in ItemoCraft.Materials)
         {
-            if (GetAmountMissingMaterial(mat) > 0 && !mat.Item.CanBeBought)
-                return false;
+            if (GetAmountMissingMaterial(mat) > 0 && mat.Item.CanBeBought)
+                canBuyRemainingMats = true;
         }
-        return true;
+        return canBuyRemainingMats;
     }
 
     public bool HasMatsToCraftOne()

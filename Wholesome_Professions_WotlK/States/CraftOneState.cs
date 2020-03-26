@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
+using Wholesome_Professions_WotlK.Items;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -69,10 +70,18 @@ namespace Wholesome_Professions_WotlK.States
 
             // Craft
             Logger.Log($"Crafting {currentStep.ItemoCraft.Name}");
-            ToolBox.Craft(profession.ProfessionName.ToString(), currentStep.ItemoCraft, 1);
+            ToolBox.Craft(profession.Name.ToString(), currentStep.ItemoCraft, 1);
+
             Logger.Log("Craft complete");
+            ToolBox.CloseProfessionFrame();
             Lua.RunMacroText("/stopcasting");
 
+            if (currentStep.ItemoCraft.IsAPrerequisiteItem)
+                profession.RegenerateSteps();
+            else
+                ItemHelper.CalculateFarmAmountFor(profession, currentStep.ItemoCraft);
+
+            profession.SetContext();
             Broadcaster.autoBroadcast = true;
         }
     }
