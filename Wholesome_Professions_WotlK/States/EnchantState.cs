@@ -80,15 +80,18 @@ namespace Wholesome_Professions_WotlK.States
 
             for (int i = 0; i < amountEnchant; i++)
             {
-                ToolBox.Craft(profession.Name.ToString(), currentStep.ItemoCraft, 1);
-                Thread.Sleep(100);
+                if (currentStep.HasMatsToCraftOne() && ToolBox.GetProfessionLevel(profession.Name) < currentStep.LevelToReach)
+                {
+                    ToolBox.Craft(profession.Name.ToString(), currentStep.ItemoCraft, 1);
+                    Thread.Sleep(100);
+                }
             }
 
             Logger.Log("Enchant complete");
             ToolBox.CloseProfessionFrame();
             Lua.RunMacroText("/stopcasting");
 
-            profession.RegenerateSteps();
+            profession.ReevaluateStep();
 
             Broadcaster.autoBroadcast = true;
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager.Wow.Class;
+using wManager.Wow.ObjectManager;
 
 public class Item
 {

@@ -48,4 +48,5 @@ public class Empty : IProfession
     public void AddGeneratedStep(Step step) { return; }
     public void SetContext() { return; }
     public void SetOtherProfession() { return; }
+    public void ReevaluateStep() { return; }
 }

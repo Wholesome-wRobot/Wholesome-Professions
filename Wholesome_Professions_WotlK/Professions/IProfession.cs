@@ -47,5 +47,6 @@ public interface IProfession
     bool ShouldEnchant();
 
     void AddGeneratedStep(Step step);
+    void ReevaluateStep();
     bool MyLevelIsHighEnough();
 }

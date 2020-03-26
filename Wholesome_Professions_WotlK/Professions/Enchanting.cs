@@ -23,7 +23,8 @@ public class Enchanting : Profession
 
         AllSteps.Clear();
         AllSteps.Add(new Step(this, 0, 50, ItemDB.EnchantBracerMinorHealth, 20));
-        AllSteps.Add(new Step(this, 50, 90, ItemDB.EnchantBracerMinorHealth, 40));
+        AllSteps.Add(new Step(this, 50, 75, ItemDB.EnchantBracerMinorHealth, 20));
+        AllSteps.Add(new Step(this, 75, 90, ItemDB.EnchantBracerMinorHealth, 20));
         AllSteps.Add(new Step(this, 90, 120, ItemDB.EnchantBracerMinorStamina, 30));
 
         MustRecalculateStep = true;

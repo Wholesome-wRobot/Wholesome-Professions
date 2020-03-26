@@ -279,7 +279,7 @@ public static class TravelHelper
             GoToTask.ToPosition(kalimdorlPlatformZepNorthrend, 0, true);
             WaitForTransport(ZeppelinKalidmdorToNorthrendId, 30);
             GoToTask.ToPosition(insideZeppelinKalimdorToNorthrend, 1);
-            WaitOnTransport(northrendPlatformZepKalimdor, 20, ContinentId.Northrend);
+            WaitOnTransport(northrendPlatformZepKalimdor, 25, ContinentId.Northrend);
         }
     }
 

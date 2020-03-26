@@ -76,11 +76,7 @@ namespace Wholesome_Professions_WotlK.States
             ToolBox.CloseProfessionFrame();
             Lua.RunMacroText("/stopcasting");
 
-            if (currentStep.ItemoCraft.IsAPrerequisiteItem)
-                profession.RegenerateSteps();
-            else
-                ItemHelper.CalculateFarmAmountFor(profession, currentStep.ItemoCraft);
-
+            profession.ReevaluateStep();
             profession.SetContext();
             Broadcaster.autoBroadcast = true;
         }

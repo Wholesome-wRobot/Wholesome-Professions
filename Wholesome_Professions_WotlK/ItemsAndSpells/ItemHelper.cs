@@ -16,9 +16,6 @@ namespace Wholesome_Professions_WotlK.Items
         // Search if a base item should be farmed (ex : Linen Cloth)
         public static void CalculateFarmAmountFor(IProfession profession, Item itemToCraft)
         {
-            // TIMER
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
             foreach (Item.Mat mat in itemToCraft.Materials)
             {
                 if (mat.Item.CanBeFarmed)
@@ -38,20 +35,12 @@ namespace Wholesome_Professions_WotlK.Items
             profession.ItemToFarm = null;
             profession.AmountOfItemToFarm = 0;
 
-            // TIMER
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.LogLineBroadcastImportant($"CalculateFarmAmountFor() {profession.Name} - {itemToCraft} - {elapsedMs} MS");
-
             return;
         }
 
         // Get the total amount of a specific needed mat in all steps
         public static int GetTotalNeededMat(IProfession profession, Item itemToSearch)
         {
-            // TIMER
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
             int amount = 0;
             foreach (Step s in profession.AllSteps)
             {
@@ -72,22 +61,12 @@ namespace Wholesome_Professions_WotlK.Items
                 }
             }
             virtualBag.Clear();
-
-            // TIMER
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.LogLineBroadcastImportant($"GetTotalNeededMat() {profession.Name} - {itemToSearch.Name} - {elapsedMs} MS");
-
-            Logger.Log("RETURNS " + amount);
             return amount;
         }
 
         // Return the amount of the specified material needed to craft in one specified item
         public static int GetMaterialAmountInItem(Item item, Item materialToSearch, int amountToCraft)
         {
-            // TIMER
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
             int amount = 0;
             foreach (Item.Mat mat in item.Materials)
             {
@@ -95,7 +74,7 @@ namespace Wholesome_Professions_WotlK.Items
                 int amountInVirtualBag = PickFromVirtualBag(mat.Item, mat.Amount * amountToCraft);
                 if (mat.Item == materialToSearch)
                 {
-                    Logger.Log($"Material {materialToSearch.Name} : {mat.Amount} * {amountToCraft} found in Item {item.Name} : " +
+                    Logger.LogDebug($"Material {materialToSearch.Name} : {mat.Amount} * {amountToCraft} found in Item {item.Name} : " +
                         $"{mat.Amount * amountToCraft - amountInVirtualBag} (+ {amountInVirtualBag} in bag)");
                     amount += mat.Amount * amountToCraft - amountInVirtualBag;
                 }
@@ -104,20 +83,12 @@ namespace Wholesome_Professions_WotlK.Items
                 amount += GetMaterialAmountInItem(mat.Item, materialToSearch, amountToCraft * mat.Amount - amountInVirtualBag);
             }
 
-            // TIMER
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.LogLineBroadcastImportant($"GetMaterialAmountInItem() {item.Name} - {materialToSearch.Name} - {elapsedMs} MS");
-
             return amount;
         }
 
         // Use selected amount of specified item in virtual bag (used for recursive search)
         public static int PickFromVirtualBag(Item item, int amountNeeded)
         {
-            // TIMER
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
             // If I have the item in my bags and it's not already added to virtual bag, add it
             int itemAlreadyInBags = ItemsManager.GetItemCountById(item.ItemId);
             if (itemAlreadyInBags > 0)
@@ -134,11 +105,6 @@ namespace Wholesome_Professions_WotlK.Items
                 {
                     itemInBag = virtualBag.Find(i => i.id == item.ItemId);
                 }
-
-                // TIMER
-                watch.Stop();
-                var elavcbcvbpsedMs = watch.ElapsedMilliseconds;
-                Logger.LogLineBroadcastImportant($"PickFromVirtualBag() {item.Name} - {elavcbcvbpsedMs} MS");
 
                 // if I have more items than needed
                 if (itemInBag.amount >= amountNeeded)

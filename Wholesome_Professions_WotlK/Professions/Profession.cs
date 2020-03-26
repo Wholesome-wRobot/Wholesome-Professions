@@ -66,7 +66,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Split Item ************************
+    // ************************ SPLIT ITEMS ************************
     public bool ShouldSplitItem()
     {
         string keyName = $"{Name}.SPLITITEM";
@@ -104,13 +104,13 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Disenchant ************************
+    // ************************ DISENCHANT ************************
     public abstract bool ShouldDisenchant();
 
-    // ************************ Should Disenchant ************************
+    // ************************ ENCHANT ************************
     public abstract bool ShouldEnchant();
 
-    // ************************ Should Filter loot ************************
+    // ************************ DELETE ITEMS ************************
     public bool ShouldFilterLoot()
     {
         string keyName = $"{Name}.FILTERLOOT";
@@ -146,7 +146,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Travel ************************
+    // ************************ TRAVEL ************************
     public bool ShouldTravel()
     {
         string keyName = $"{Name}.TRAVEL";
@@ -179,7 +179,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Learn Profession ************************
+    // ************************ LEARN PROFESSION ************************
     public bool ShouldLearnProfession()
     {
         string keyName = $"{Name}.LEARNPROF";
@@ -218,7 +218,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Buy And Learn Recipe ************************
+    // ************************ BUY AND LEARN RECIPE ************************
     public bool ShouldBuyAndLearnRecipe()
     {
         string keyName = $"{Name}.BUY&LEARN";
@@ -258,7 +258,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Learn Recipe From Trainer ************************
+    // ************************ LEARN RECIPE FROM TRAINER ************************
     public bool ShouldLearnRecipeFromTrainer()
     {
         string keyName = $"{Name}.LEARNRECIPE";
@@ -302,7 +302,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Buy Materials ************************
+    // ************************ BUY MATERIALS ************************
     public bool ShouldBuyMaterials()
     {
         string keyName = $"{Name}.BUYMATS";
@@ -341,7 +341,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Craft One ************************
+    // ************************ CRAFT ONE ************************
     public bool ShouldCraftOne()
     {
         string keyName = $"{Name}.CRAFTONE";
@@ -381,7 +381,7 @@ public abstract class Profession : IProfession
         return true;
     }
 
-    // ************************ Should Craft ************************
+    // ************************ CRAFT ************************
     public bool ShouldCraft()
     {
         string keyName = $"{Name}.CRAFT";
@@ -430,7 +430,7 @@ public abstract class Profession : IProfession
         return false;
     }
 
-    // ************************ Should Load Profile ************************
+    // ************************ LOAD PROFILE ************************
     public bool ShouldLoadProfile()
     {
         string keyName = $"{Name}.LOADPROFILE";
@@ -469,6 +469,19 @@ public abstract class Profession : IProfession
         return ObjectManager.Me.Level >= MinimumCharLevel;
     }
 
+    // Reevaluates if we need to modify or change the current step
+    public void ReevaluateStep()
+    {
+        if (CurrentStep.ItemoCraft.IsAPrerequisiteItem || (ToolBox.GetProfessionLevel(Name) - CurrentStep.LevelToReach <= 0))
+            RegenerateSteps();
+        else
+            ItemHelper.CalculateFarmAmountFor(this, CurrentStep.ItemoCraft);
+
+        if (AmountOfItemToFarm <= 0)
+            RegenerateSteps();
+    }
+
+    // Automatically added generated step
     public void AddGeneratedStep(Step step)
     {
         if (!AllSteps.Contains(step))
@@ -483,6 +496,7 @@ public abstract class Profession : IProfession
         }
     }
 
+    // Set the other chosen profession by the user
     public void SetOtherProfession()
     {
         if (Main.primaryProfession != null && Main.secondaryProfession != null)

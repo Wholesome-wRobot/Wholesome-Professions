@@ -80,7 +80,7 @@ class DisenchantState : State
             Usefuls.WaitIsCasting();
         }
 
-        ItemHelper.CalculateFarmAmountFor(profession, currentStep.ItemoCraft);
+        profession.ReevaluateStep();
 
         Broadcaster.autoBroadcast = true;
     }

@@ -1,4 +1,5 @@
-﻿using wManager.Wow.Class;
+﻿using System.Collections.Generic;
+using wManager.Wow.Class;
 
 public static class ItemDB
 {
@@ -65,7 +66,7 @@ public static class ItemDB
     {
         // *************** ENCHANTING ***************
         // Enchants are treated as items to facilitate mats calculation
-
+        
         EnchantBracerMinorStamina.Name = "Enchant Bracer - Minor Stamina";
         EnchantBracerMinorStamina.IsEnchant = true;
         EnchantBracerMinorStamina.Spell = new Spell("Enchant Bracer - Minor Stamina");
