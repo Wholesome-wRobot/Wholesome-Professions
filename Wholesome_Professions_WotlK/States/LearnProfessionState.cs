@@ -31,17 +31,12 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
+                    || Conditions.IsAttackedAndCannotIgnore)
                     return false;
                 
                 if (Main.primaryProfession.ShouldLearnProfession())
                 {
                     profession = Main.primaryProfession;
-                    return true;
-                }
-                if (Main.secondaryProfession.ShouldLearnProfession())
-                {
-                    profession = Main.secondaryProfession;
                     return true;
                 }
 
@@ -80,7 +75,7 @@ namespace Wholesome_Professions_WotlK.States
             if (GoToTask.ToPositionAndIntecractWithNpc(trainer.Position, trainer.Entry, trainer.GossipOption))
             {
                 ToolBox.LearnthisSpell(profession.ProfessionSpell);
-                profession.HasCheckedIfWeKnowRecipe = false;
+                profession.HasCheckedIfWeKnowRecipeFlag = false;
                 Thread.Sleep(1000);
             }
 

@@ -3,6 +3,8 @@ using wManager.Wow.Class;
 
 public static class ItemDB
 {
+    public static List<Item> AlllItems = new List<Item>();
+
     public static Item LinenCloth = new Item();
     public static Item BoltOfLinenCloth = new Item();
     public static Item CoarseThread = new Item();
@@ -61,20 +63,28 @@ public static class ItemDB
     public static Item GreaterMagicEssence = new Item();
     public static Item EnchantBracerMinorHealth = new Item();
     public static Item EnchantBracerMinorStamina = new Item();
+    public static Item RunedSilverRod = new Item();
 
     static ItemDB()
     {
         // *************** ENCHANTING ***************
         // Enchants are treated as items to facilitate mats calculation
-        
+
+        // CAN'T BE CRAFTED
+        RunedSilverRod.Name = "Runed Silver Rod";
+        RunedSilverRod.ItemId = 6339;
+        RunedSilverRod.IsAPrerequisiteItem = true;
+        RunedSilverRod.UserMustBuyManually = true;
+        ToolBox.SetSellListForOneItem(RunedSilverRod);
+
         EnchantBracerMinorStamina.Name = "Enchant Bracer - Minor Stamina";
-        EnchantBracerMinorStamina.IsEnchant = true;
+        EnchantBracerMinorStamina.IsAnEnchant = true;
         EnchantBracerMinorStamina.Spell = new Spell("Enchant Bracer - Minor Stamina");
         EnchantBracerMinorStamina.AddMaterial(StrangeDust, 3);
         EnchantBracerMinorStamina.EnchantGearType = "INVTYPE_WRIST";
 
         EnchantBracerMinorHealth.Name = "Enchant Bracer - Minor Health";
-        EnchantBracerMinorHealth.IsEnchant = true;
+        EnchantBracerMinorHealth.IsAnEnchant = true;
         EnchantBracerMinorHealth.Spell = new Spell("Enchant Bracer - Minor Health");
         EnchantBracerMinorHealth.AddMaterial(StrangeDust, 1);
         EnchantBracerMinorHealth.EnchantGearType = "INVTYPE_WRIST";
@@ -377,6 +387,11 @@ public static class ItemDB
         ReinforcedLinenCape.AddMaterial(BoltOfLinenCloth, 2);
         ReinforcedLinenCape.AddMaterial(CoarseThread, 3);
         ReinforcedLinenCape.ForceSell = true;
+    }
+
+    public static Item GetItemFromId(int id)
+    {
+        return AlllItems.Find(i => i.ItemId == id);
     }
 
 }

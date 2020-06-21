@@ -28,18 +28,13 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 
+                    || Conditions.IsAttackedAndCannotIgnore
                     || !WholesomeProfessionsSettings.CurrentSetting.FilterLoot)
                     return false;
                 
                 if (Main.primaryProfession.ShouldFilterLoot())
                 {
                     profession = Main.primaryProfession;
-                    return true;
-                }
-                if (Main.secondaryProfession.ShouldFilterLoot())
-                {
-                    profession = Main.secondaryProfession;
                     return true;
                 }
 

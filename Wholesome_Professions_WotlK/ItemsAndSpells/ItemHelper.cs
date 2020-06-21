@@ -38,6 +38,16 @@ namespace Wholesome_Professions_WotlK.Items
             return;
         }
 
+        // Surcharge pour la recherche par ID
+        public static int GetTotalNeededMat(IProfession profession, int itemToSearchId)
+        {
+            Item item = ItemDB.GetItemFromId(itemToSearchId);
+            if (item == null)
+                return 0;
+            else
+                return GetTotalNeededMat(profession, item);
+        }
+
         // Get the total amount of a specific needed mat in all steps
         public static int GetTotalNeededMat(IProfession profession, Item itemToSearch)
         {

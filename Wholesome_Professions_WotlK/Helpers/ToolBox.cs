@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Wholesome_Professions_WotlK.Helpers;
 using wManager;
@@ -141,7 +140,7 @@ public class ToolBox
     public static void SetSellListForOneItem(Item item)
     {
         RemoveFromSellAndNotSellList(item);
-        if (item.IsEnchant)
+        if (item.IsAnEnchant)
             return;
 
         if (item.ForceSell)
@@ -184,7 +183,7 @@ public class ToolBox
     public static void Craft(string skillName, Item item, int quantity)
     {
         OpenProfessionFrame(skillName);
-        if (item.IsEnchant)
+        if (item.IsAnEnchant)
         {
             UseProfessionSkill(item, 1);
             WoWItem itemToEnchant = EquippedItems.GetEquippedItems().Find(i => i.GetItemInfo.ItemEquipLoc == item.EnchantGearType);
@@ -251,7 +250,7 @@ public class ToolBox
                                     end");
         Thread.Sleep(300);
         SpellManager.CastSpellByNameLUA(profession.Name.ToString());
-        profession.HasCheckedIfWeKnowRecipe = true;
+        profession.HasCheckedIfWeKnowRecipeFlag = true;
         return recipeIsKnown;
     }
 
@@ -260,7 +259,6 @@ public class ToolBox
         List<int> itemContainerBagIdAndSlot = Bag.GetItemContainerBagIdAndSlot(item.Entry);
         Lua.LuaDoString(string.Format("PickupContainerItem({0}, {1})", itemContainerBagIdAndSlot[0], itemContainerBagIdAndSlot[1]), false);
         Lua.LuaDoString("DeleteCursorItem()", false);
-        Thread.Sleep(100);
     }
 
     public static int GetGearSlot(WoWItem item)

@@ -21,15 +21,14 @@ public interface IProfession
     WoWItem ItemToDelete { get; set; }
     string ItemToSplit { get; set; }
     string City { get; set; }
-    IProfession OtherProfession { get; set; }
     int Phase { get; set; }
 
-    bool MustRecalculateStep { get; set; }
-    bool HasCheckedIfWeKnowRecipe { get; set; }
+    bool MustRecalculateStepFlag { get; set; }
+    bool HasCheckedIfWeKnowRecipeFlag { get; set; }
+    bool UserMustBuyManuallyFlag { get; set; }
 
     void RegenerateSteps();
     void SetContext();
-    void SetOtherProfession();
 
     bool ShouldCraft();
     bool ShouldSellItems();
@@ -48,5 +47,24 @@ public interface IProfession
 
     void AddGeneratedStep(Step step);
     void ReevaluateStep();
-    bool MyLevelIsHighEnough();
+
+    // CHECKS
+    bool WeHaveItemsToFarm(string key = null);
+    bool MyCharLevelIsHighEnough(string key = null);
+    bool CurrenStepIsNull(string key = null);
+    bool UserMustBuyManuallyIsTrue(string key = null);
+    bool MustRecalculateIsTrue(string key = null);
+    bool BotProfileNameIsNull(string key = null);
+    bool VendorIsConfirmed(string key = null);
+    bool WeAreOnRightContinent(string key = null);
+    bool WeNeedToTrain(string key = null);
+    bool WeKnowTheRecipe(string key = null);
+    bool WeHaveAllMats(string key = null);
+    bool RecipeMustBeBought(string key = null);
+    bool WeCanBuyRemainingMats(string key = null);
+    bool WeHaveMatsToCraftOne(string key = null);
+    bool CurrentStepIsACraftAll(string key = null);
+    bool CurrentStepIsACraftToLevel(string key = null);
+    bool CurrentStepIsAListPrecraft(string key = null);
+    bool ItemToCraftIsAnEnchant(string key = null);
 }

@@ -12,7 +12,6 @@ public class Enchanting : Profession
     public Enchanting() : base (SkillLine.Enchanting)
     {
         RegenerateSteps();
-        // Manage sell list
         ToolBox.ManageSellList(AllSteps);
     }
 
@@ -27,8 +26,8 @@ public class Enchanting : Profession
         AllSteps.Add(new Step(this, 75, 90, ItemDB.EnchantBracerMinorHealth, 20));
         AllSteps.Add(new Step(this, 90, 120, ItemDB.EnchantBracerMinorStamina, 30));
 
-        MustRecalculateStep = true;
-        HasCheckedIfWeKnowRecipe = false;
+        MustRecalculateStepFlag = true;
+        HasCheckedIfWeKnowRecipeFlag = false;
 
         if (Bot.ProfileName != null)
             ProfileHandler.UnloadCurrentProfile();
@@ -37,11 +36,12 @@ public class Enchanting : Profession
     public override bool ShouldDisenchant()
     {
         string keyName = $"{Name}.DISENCHANT";
+        /*
         if (CurrentStep == null)
         {
             FrameHelper.UpdateDebugFrame(keyName, "No step");
             return false;
-        }
+        }*/
         if (!Disenchant.KnownSpell)
         {
             FrameHelper.UpdateDebugFrame(keyName, "We don't know Disenchant");
@@ -73,17 +73,12 @@ public class Enchanting : Profession
             FrameHelper.UpdateDebugFrame(keyName, "No step");
             return false;
         }
-        if (Phase > OtherProfession.Phase)
-        {
-            FrameHelper.UpdateDebugFrame(keyName, $"Waiting for {OtherProfession.Name} to catch up");
-            return false;
-        }
-        if (!MyLevelIsHighEnough())
+        if (!MyCharLevelIsHighEnough())
         {
             FrameHelper.UpdateDebugFrame(keyName, "Level up first");
             return false;
         }
-        if (!CurrentStep.ItemoCraft.IsEnchant)
+        if (!CurrentStep.ItemoCraft.IsAnEnchant)
         {
             FrameHelper.UpdateDebugFrame(keyName, "Not an enchant");
             return false;
@@ -131,7 +126,8 @@ public class Enchanting : Profession
                 SuppliesVendor = VendorDB.OGEnchantingSupplies;
                 PrerequisiteItems = new List<Item>()
                 {
-                    ItemDB.RunedCopperRod
+                    ItemDB.RunedCopperRod,
+                    ItemDB.RunedSilverRod
                 };
                 Phase = 2;
                 City = "Orgrimmar";

@@ -159,10 +159,7 @@ public class Main : IProduct
     private void SetProfessions()
     {
         primaryProfession = new Tailoring();
-        secondaryProfession = new Enchanting();
-        primaryProfession.SetOtherProfession();
-        secondaryProfession.SetOtherProfession();
-        amountProfessionsSelected = 2;
+        amountProfessionsSelected = 1;
     }
 
     private static int GetWowVersion()

@@ -28,17 +28,12 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
+                    || Conditions.IsAttackedAndCannotIgnore)
                     return false;
 
                 if (Main.primaryProfession.ShouldSetCurrentStep())
                 {
                     profession = Main.primaryProfession;
-                    return true;
-                }
-                if (Main.secondaryProfession.ShouldSetCurrentStep())
-                {
-                    profession = Main.secondaryProfession;
                     return true;
                 }
 
@@ -67,8 +62,16 @@ namespace Wholesome_Professions_WotlK.States
 
             Step selectedStep = null;
             int currentLevel = ToolBox.GetProfessionLevel(profession.Name);
-
-            // First check if we need a prerequisite item
+            
+            // Check if user action is required
+            if (profession.CurrentStep != null && profession.CurrentStep.ItemoCraft.UserMustBuyManually 
+                && !profession.UserMustBuyManuallyFlag)
+            {
+                profession.UserMustBuyManuallyFlag = true;
+                return;
+            }
+            
+            // Check if we need a prerequisite item
             if (profession.PrerequisiteItems.Count > 0)
             {
                 foreach (Item item in profession.PrerequisiteItems)
@@ -85,7 +88,7 @@ namespace Wholesome_Professions_WotlK.States
                     }
                 }
             }
-
+            
             // Search for Priority Steps
             Logger.LogDebug($"*** Checking for priority steps");
             foreach (Step step in profession.AllSteps)
@@ -165,7 +168,7 @@ namespace Wholesome_Professions_WotlK.States
                 Logger.LogDebug($"Recipe is known : {selectedStep.KnownRecipe}");
             }
 
-            profession.MustRecalculateStep = false;
+            profession.MustRecalculateStepFlag = false;
             Broadcaster.autoBroadcast = true;
             Broadcaster.BroadCastSituation(true);
         }

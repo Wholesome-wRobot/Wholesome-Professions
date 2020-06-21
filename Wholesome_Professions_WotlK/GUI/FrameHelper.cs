@@ -138,14 +138,17 @@ static class FrameHelper
 
     public static void UpdateDebugFrame(string key, string value)
     {
-        // If the key doesn't exist, we create it, otherwise we replace the value
-        if (!_debugStringList.Exists(e => e[0] == key))
-            _debugStringList.Add(new string[] { key, value });
-        else
-            _debugStringList.Find(e => e[0] == key)[1] = value;
+        if (key != null)
+        {
+            // If the key doesn't exist, we create it, otherwise we replace the value
+            if (!_debugStringList.Exists(e => e[0] == key))
+                _debugStringList.Add(new string[] { key, value });
+            else
+                _debugStringList.Find(e => e[0] == key)[1] = value;
 
-        string result = BuildDebugString(_debugStringList);
-        SetDebugFrameText(result);
+            string result = BuildDebugString(_debugStringList);
+            SetDebugFrameText(result);
+        }
     }
 
     private static string BuildDebugString(List<string[]> listStrings)

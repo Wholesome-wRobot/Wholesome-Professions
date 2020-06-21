@@ -6,7 +6,6 @@ public class Tailoring : Profession
     public Tailoring() : base (SkillLine.Tailoring)
     {
         RegenerateSteps();
-        // Manage sell list
         ToolBox.ManageSellList(AllSteps);
     }
 
@@ -51,8 +50,8 @@ public class Tailoring : Profession
         AllSteps.Add(new Step(this, 410, 415, ItemDB.DuskweaveGloves, 5));
         AllSteps.Add(new Step(this, 415, 425, ItemDB.DuskweaveBoots, 15));
 
-        MustRecalculateStep = true;
-        HasCheckedIfWeKnowRecipe = false;
+        MustRecalculateStepFlag = true;
+        HasCheckedIfWeKnowRecipeFlag = false;
 
         if (Bot.ProfileName != null)
             ProfileHandler.UnloadCurrentProfile();
@@ -107,7 +106,7 @@ public class Tailoring : Profession
                 ProfessionSpell = "Master Tailor";
                 ProfessionTrainer = VendorDB.ThrallmarTailoringTrainer;
                 SuppliesVendor = VendorDB.ShattrathTailoringSupplies;
-                Phase = 5; // !!!!!!!!!!!!!!!!!!
+                Phase = 5;
                 City = "Thrallmar";
             }
             else if (profLevel >= 350)
@@ -116,7 +115,7 @@ public class Tailoring : Profession
                 ProfessionSpell = "Grand Master Tailor";
                 ProfessionTrainer = VendorDB.WarsongHoldTailoringTrainer;
                 SuppliesVendor = VendorDB.WarsongHoldTailoringSupplies;
-                Phase = 6; // !!!!!!!!!!!!!!!!!!
+                Phase = 6;
                 City = "Warsong Hold";
             }
         }

@@ -29,17 +29,12 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || ObjectManager.Me.MountDisplayId != 0)
+                    || Conditions.IsAttackedAndCannotIgnore || ObjectManager.Me.MountDisplayId != 0)
                     return false;
                 
                 if (Main.primaryProfession.ShouldSplitItem())
                 {
                     profession = Main.primaryProfession;
-                    return true;
-                }
-                if (Main.secondaryProfession.ShouldSplitItem())
-                {
-                    profession = Main.secondaryProfession;
                     return true;
                 }
 

@@ -29,17 +29,12 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0 || !WholesomeProfessionsSettings.CurrentSetting.Autofarm)
+                    || Conditions.IsAttackedAndCannotIgnore || !WholesomeProfessionsSettings.CurrentSetting.Autofarm)
                     return false;
                 
                 if (Main.primaryProfession.ShouldLoadProfile())
                 {
                     profession = Main.primaryProfession;
-                    return true;
-                }
-                if (Main.secondaryProfession.ShouldLoadProfile())
-                {
-                    profession = Main.secondaryProfession;
                     return true;
                 }
 

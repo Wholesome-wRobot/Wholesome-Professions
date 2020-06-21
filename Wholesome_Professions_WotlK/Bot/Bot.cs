@@ -127,9 +127,9 @@ internal static class Bot
         if (Main.amountProfessionsSelected > 0)
         {
             if (Main.primaryProfession != null)
-                Main.primaryProfession.MustRecalculateStep = true;
+                Main.primaryProfession.MustRecalculateStepFlag = true;
             if (Main.secondaryProfession != null)
-                Main.secondaryProfession.MustRecalculateStep = true;
+                Main.secondaryProfession.MustRecalculateStepFlag = true;
         }
     }
 }

@@ -31,17 +31,12 @@ namespace Wholesome_Professions_WotlK.States
             get
             {
                 if (!Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause || !ObjectManager.Me.IsValid
-                    || Conditions.IsAttackedAndCannotIgnore || Main.amountProfessionsSelected <= 0)
+                    || Conditions.IsAttackedAndCannotIgnore)
                     return false;
 
                 if (Main.primaryProfession.ShouldLearnRecipeFromTrainer())
                 {
                     profession = Main.primaryProfession;
-                    return true;
-                }
-                if (Main.secondaryProfession.ShouldLearnRecipeFromTrainer())
-                {
-                    profession = Main.secondaryProfession;
                     return true;
                 }
 
