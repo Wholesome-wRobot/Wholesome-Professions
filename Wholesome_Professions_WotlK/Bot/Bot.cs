@@ -33,7 +33,7 @@ internal static class Bot
 
             // Load CC:
             CustomClass.LoadCustomClass();
-
+             
             // FSM
             Fsm.States.Clear();
 
