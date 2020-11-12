@@ -44,11 +44,10 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RDManaged">
-      <HintPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Bin\RDManaged.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>D:\WoW\WoW Wotlk\WRobot WOTLK\Bin\RDManaged.dll</HintPath>
     </Reference>
     <Reference Include="robotManager">
-      <HintPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Bin\robotManager.dll</HintPath>
+      <HintPath>D:\WoW\WoW Wotlk\WRobot WOTLK\Bin\robotManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -62,7 +61,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Reference Include="wManager">
-      <HintPath>E:\WoW\WoW Wotlk\WRobot WOTLK\Bin\wManager.dll</HintPath>
+      <HintPath>D:\WoW\WoW Wotlk\WRobot WOTLK\Bin\wManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -140,8 +139,8 @@
     <PostBuildEvent>del "$(ProjectDir)\Compiled\WRobot\Products\$(ProjectName).pdb"
 xcopy /Y/E/R "$(ProjectDir)\Compiled" "C:\Users\Nico\Desktop"
 del "C:\Users\Nico\Desktop\Version.txt"
-xcopy /Y/E/R "$(ProjectDir)\Compiled\WRobot" "E:\WoW\WoW Wotlk\WRobot WOTLK"
+xcopy /Y/E/R "$(ProjectDir)\Compiled\WRobot" "D:\WoW\WoW Wotlk\WRobot WOTLK"
 
-start "WRobot" "E:\WoW\WoW Wotlk\WRobot WOTLK\WRobot.exe" AutoAttachAndLog=true</PostBuildEvent>
+start "WRobot" "D:\WoW\WoW Wotlk\WRobot WOTLK\WRobot.exe" AutoAttachAndLog=true</PostBuildEvent>
   </PropertyGroup>
 </Project>

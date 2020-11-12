@@ -22,7 +22,7 @@ public class Main : IProduct
     public bool IsStarted { get; private set; } = false;
     ProductSettingsControl _settingsUserControl;
 
-    public string version = "0.1.8"; // Must match version in Version.txt
+    public string version = "0.1.81"; // Must match version in Version.txt
 
     public void Initialize()
     {
@@ -65,7 +65,7 @@ public class Main : IProduct
 
             WRobotSettings.SetRecommendedWRobotSettings();
 
-            _pulseThread.DoWork += DoBackgroundPulse;
+            _pulseThread.DoWork += BroadcasterPulse;
             _pulseThread.RunWorkerAsync();
 
             Broadcaster.InitializeTimer();
@@ -100,7 +100,7 @@ public class Main : IProduct
 
             WRobotSettings.RestoreUserWRobotSettings();
 
-            _pulseThread.DoWork -= DoBackgroundPulse;
+            _pulseThread.DoWork -= BroadcasterPulse;
             _pulseThread.Dispose();
 
             Broadcaster.broadcastTimer.Elapsed -= Broadcaster.SetTimerReady;
@@ -118,7 +118,7 @@ public class Main : IProduct
     }
 
     // Broadcaster
-    private void DoBackgroundPulse(object sender, DoWorkEventArgs args)
+    private void BroadcasterPulse(object sender, DoWorkEventArgs args)
     {
         while (IsStarted)
         {

@@ -38,12 +38,13 @@ internal static class Bot
             Fsm.States.Clear();
 
             Fsm.AddState(new Relogger { Priority = 200 });
-            Fsm.AddState(new Pause { Priority = 32 });
-            Fsm.AddState(new Resurrect { Priority = 31 });
-            Fsm.AddState(new MyMacro { Priority = 30 });
-            Fsm.AddState(new IsAttacked { Priority = 29 });
-            Fsm.AddState(new Regeneration { Priority = 28 });
-            Fsm.AddState(new Looting { Priority = 27 });
+            Fsm.AddState(new Pause { Priority = 33 });
+            Fsm.AddState(new Resurrect { Priority = 32 });
+            Fsm.AddState(new MyMacro { Priority = 31 });
+            Fsm.AddState(new IsAttacked { Priority = 30 });
+            Fsm.AddState(new Regeneration { Priority = 29 });
+            Fsm.AddState(new Looting { Priority = 28 });
+            Fsm.AddState(new FlightMasterTakeTaxiState { Priority = 27 });
             Fsm.AddState(new Farming { Priority = 26 });
             Fsm.AddState(new ToTown { Priority = 25 });
 

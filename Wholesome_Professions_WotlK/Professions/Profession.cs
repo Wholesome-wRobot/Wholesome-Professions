@@ -58,7 +58,9 @@ public abstract class Profession : IProfession
     {
         string key = $"{Name}.SETSTEP";
 
-        if (!CurrenStepIsNull(key) && UserMustBuyManuallyIsTrue(key) && ItemsManager.GetItemCountById(CurrentStep.ItemoCraft.ItemId) <= 0)
+        if (!CurrenStepIsNull(key) 
+            && UserMustBuyManuallyIsTrue(key) 
+            && ItemsManager.GetItemCountById(CurrentStep.ItemoCraft.ItemId) <= 0)
             return false;
         if (!MustRecalculateIsTrue(key))
             return false;
@@ -72,7 +74,9 @@ public abstract class Profession : IProfession
     {
         string key = $"{Name}.SPLITITEM";
 
-        if (CurrenStepIsNull(key) || UserMustBuyManuallyIsTrue(key) || !WeHaveAnItemToSplit(key))
+        if (CurrenStepIsNull(key) 
+            || UserMustBuyManuallyIsTrue(key) 
+            || !WeHaveAnItemToSplit(key))
             return false;
 
         FrameHelper.UpdateDebugFrame(key, "RUNNING");
@@ -91,7 +95,9 @@ public abstract class Profession : IProfession
         string key = $"{Name}.FILTERLOOT";
         ItemToDelete = null;
 
-        if (CurrenStepIsNull(key) || UserMustBuyManuallyIsTrue(key) || !WeHaveAnItemToDelete(key) 
+        if (CurrenStepIsNull(key) 
+            || UserMustBuyManuallyIsTrue(key) 
+            || !WeHaveAnItemToDelete(key) 
             || BotProfileNameIsNull(key))
             return false;
 
@@ -104,8 +110,10 @@ public abstract class Profession : IProfession
     {
         string key = $"{Name}.TRAVEL";
 
-        if (CurrenStepIsNull(key) || UserMustBuyManuallyIsTrue(key)
-            || !MyCharLevelIsHighEnough(key) || WeAreOnRightContinent(key))
+        if (CurrenStepIsNull(key) 
+            || UserMustBuyManuallyIsTrue(key)
+            || !MyCharLevelIsHighEnough(key) 
+            || WeAreOnRightContinent(key))
             return false;
 
         FrameHelper.UpdateDebugFrame(key, "RUNNING");
@@ -117,8 +125,11 @@ public abstract class Profession : IProfession
     {
         string key = $"{Name}.LEARNPROF";
 
-        if (CurrenStepIsNull(key) || !WeNeedToTrain(key) || UserMustBuyManuallyIsTrue(key) 
-            || !MyCharLevelIsHighEnough(key) || !VendorIsConfirmed(key))
+        if (CurrenStepIsNull(key) 
+            || !WeNeedToTrain(key) 
+            || UserMustBuyManuallyIsTrue(key) 
+            || !MyCharLevelIsHighEnough(key) 
+            || !VendorIsConfirmed(key))
             return false;
 
         FrameHelper.UpdateDebugFrame($"{Name}.LEARNPROF", "RUNNING");
@@ -130,8 +141,11 @@ public abstract class Profession : IProfession
     {
         string key = $"{Name}.BUY&LEARN";
 
-        if (CurrenStepIsNull(key) || UserMustBuyManuallyIsTrue(key)
-            || !MyCharLevelIsHighEnough(key) || !VendorIsConfirmed(key) || WeKnowTheRecipe(key))
+        if (CurrenStepIsNull(key) 
+            || UserMustBuyManuallyIsTrue(key)
+            || !MyCharLevelIsHighEnough(key) 
+            || !VendorIsConfirmed(key) 
+            || WeKnowTheRecipe(key))
             return false;
         if (CurrentStep.ItemoCraft.RecipeVendor == null)
         {
@@ -149,8 +163,11 @@ public abstract class Profession : IProfession
         string key = $"{Name}.LEARNRECIPE";
         Logger.LogDebug($"{Name} : ShouldLearnRecipeFromTrainer()");
 
-        if (CurrenStepIsNull(key) || UserMustBuyManuallyIsTrue(key)
-            || !MyCharLevelIsHighEnough(key) || !VendorIsConfirmed(key) || WeKnowTheRecipe(key) 
+        if (CurrenStepIsNull(key) 
+            || UserMustBuyManuallyIsTrue(key)
+            || !MyCharLevelIsHighEnough(key) 
+            || !VendorIsConfirmed(key) 
+            || WeKnowTheRecipe(key) 
             || RecipeMustBeBought(key))
             return false;
 
@@ -163,8 +180,11 @@ public abstract class Profession : IProfession
     {
         string key = $"{Name}.BUYMATS";
 
-        if (CurrenStepIsNull(key) || UserMustBuyManuallyIsTrue(key)
-            || !MyCharLevelIsHighEnough(key) || !VendorIsConfirmed(key) || !WeCanBuyRemainingMats(key)
+        if (CurrenStepIsNull(key) 
+            || UserMustBuyManuallyIsTrue(key)
+            || !MyCharLevelIsHighEnough(key) 
+            || !VendorIsConfirmed(key) 
+            || !WeCanBuyRemainingMats(key)
             || WeHaveMatsToCraftOne(key))
             return false;
 
@@ -178,8 +198,12 @@ public abstract class Profession : IProfession
         string key = $"{Name}.CRAFTONE";
         Logger.LogDebug($"{Name} : ShouldCraftOne()");
 
-        if (CurrenStepIsNull(key)|| UserMustBuyManuallyIsTrue(key) || BotProfileNameIsNull(key)
-            || !WeHaveItemsToFarm(key) || !WeHaveMatsToCraftOne(key) || !CurrentStepIsACraftAll(key))
+        if (CurrenStepIsNull(key)
+            || UserMustBuyManuallyIsTrue(key) 
+            || BotProfileNameIsNull(key)
+            || !WeHaveItemsToFarm(key) 
+            || !WeHaveMatsToCraftOne(key) 
+            || !CurrentStepIsACraftAll(key))
             return false;
 
         FrameHelper.UpdateDebugFrame(key, "RUNNING");
@@ -192,11 +216,16 @@ public abstract class Profession : IProfession
         string key = $"{Name}.CRAFT";
         Logger.LogDebug($"{Name} : Checking if should craft");
 
-        if (CurrenStepIsNull(key) || UserMustBuyManuallyIsTrue(key)
-            || !MyCharLevelIsHighEnough(key) || WeHaveItemsToFarm(key) || !WeHaveAllMats(key)
-            || CurrentStepIsAListPrecraft(key) || ItemToCraftIsAnEnchant(key))
+        if (CurrenStepIsNull(key) 
+            || UserMustBuyManuallyIsTrue(key)
+            || !MyCharLevelIsHighEnough(key) 
+            || WeHaveItemsToFarm(key) 
+            || !WeHaveAllMats(key)
+            || CurrentStepIsAListPrecraft(key) 
+            || ItemToCraftIsAnEnchant(key))
             return false;
-        if (CurrentStepIsACraftAll(key) || CurrentStepIsACraftToLevel(key))
+        if (CurrentStepIsACraftAll(key) 
+            || CurrentStepIsACraftToLevel(key))
             return true;
 
         FrameHelper.UpdateDebugFrame(key, "WARNING : NO STEP AFTER CHECK");
@@ -210,7 +239,9 @@ public abstract class Profession : IProfession
 
         if (UserMustBuyManuallyIsTrue(key))
             return false;
-        if (!WeHaveItemsToFarm(key) && !BotProfileNameIsNull(key) && Bot.ProfileProfession == Name.ToString())
+        if (!WeHaveItemsToFarm(key) 
+            && !BotProfileNameIsNull(key) 
+            && Bot.ProfileProfession == Name.ToString())
         {
             FrameHelper.UpdateDebugFrame(key, "We're done farming. Unloading profile");
             ProfileHandler.UnloadCurrentProfile();
@@ -294,7 +325,8 @@ public abstract class Profession : IProfession
     public bool VendorIsConfirmed(string key = null)
     {
         if ((!CurrentStep.ItemoCraft.VendorFirst && !WeHaveItemsToFarm(key))
-            || CurrentStep.ItemoCraft.VendorFirst || City == ToolBox.GetCurrentCity())
+            || CurrentStep.ItemoCraft.VendorFirst 
+            || City == ToolBox.GetCurrentCity())
             return true;
 
         FrameHelper.UpdateDebugFrame(key, $"We must wait before going to vendors");
