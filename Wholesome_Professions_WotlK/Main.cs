@@ -58,7 +58,7 @@ public class Main : IProduct
     {
         try
         {
-            AutoUpdater.CheckUpdate(this);
+            AutoUpdater.CheckUpdate(version);
             IsStarted = true;
             FrameHelper.CreateDebugFrame();
             FrameHelper.CreateBroadcastFrame();

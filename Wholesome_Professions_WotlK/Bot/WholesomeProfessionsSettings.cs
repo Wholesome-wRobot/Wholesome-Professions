@@ -2,9 +2,7 @@
 using robotManager.Helpful;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
-using System.ComponentModel;
 using System.IO;
-using robotManager;
 using Wholesome_Professions_WotlK.Helpers;
 
 [Serializable]

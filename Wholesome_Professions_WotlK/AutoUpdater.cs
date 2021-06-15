@@ -9,7 +9,7 @@ using Wholesome_Professions_WotlK.Helpers;
 
 public static class AutoUpdater
 {
-    public static void CheckUpdate(Main mainObject)
+    public static void CheckUpdate(string mainVersion)
     {
         DateTime dateBegin = new DateTime(2020, 1, 1);
         DateTime currentDate = DateTime.Now;
@@ -61,9 +61,9 @@ public static class AutoUpdater
             var onlineVersionContent = new System.Net.WebClient { Encoding = Encoding.UTF8 }.DownloadString(onlineVersion);
 
             Logger.Log($"Online Version : {onlineVersionContent}");
-            if (onlineVersionContent == null || onlineVersionContent.Length > 10 || onlineVersionContent == mainObject.version)
+            if (onlineVersionContent == null || onlineVersionContent.Length > 10 || onlineVersionContent == mainVersion)
             {
-                Logger.Log($"Your version is up to date ({mainObject.version})");
+                Logger.Log($"Your version is up to date ({mainVersion})");
                 return;
             }
 
@@ -72,7 +72,7 @@ public static class AutoUpdater
 
             if (onlineFileContent != null && onlineFileContent.Length > 0)
             {
-                Logger.Log($"Your version : {mainObject.version}");
+                Logger.Log($"Your version : {mainVersion}");
                 Logger.Log("Trying to update");
                 
                 File.Move(currentFile, oldFile);
