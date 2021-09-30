@@ -37,17 +37,18 @@
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net46\MahApps.Metro.dll</HintPath>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\Dependencies\MahApps.Metro.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RDManaged">
-      <HintPath>D:\WoW\WoW Wotlk\WRobot WOTLK\Bin\RDManaged.dll</HintPath>
+      <HintPath>..\Dependencies\RDManaged.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="robotManager">
-      <HintPath>F:\WoW\WoW Wotlk\WRobot WOTLK\Bin\robotManager.dll</HintPath>
+      <HintPath>..\Dependencies\robotManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -61,7 +62,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Reference Include="wManager">
-      <HintPath>F:\WoW\WoW Wotlk\WRobot WOTLK\Bin\wManager.dll</HintPath>
+      <HintPath>..\Dependencies\wManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -139,8 +140,8 @@
     <PostBuildEvent>del "$(ProjectDir)\Compiled\WRobot\Products\$(ProjectName).pdb"
 xcopy /Y/E/R "$(ProjectDir)\Compiled" "C:\Users\Nico\Desktop"
 del "C:\Users\Nico\Desktop\Version.txt"
-xcopy /Y/E/R "$(ProjectDir)\Compiled\WRobot" "D:\WoW\WoW Wotlk\WRobot WOTLK"
+xcopy /Y/E/R "$(ProjectDir)\Compiled\WRobot" "F:\WoW\WoW Wotlk\WRobot WOTLK"
 
-start "WRobot" "D:\WoW\WoW Wotlk\WRobot WOTLK\WRobot.exe" AutoAttachAndLog=true</PostBuildEvent>
+start "WRobot" "F:\WoW\WoW Wotlk\WRobot WOTLK\WRobot.exe" AutoAttachAndLog=true</PostBuildEvent>
   </PropertyGroup>
 </Project>
